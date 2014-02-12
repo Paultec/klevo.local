@@ -1,9 +1,9 @@
 <?php echo $this->doctype(); ?>
 
-<html lang="en">
+<html lang="ru">
     <head>
         <meta charset="utf-8">
-        <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+        <?php echo $this->headTitle('Klevo '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
 
         <?php echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -13,43 +13,74 @@
         <!-- Le styles -->
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                         ->prependStylesheet($this->basePath() . '/css/style.css')
-                        ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
-                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+                        ->prependStylesheet($this->basePath() . 'http://fonts.googleapis.com/css?family=Lemon')?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/holder.js') // НЕ забыть удалить!!!
+            ->prependFile($this->basePath() . '/js/script.js')
+            ->prependFile($this->basePath() . '/js/mosaic.min.js')
             ->prependFile($this->basePath() . '/js/bootstrap.min.js')
             ->prependFile($this->basePath() . '/js/jquery.min.js')
             ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
             ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
         ; ?>
-
     </head>
     <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-        </nav>
         <div class="container">
+            <div class="content row">
+                <div class="col col-lg-2">
+                    <section id="branding" class="text-center">
+                        <a href="/" class="brand wobble-vertical">Klevo</a>
+                    </section>
+                </div>
+                <div class="col col-lg-8">
+                    <!-- Carousel -->
+                    <div class="carousel slide hidden-sm hidden-xs" data-ride="carousel">
+                        <section class="carousel-inner">
+                            <div class="active item"><img src="holder.js/750x150" alt=""></div>
+                            <div class="item"><img src="holder.js/750x150" alt=""></div>
+                            <div class="item"><img src="holder.js/750x150" alt=""></div>
+                            <div class="item"><img src="holder.js/750x150" alt=""></div>
+                            <div class="item"><img src="holder.js/750x150" alt=""></div>
+                        </section>
+                    </div><!-- /Carousel -->
+                </div>
+                <div class="col col-lg-2">
+                    <address class="text-justify">
+                        <strong>
+                            <abbr title="Город">г.</abbr> Днепропетровск<br>
+                            улица, номер дома<br>
+                        </strong>
+                        <abbr title="Телефон">Тел.:</abbr> <span>8(800)8080</span><br>
+                        <abbr title="Телефон">Тел.:</abbr> <span>8(800)8080</span><br>
+                        Факс: <span>8(800)8080</span>
+                    </address>
+                </div>
+            </div>
+            <!-- Horizontal menu  -->
+            <div class="navbar horizontal-nav center-block" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li><a href="#" class="hover-shadow">Галерея <span class="glyphicon glyphicon-picture"></span></a></li>
+                    <li><a href="#" class="hover-shadow">Статьи <span class="glyphicon glyphicon-pencil"></span></a></li>
+                    <li><a href="#" class="hover-shadow">Форум <span class="glyphicon glyphicon-comment"></span></a></li>
+                    <li><a href="#" class="hover-shadow">Оплата и доставка <span class="glyphicon glyphicon-shopping-cart"></a></li>
+                    <li><a href="#" class="hover-shadow">Контакты <span class="glyphicon glyphicon-earphone"></a></li>
+                </ul>
+                <form method="post" action="#" class="navbar-form navbar-left main-search" role="search">
+                    <div class="search-controls">
+                        <div class="form-group">
+                            <input type="text" class="form-control search-input" placeholder="Искать...">
+                        </div>
+                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                    </div>
+                </form>
+            </div><!-- /Horizontal menu  -->
             <?php echo $this->content; ?>
-            <hr>
             <footer>
                 <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
-        <?php echo $this->inlineScript() ?>
     </body>
 </html>
