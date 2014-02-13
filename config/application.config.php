@@ -7,6 +7,12 @@ return array(
         'ZFTool',
         'DoctrineModule',
         'DoctrineORMModule',
+        'ZfcBase',
+        'ZfcAdmin',
+        'ZfcUser',
+        'ZfcUserDoctrineORM',
+        'BjyAuthorize',
+        'User'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

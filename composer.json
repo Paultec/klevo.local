@@ -13,6 +13,11 @@
         "zendframework/zend-developer-tools": "0.0.2",
         "zendframework/zftool": "dev-master",
         "doctrine/doctrine-module": "0.*",
-        "doctrine/doctrine-orm-module": "0.*"
+        "doctrine/doctrine-orm-module": "0.*",
+        "zf-commons/zfc-base": "dev-master as 0.1.0",
+        "zf-commons/zfc-admin": "dev-master",
+        "zf-commons/zfc-user" : "dev-master as 0.1.0",
+        "zf-commons/zfc-user-doctrine-orm" : "dev-master as 0.1.1",
+        "bjyoungblood/bjy-authorize": "1.4.*"
     }
 }
