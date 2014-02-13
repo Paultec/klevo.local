@@ -1,9 +1,38 @@
 body {
     background: url("../img/misc/bg.png");
+    height: 1500px;
 }
 
 .container {
 
+}
+
+/******************************************************************************
+feedback
+*******************************************************************************/
+.feedback {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: -65px;
+    padding: 10px;
+    background: rgba(244, 0, 0, 0.8);
+    border-radius: 10px;
+    -ms-transform:rotate(-90deg);
+    -webkit-transform:rotate(-90deg);
+    transform:rotate(-90deg);
+    border: 2px solid #428BCA;
+    -webkit-transition: left 1s;
+    transition: left 1s;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.feedback:hover {
+    color: #ffffff;
+    text-decoration: none;
+    left: -60px;
 }
 
 /******************************************************************************
