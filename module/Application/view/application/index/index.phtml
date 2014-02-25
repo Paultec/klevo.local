@@ -1,71 +1,137 @@
-<div id="carousel" class="carousel slide hidden-sm hidden-xs" data-ride="carousel">
+<section class="col col-lg-3">
+    <div id="auth">
+        <?php echo $this->ZfcUserLoginWidget(); ?>
+    </div>
+    <aside class="filter">
+        <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
 
-    <ol class="carousel-indicators">
-        <li data-target="#carousel" data-slide-to="0" class="active"></li>
-        <li data-target="#carousel" data-slide-to="1"></li>
-        <li data-target="#carousel" data-slide-to="2"></li>
-        <li data-target="#carousel" data-slide-to="3"></li>
-        <li data-target="#carousel" data-slide-to="4"></li>
-    </ol>
+        <div class="accordion">
+            <!-- Product 1-->
+            <section class="accordion-group">
 
-    <section class="carousel-inner">
-        <div class="active item">
-            <div class="mosaic-block items">
-                <div class="mosaic-overlay">
-                    <div class="details">
-                        <h4>Товар 1</h4>
-                        <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
-                    </div>
-                </div>
-                <img src="holder.js/1170x350/sky" alt="">
-            </div>
-        </div>
-        <div class="item">
-            <div class="mosaic-block items">
-                <div class="mosaic-overlay">
-                    <div class="details">
-                        <h4>Товар 2</h4>
-                        <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
-                    </div>
-                </div>
-                <img src="holder.js/1170x350/sky" alt="">
-            </div>
-        </div>
-        <div class="item">
-            <div class="mosaic-block items">
-                <div class="mosaic-overlay">
-                    <div class="details">
-                        <h4>Товар 3</h4>
-                        <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
-                    </div>
-                </div>
-                <img src="holder.js/1170x350/sky" alt="">
-            </div>
-        </div>
-        <div class="item">
-            <div class="mosaic-block items">
-                <div class="mosaic-overlay">
-                    <div class="details">
-                        <h4>Товар 4</h4>
-                        <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
-                    </div>
-                </div>
-                <img src="holder.js/1170x350/sky" alt="">
-            </div>
-        </div>
-        <div class="item">
-            <div class="mosaic-block items">
-                <div class="mosaic-overlay">
-                    <div class="details">
-                        <h4>Товар 5</h4>
-                        <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
-                    </div>
-                </div>
-                <img src="holder.js/1170x350/sky" alt="">
-            </div>
-        </div>
-    </section>
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#product" href="#product1">
+                        <span class="glyphicon"></span> Удилища</a>
+                </div><!-- accordion heading -->
 
-    <a class="left carousel-control" href="#carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-    <a class="right carousel-control" href="#carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-</div>
+                <div id="product1" class="accordion-body collapse">
+                    <section class="accordion-inner">
+                        <ul class="list-unstyled">
+                            <li><a href="#">Спиннинговые</a></li>
+                            <li><a href="#">Карповые</a></li>
+                            <li><a href="#">Поплавочные</a></li>
+                            <li><a href="#">Нахлыстовые</a></li>
+                        </ul>
+                    </section><!-- accordion-inner -->
+                </div><!-- accordion-body -->
+
+            </section><!-- accordion-group -->
+            <!-- Product 2-->
+            <section class="accordion-group">
+
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#product" href="#product2">
+                        <span class="glyphicon"></span> Катушки</a>
+                </div><!-- accordion heading -->
+
+                <div id="product2" class="accordion-body collapse">
+                    <section class="accordion-inner">
+                        <ul class="list-unstyled">
+                            <li><a href="#">Инерционные</a></li>
+                            <li><a href="#">Безынерционные</a></li>
+                            <li><a href="#">Мультипликаторные</a></li>
+                            <li><a href="#">С байтранером</a></li>
+                        </ul>
+                    </section><!-- accordion-inner -->
+                </div><!-- accordion-body -->
+
+            </section><!-- accordion-group -->
+            <!-- Product 3-->
+            <section class="accordion-group">
+
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#product" href="#product3">
+                        <span class="glyphicon"></span> Катушки</a>
+                </div><!-- accordion heading -->
+
+            </section><!-- accordion-group -->
+        </div>
+</section>
+
+<section class="col col-lg-6">
+    <div id="carousel" class="carousel slide hidden-sm hidden-xs" data-ride="carousel">
+
+        <ol class="carousel-indicators">
+            <li data-target="#carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel" data-slide-to="1"></li>
+            <li data-target="#carousel" data-slide-to="2"></li>
+            <li data-target="#carousel" data-slide-to="3"></li>
+            <li data-target="#carousel" data-slide-to="4"></li>
+        </ol>
+
+        <section class="carousel-inner">
+            <div class="active item">
+                <div class="mosaic-block items">
+                    <div class="mosaic-overlay">
+                        <div class="details">
+                            <h4>Товар 1</h4>
+                            <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
+                        </div>
+                    </div>
+                    <img src="holder.js/540x350/sky" alt="">
+                </div>
+            </div>
+            <div class="item">
+                <div class="mosaic-block items">
+                    <div class="mosaic-overlay">
+                        <div class="details">
+                            <h4>Товар 2</h4>
+                            <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
+                        </div>
+                    </div>
+                    <img src="holder.js/540x350/sky" alt="">
+                </div>
+            </div>
+            <div class="item">
+                <div class="mosaic-block items">
+                    <div class="mosaic-overlay">
+                        <div class="details">
+                            <h4>Товар 3</h4>
+                            <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
+                        </div>
+                    </div>
+                    <img src="holder.js/540x350/sky" alt="">
+                </div>
+            </div>
+            <div class="item">
+                <div class="mosaic-block items">
+                    <div class="mosaic-overlay">
+                        <div class="details">
+                            <h4>Товар 4</h4>
+                            <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
+                        </div>
+                    </div>
+                    <img src="holder.js/540x350/sky" alt="">
+                </div>
+            </div>
+            <div class="item">
+                <div class="mosaic-block items">
+                    <div class="mosaic-overlay">
+                        <div class="details">
+                            <h4>Товар 5</h4>
+                            <p>Информация о товаре. Информация о товаре. Информация о товаре. Информация о товаре.</p>
+                        </div>
+                    </div>
+                    <img src="holder.js/540x350/sky" alt="">
+                </div>
+            </div>
+        </section>
+
+        <a class="left carousel-control" href="#carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+        <a class="right carousel-control" href="#carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div>
+</section>
+
+<section class="col col-lg-3">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam dolorem incidunt minus perspiciatis quia quis ratione. Ab, corporis ea eius enim ex explicabo facilis ipsum libero nesciunt quia quidem voluptatem?
+</section>

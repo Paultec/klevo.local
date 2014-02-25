@@ -3,6 +3,10 @@ body {
     height: 1500px;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Noto Serif', serif;
+}
+
 .container {
 
 }
@@ -170,10 +174,6 @@ Horizontal menu
     color: #563D7C;
 }
 
-.search-input {
-    width: 200px;
-}
-
 @keyframes hover {
     50% {
         -webkit-transform: translateY(-3px);
@@ -301,13 +301,35 @@ Horizontal menu
     animation-direction: alternate;
 }
 
+
+/******************************************************************************
+Main search
+*******************************************************************************/
+#main-search {
+    padding-left: 10px;
+}
+
+.search-input {
+    float: left;
+    width: 95%;
+    border-radius: 0;
+}
+
+/******************************************************************************
+Shopping cart
+*******************************************************************************/
+.fa-shopping-cart {
+    color: #119E4D;
+    text-shadow: 3px 3px 2px rgba(150, 150, 150, 1);
+}
+
 /******************************************************************************
 Info on carousel
 *******************************************************************************/
 .mosaic-block {
     position:relative;
     overflow:hidden;
-    width:1170px;
+    width:540px;
     height:350px;
     background:#111 url(../img/misc/progress.gif) no-repeat center center;
 }
@@ -355,4 +377,36 @@ Info on carousel
 .items p {
     color:#aaa;
     text-shadow:1px 1px 0 rgb(0,0,0);
+}
+
+/******************************************************************************
+accordion
+*******************************************************************************/
+.list-unstyled {
+    margin-left: 20px;
+}
+
+/******************************************************************************
+modal
+*******************************************************************************/
+#lean_overlay {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    height:100%;
+    width:100%;
+    background: #000;
+    display: none;
+}
+
+#auth {
+    width: 404px;
+    padding-bottom: 2px;
+    display:none;
+    background: #fff;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 4px rgba(0,0,0,0.7);
+    -moz-box-shadow: 0 0 4px rgba(0,0,0,0.7);
+    box-shadow: 0 0 4px rgba(0,0,0,0.7);
 }

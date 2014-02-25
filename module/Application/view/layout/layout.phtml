@@ -13,13 +13,16 @@
         <!-- Le styles -->
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                         ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/css/font-awesome.css')
                         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+                        ->prependStylesheet($this->basePath() . 'http://fonts.googleapis.com/css?family=Noto+Serif&subset=latin,cyrillic')
                         ->prependStylesheet($this->basePath() . 'http://fonts.googleapis.com/css?family=Lemon')?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()
             ->prependFile($this->basePath() . '/js/holder.js') // НЕ забыть удалить!!!
             ->prependFile($this->basePath() . '/js/script.js')
+            ->prependFile($this->basePath() . '/js/modal.min.js')
             ->prependFile($this->basePath() . '/js/mosaic.min.js')
             ->prependFile($this->basePath() . '/js/bootstrap.min.js')
             ->prependFile($this->basePath() . '/js/jquery.min.js')
@@ -67,18 +70,29 @@
                     <li><a href="#" class="hover-shadow">Форум <span class="glyphicon glyphicon-comment"></span></a></li>
                     <li><a href="#" class="hover-shadow">Оплата и доставка <span class="glyphicon glyphicon-shopping-cart"></a></li>
                     <li><a href="#" class="hover-shadow">Контакты <span class="glyphicon glyphicon-earphone"></a></li>
+                    <li><a href="#auth" id="modal" class="hover-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
                 </ul>
-                <form method="post" action="#" class="navbar-form navbar-left main-search" role="search">
-                    <div class="search-controls">
-                        <div class="form-group">
-                            <input type="text" class="form-control search-input" placeholder="Искать...">
-                        </div>
-                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                    </div>
-                </form>
             </div><!-- /Horizontal menu  -->
+            <!-- Search and Cart -->
+            <div class="content row">
+                <div class="col col-lg-9">
+                    <form method="post" action="#" id="main-search" role="search">
+                        <div class="form-group">
+                            <input type="search" class="form-control search-input" placeholder="Искать...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">
+                                  <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <div class="col col-lg-3">
+                    <a href="#" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span>Корзина (товаров: 0)</a>
+                </div>
+            </div><!-- /Search and Cart -->
             <?php echo $this->content; ?>
-            <footer>
+            <footer class="col col-lg-12">
                 <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
