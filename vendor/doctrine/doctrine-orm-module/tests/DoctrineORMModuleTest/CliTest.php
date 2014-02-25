@@ -21,6 +21,7 @@ namespace DoctrineORMModuleTest;
 
 use PHPUnit_Framework_TestCase;
 use DoctrineORMModuleTest\Util\ServiceManagerFactory;
+use Zend\EventManager\EventInterface;
 
 /**
  * Tests used to verify that command line functionality is active
@@ -53,13 +54,9 @@ class CliTest extends PHPUnit_Framework_TestCase
         $application        = $serviceManager->get('Application');
         $invocations        = 0;
 
-        $sharedEventManager->attach(
-            'doctrine',
-            'loadCli.post',
-            function () use (&$invocations) {
-                $invocations += 1;
-            }
-        );
+        $sharedEventManager->attach('doctrine', 'loadCli.post', function() use (&$invocations) {
+            $invocations += 1;
+        });
 
         $application->bootstrap();
         $this->entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');

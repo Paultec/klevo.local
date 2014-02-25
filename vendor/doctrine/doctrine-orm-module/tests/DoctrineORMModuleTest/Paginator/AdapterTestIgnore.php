@@ -30,7 +30,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 
-class AdapterTestIgnore extends TestCase
+class AdapterTest extends TestCase
 {
     /**
      * @var QueryBuilder

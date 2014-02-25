@@ -19,7 +19,6 @@
 
 namespace DoctrineModule\Service;
 
-use Doctrine\Common\Cache\CacheProvider;
 use RuntimeException;
 use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\MemcachedCache;
@@ -38,31 +37,28 @@ class CacheFactory extends AbstractFactory
 {
     /**
      * {@inheritDoc}
-     *
      * @return \Doctrine\Common\Cache\Cache
-     *
      * @throws RuntimeException
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $sl)
     {
         /** @var $options \DoctrineModule\Options\Cache */
-        $options = $this->getOptions($serviceLocator, 'cache');
+        $options = $this->getOptions($sl, 'cache');
         $class   = $options->getClass();
 
         if (!$class) {
             throw new RuntimeException('Cache must have a class name to instantiate');
         }
 
-        if ('filesystem' === $this->name) {
+        if ($class === 'Doctrine\Common\Cache\FilesystemCache') {
             $cache = new $class($options->getDirectory());
         } else {
             $cache = new $class;
         }
 
         $instance = $options->getInstance();
-
-        if (is_string($instance) && $serviceLocator->has($instance)) {
-            $instance = $serviceLocator->get($instance);
+        if (is_string($instance) && $sl->has($instance)) {
+            $instance = $sl->get($instance);
         }
 
         if ($cache instanceof MemcacheCache) {
@@ -74,12 +70,6 @@ class CacheFactory extends AbstractFactory
         } elseif ($cache instanceof RedisCache) {
             /* @var $cache RedisCache */
             $cache->setRedis($instance);
-        }
-
-        ;
-
-        if ($cache instanceof CacheProvider && ($namespace = $options->getNamespace())) {
-            $cache->setNamespace($namespace);
         }
 
         return $cache;

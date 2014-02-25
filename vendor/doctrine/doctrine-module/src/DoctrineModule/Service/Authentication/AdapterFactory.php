@@ -33,25 +33,19 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class AdapterFactory extends AbstractFactory
 {
     /**
-     * {@inheritDoc}
      *
-     * @return \DoctrineModule\Authentication\Adapter\ObjectRepository
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @return \DoctrineModule\Authentication\Adapter\DoctrineObjectRepository
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $options \DoctrineModule\Options\Authentication */
         $options = $this->getOptions($serviceLocator, 'authentication');
-
-        if (is_string($objectManager = $options->getObjectManager())) {
-            $options->setObjectManager($serviceLocator->get($objectManager));
+        if (is_string($options->getObjectManager())) {
+            $options->setObjectManager($serviceLocator->get($options->getObjectManager()));
         }
-
         return new ObjectRepository($options);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getOptionsClass()
     {
         return 'DoctrineModule\Options\Authentication';

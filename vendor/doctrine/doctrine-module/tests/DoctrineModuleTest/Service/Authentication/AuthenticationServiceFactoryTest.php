@@ -51,10 +51,6 @@ class AuthenticationServiceFactoryTest extends BaseTestCase
                 ),
             )
         );
-        $serviceManager->setInvokableClass(
-            'DoctrineModule\Authentication\Storage\Session',
-            'Zend\Authentication\Storage\Session'
-        );
         $serviceManager->setFactory('doctrine.authenticationadapter.' . $name, new AdapterFactory($name));
         $serviceManager->setFactory('doctrine.authenticationstorage.' . $name, new StorageFactory($name));
 

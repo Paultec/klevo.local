@@ -55,15 +55,13 @@ class EventManagerFactory extends AbstractFactory
                 continue;
             }
 
-            $subscriberType = is_object($subscriberName) ? get_class($subscriberName) : $subscriberName;
-
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Invalid event subscriber "%s" given, must be a service name, '
-                    . 'class name or an instance implementing Doctrine\Common\EventSubscriber',
-                    is_string($subscriberType) ? $subscriberType : gettype($subscriberType)
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid event subscriber "%s" given, must be a service name, '
+                . 'class name or an instance implementing Doctrine\Common\EventSubscriber',
+                is_object($subscriberName)
+                    ? get_class($subscriberName)
+                    : (is_string($subscriberName) ? $subscriberName : gettype($subscriber))
+            ));
         }
 
         return $eventManager;

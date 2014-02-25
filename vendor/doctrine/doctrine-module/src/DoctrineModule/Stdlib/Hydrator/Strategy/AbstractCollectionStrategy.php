@@ -96,17 +96,15 @@ abstract class AbstractCollectionStrategy implements StrategyInterface
      * Set the object
      *
      * @param  object $object
-     *
-     * @throws \InvalidArgumentException
-     *
      * @return AbstractCollectionStrategy
      */
     public function setObject($object)
     {
         if (!is_object($object)) {
-            throw new InvalidArgumentException(
-                sprintf('The parameter given to setObject method of %s class is not an object', get_called_class())
-            );
+            throw new InvalidArgumentException(sprintf(
+                'The parameter given to setObject method of %s class is not an object',
+                get_called_class()
+            ));
         }
 
         $this->object = $object;
@@ -134,8 +132,6 @@ abstract class AbstractCollectionStrategy implements StrategyInterface
     /**
      * Return the collection by value (using the public API)
      *
-     * @throws \InvalidArgumentException
-     *
      * @return Collection
      */
     protected function getCollectionFromObjectByValue()
@@ -144,14 +140,12 @@ abstract class AbstractCollectionStrategy implements StrategyInterface
         $getter = 'get' . ucfirst($this->getCollectionName());
 
         if (!method_exists($object, $getter)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'The getter %s to access collection %s in object %s does not exist',
-                    $getter,
-                    $this->getCollectionName(),
-                    get_class($object)
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'The getter %s to access collection %s in object %s does not exist',
+                $getter,
+                $this->getCollectionName(),
+                get_class($object)
+            ));
         }
 
         return $object->$getter();
@@ -180,11 +174,10 @@ abstract class AbstractCollectionStrategy implements StrategyInterface
      *
      * @param object $a
      * @param object $b
-     *
-     * @return int
      */
     protected function compareObjects($a, $b)
     {
         return strcmp(spl_object_hash($a), spl_object_hash($b));
     }
 }
+

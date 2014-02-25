@@ -20,7 +20,7 @@
 namespace DoctrineModule\Authentication\Adapter;
 
 use DoctrineModule\Options\Authentication as AuthenticationOptions;
-use Zend\Authentication\Adapter\AbstractAdapter;
+use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Adapter\Exception;
 use Zend\Authentication\Result as AuthenticationResult;
 
@@ -33,8 +33,22 @@ use Zend\Authentication\Result as AuthenticationResult;
  * @author  Tim Roediger <superdweebie@gmail.com>
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  */
-class ObjectRepository extends AbstractAdapter
+class ObjectRepository implements AdapterInterface
 {
+    /**
+     * User supplied identity.
+     *
+     * @var string
+     */
+    protected $identityValue;
+
+    /**
+     * User supplied credential.
+     *
+     * @var string
+     */
+    protected $credentialValue;
+
     /**
      * @var AuthenticationOptions
      */
@@ -70,35 +84,25 @@ class ObjectRepository extends AbstractAdapter
         $this->options = $options;
         return $this;
     }
-    
-    /**
-     * @return AuthenticationOptions
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
 
     /**
      * Set the value to be used as the identity
      *
      * @param  mixed $identityValue
      * @return ObjectRepository
-     * @deprecated use setIdentity instead
      */
     public function setIdentityValue($identityValue)
     {
-        $this->identity = $identityValue;
+        $this->identityValue = $identityValue;
         return $this;
     }
 
     /**
      * @return string
-     * @deprecated use getIdentity instead
      */
     public function getIdentityValue()
     {
-        return $this->identity;
+        return $this->identityValue;
     }
 
     /**
@@ -106,21 +110,19 @@ class ObjectRepository extends AbstractAdapter
      *
      * @param  mixed $credentialValue
      * @return ObjectRepository
-     * @deprecated use setCredential instead
      */
     public function setCredentialValue($credentialValue)
     {
-        $this->credential = $credentialValue;
+        $this->credentialValue = $credentialValue;
         return $this;
     }
 
     /**
      * @return string
-     * @deprecated use getCredential instead
      */
     public function getCredentialValue()
     {
-        return $this->credential;
+        return $this->credentialValue;
     }
 
     /**
@@ -130,9 +132,7 @@ class ObjectRepository extends AbstractAdapter
     {
         $this->setup();
         $options  = $this->options;
-        $identity = $options
-            ->getObjectRepository()
-            ->findOneBy(array($options->getIdentityProperty() => $this->identity));
+        $identity = $options->getObjectRepository()->findOneBy(array($options->getIdentityProperty() => $this->identityValue));
 
         if (!$identity) {
             $this->authenticationResultInfo['code'] = AuthenticationResult::FAILURE_IDENTITY_NOT_FOUND;
@@ -165,18 +165,16 @@ class ObjectRepository extends AbstractAdapter
         } elseif (property_exists($identity, $credentialProperty)) {
             $documentCredential = $identity->{$credentialProperty};
         } else {
-            throw new Exception\UnexpectedValueException(
-                sprintf(
-                    'Property (%s) in (%s) is not accessible. You should implement %s::%s()',
-                    $credentialProperty,
-                    get_class($identity),
-                    get_class($identity),
-                    $getter
-                )
-            );
+            throw new Exception\UnexpectedValueException(sprintf(
+                'Property (%s) in (%s) is not accessible. You should implement %s::%s()',
+                $credentialProperty,
+                get_class($identity),
+                get_class($identity),
+                $getter
+            ));
         }
 
-        $credentialValue = $this->credential;
+        $credentialValue = $this->credentialValue;
         $callable = $this->options->getCredentialCallable();
 
         if ($callable) {
@@ -205,23 +203,22 @@ class ObjectRepository extends AbstractAdapter
      */
     protected function setup()
     {
-        if (null === $this->identity) {
+        if (null === $this->identityValue) {
             throw new Exception\RuntimeException(
-                'A value for the identity was not provided prior to authentication with ObjectRepository '
-                . 'authentication adapter'
+                'A value for the identity was not provided prior to authentication with ObjectRepository authentication '
+                    . 'adapter'
             );
         }
 
-        if (null === $this->credential) {
+        if (null === $this->credentialValue) {
             throw new Exception\RuntimeException(
-                'A credential value was not provided prior to authentication with ObjectRepository'
-                . ' authentication adapter'
+                'A credential value was not provided prior to authentication with ObjectRepository authentication adapter'
             );
         }
 
         $this->authenticationResultInfo = array(
             'code' => AuthenticationResult::FAILURE,
-            'identity' => $this->identity,
+            'identity' => $this->identityValue,
             'messages' => array()
         );
     }

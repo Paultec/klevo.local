@@ -73,16 +73,19 @@ class DriverFactory extends AbstractFactory
         }
 
         if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf('Driver with type "%s" could not be found', $class));
+            throw new InvalidArgumentException(sprintf(
+                'Driver with type "%s" could not be found',
+                $class
+            ));
         }
 
         // Not all drivers (DriverChain) require paths.
         $paths = $options->getPaths();
 
         // Special options for AnnotationDrivers.
-        if ('Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver' === $class
-            || is_subclass_of($class, 'Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver')
-        ) {
+        if (($class == 'Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver') ||
+            (is_subclass_of($class, 'Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver')))
+        {
             $reader = new Annotations\AnnotationReader;
             $reader = new Annotations\CachedReader(
                 new Annotations\IndexedReader($reader),
@@ -103,14 +106,12 @@ class DriverFactory extends AbstractFactory
             if (get_class($locator) === 'Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator') {
                 $driver->setLocator(new DefaultFileLocator($locator->getPaths(), $options->getExtension()));
             } else {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Discovered file locator for driver of type "%s" is an instance of "%s". This factory '
+                throw new InvalidArgumentException(sprintf(
+                    'Discovered file locator for driver of type "%s" is an instance of "%s". This factory '
                         . 'supports only the DefaultFileLocator when an extension is set for the file locator',
-                        get_class($driver),
-                        get_class($locator)
-                    )
-                );
+                    get_class($driver),
+                    get_class($locator)
+                ));
             }
         }
 
@@ -124,9 +125,6 @@ class DriverFactory extends AbstractFactory
             }
 
             foreach ($drivers as $namespace => $driverName) {
-                if (null === $driverName) {
-                    continue;
-                }
                 $options = $this->getOptions($sl, 'driver', $driverName);
                 $driver->addDriver($this->createDriver($sl, $options), $namespace);
             }

@@ -45,11 +45,6 @@ class AuthenticationServiceFactory extends AbstractFactory
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getOptionsClass()
-    {
-        throw new \BadMethodCallException('Not implemented');
-    }
+    {}
 }

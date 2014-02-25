@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace DoctrineORMModuleTest\Options;
+namespace DoctrineORMModuleTest\Collector;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use DoctrineORMModule\Options\SQLLoggerCollectorOptions;
