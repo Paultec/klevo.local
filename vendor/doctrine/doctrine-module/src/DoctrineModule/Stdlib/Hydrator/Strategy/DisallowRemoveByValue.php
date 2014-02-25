@@ -19,7 +19,6 @@
 
 namespace DoctrineModule\Stdlib\Hydrator\Strategy;
 
-use Doctrine\Common\Collections\Collection;
 use LogicException;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -47,22 +46,14 @@ class DisallowRemoveByValue extends AbstractCollectionStrategy
         $adder   = 'add' . ucfirst($this->collectionName);
 
         if (!method_exists($this->object, $adder)) {
-            throw new LogicException(
-                sprintf(
-                    'DisallowRemove strategy for DoctrineModule hydrator requires %s to
-                     be defined in %s entity domain code, but it seems to be missing',
-                    $adder,
-                    get_class($this->object)
-                )
-            );
+            throw new LogicException(sprintf(
+                'AllowRemove strategy for DoctrineModule hydrator requires %s to be defined in %s
+                 entity domain code, but it seems to be missing',
+                $adder, get_class($this->object)
+            ));
         }
 
-        $collection = $this->getCollectionFromObjectByValue();
-
-        if ($collection instanceof Collection) {
-            $collection = $collection->toArray();
-        }
-
+        $collection = $this->getCollectionFromObjectByValue()->toArray();
         $toAdd      = new ArrayCollection(array_udiff($value, $collection, array($this, 'compareObjects')));
 
         $this->object->$adder($toAdd);

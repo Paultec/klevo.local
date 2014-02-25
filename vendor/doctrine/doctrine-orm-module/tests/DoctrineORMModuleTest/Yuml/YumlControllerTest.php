@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace DoctrineORMModuleTest\Yuml;
+namespace OcraServiceManagerTest\ServiceManager;
 
 use DoctrineORMModule\Yuml\YumlController;
 
@@ -28,7 +28,7 @@ use DoctrineORMModule\Yuml\YumlController;
  * @link    http://www.doctrine-project.org/
  * @author  Marco Pivetta <ocramius@gmail.com>
  */
-class YumlControllerTest extends \PHPUnit_Framework_TestCase
+class YumlControlleTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var YumlController

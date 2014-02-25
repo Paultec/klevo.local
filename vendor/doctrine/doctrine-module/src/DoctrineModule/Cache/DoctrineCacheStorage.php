@@ -71,9 +71,8 @@ class DoctrineCacheStorage extends AbstractAdapter
     protected function internalSetItem(& $normalizedKey, & $value)
     {
         $key = $this->getOptions()->getNamespace() . $normalizedKey;
-        $ttl = $this->getOptions()->getTtl();
 
-        return $this->cache->save($key, $value, $ttl);
+        return $this->cache->save($key, $value);
     }
 
     /**
