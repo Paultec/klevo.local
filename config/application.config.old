@@ -18,7 +18,7 @@ return array(
         'ZfcUserDoctrineORM',
         'BjyAuthorize',
         'User',
-        'Cart'
+        //'Cart',
         ),
     'module_listener_options' => array(
         'module_paths' => array(
