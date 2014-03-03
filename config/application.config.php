@@ -17,6 +17,7 @@ return array(
         'ZfcUser',
         'ZfcUserDoctrineORM',
         'BjyAuthorize',
+        'Catalog',
         'User',
         'Cart'
         ),
