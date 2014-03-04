@@ -20,20 +20,13 @@ class IndexController extends AbstractActionController
             ->getRepository('\Catalog\Entity\Item')
             ->findBy(array());
 
-        $items_arr = array();
-
-        foreach ($items as $item) {
-            $items_arr[] = $item->getArrayCopy();
-        }
-
         $categoryList = array();
 
-        foreach ($items_arr as $item) {
-            $categoryList[] = $item;
+        foreach ($items as $item) {
+            $categoryList[] = $item->getArrayCopy();
         }
 
         return new ViewModel(array(
-            //'items' => $items_arr,
             'categoryList' => $categoryList,
         ));
     }
