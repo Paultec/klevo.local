@@ -115,7 +115,7 @@ class CartTable
      */
     public function setQty($qty)
     {
-        $this->qty = qty;
+        $this->qty = $qty;
     }
 
     /**
