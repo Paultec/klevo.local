@@ -14,7 +14,7 @@ class CartController extends AbstractActionController
         $auth = new AuthenticationService();
         $currentUser = $auth->getIdentity();
         $idUser = (int) $currentUser;
-        
+
         $em = $this
             ->getServiceLocator()
             ->get('Doctrine\ORM\EntityManager');

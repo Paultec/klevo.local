@@ -18,7 +18,7 @@ class IndexController extends AbstractActionController
     {
         $items = $this->getEntityManager()
             ->getRepository('\Catalog\Entity\Item')
-            ->findBy(array('idParent' => null));
+            ->findBy(array());
 
         $items_arr = array();
 
@@ -26,8 +26,15 @@ class IndexController extends AbstractActionController
             $items_arr[] = $item->getArrayCopy();
         }
 
+        $categoryList = array();
+
+        foreach ($items_arr as $item) {
+            $categoryList[] = $item;
+        }
+
         return new ViewModel(array(
-            'items' => $items_arr,
+            //'items' => $items_arr,
+            'categoryList' => $categoryList,
         ));
     }
 
