@@ -1,24 +1,3 @@
-
 <?php
 
-//var_dump($this->items);
-
-$categoryList = $this->categoryList;
-//var_dump($categoryList);
-
-function getTree($list, $idParent) {
-    echo '<ul>';
-    foreach ($list as $elem) {
-        if ($elem['idParent'] == $idParent) {
-            echo '<li>';
-            echo $elem['name'];
-            echo '</li>';
-            getTree($list, $elem['id']);
-        }
-    }
-    echo '</ul>';
-}
-
-getTree($categoryList, null);
-
-?>
+echo $this->showList($this->categoryList, null);

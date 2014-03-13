@@ -20,6 +20,12 @@ return array(
         ),
     ),
 
+    'view_helpers' => array(
+        'invokables' => array(
+            'showList' => 'Catalog\View\Helper\ShowList',
+        ),
+    ),
+
     'router' => array(
         'routes' => array(
             'catalog' => array(
