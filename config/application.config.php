@@ -19,7 +19,9 @@ return array(
         'BjyAuthorize',
         'Catalog',
         'User',
-        'Cart'
+        'Cart',
+        'Product',
+        'GoSession'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

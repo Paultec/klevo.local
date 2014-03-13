@@ -1,0 +1,34 @@
+<?php
+
+use Zend\Form\Form;
+use Zend\Form\Element;
+
+$productList = $this->productList;
+
+//$form = new Form();
+//
+//$form->prepare();
+//$form->setAttribute('action', $this->url('cart', array('action' => 'add')));
+//$form->setAttribute('method', 'post');
+//
+//echo $this->form()->openTag($form);
+
+foreach ($productList as $product) {
+    echo '<h3>'.$product->getName().'</h3>';
+    echo '<form class="form-horizontal" method="POST" action="/cart/add">';
+    echo '<input type="hidden" name="idProduct" value="';
+    echo $product->getId();
+    echo '" />';
+    echo '<label><input class="btn-success" type="submit" name="addToCart" value="В корзину" /></label></form>';
+//    $idProduct = new Element\Hidden('idProduct');
+//    $idProduct->setValue($product->getId());
+//    echo $this->formHidden($idProduct);
+//
+//    $submit = new Element\Submit('addToCart');
+//    $submit->setValue('В корзину');
+//    echo $this->formSubmit($submit);
+}
+
+//echo $this->form()->closeTag();
+
+?>
