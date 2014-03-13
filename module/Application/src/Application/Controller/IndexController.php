@@ -16,6 +16,11 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return new ViewModel();
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
+
+        $index = new ViewModel();
+        $index->addChild($catalog, 'catalog');
+
+        return $index;
     }
 }

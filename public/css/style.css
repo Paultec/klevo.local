@@ -1,6 +1,5 @@
 body {
-    background: url("../img/misc/bg.png");
-    height: 1500px;
+    background: #ECEBE7 url("../img/misc/bg.png");
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -382,8 +381,28 @@ Info on carousel
 /******************************************************************************
 accordion
 *******************************************************************************/
-.list-unstyled {
-    margin-left: 20px;
+#first > a {
+    padding-left: 2.2em;
+}
+
+.filled, .empty {
+    color: #000000 !important;
+    background: #ECEBE7 url("../img/misc/bg.png") !important;
+}
+
+.empty {
+    display: block;
+    font-family: 'Noto Serif', serif;
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+    padding: .5em .5em .5em .5em;
+    margin-top: 2px;
+    color: #000000;
+}
+
+.empty:hover {
+    border: 1px solid #999999;
+    text-decoration: none;
 }
 
 /******************************************************************************

@@ -9,7 +9,7 @@ $(function(){
         function() {
         $(this).css({'color': '#563D7C'})
                .children().css({'color': '#428BCA'});
-    },
+        },
         function() {
             $(this).css({'color': '#428BCA'})
                 .children().css({'color': '#563D7C'});
@@ -19,7 +19,6 @@ $(function(){
     /******************************************************************************
      Info on carousel
      *******************************************************************************/
-
     $('.items').mosaic({
         animation: 'slide'
     });
@@ -27,7 +26,16 @@ $(function(){
     /******************************************************************************
      accordion
      *******************************************************************************/
-    $('.accordion-group').has('ul').find('span').addClass('glyphicon-plus');
+    $('.accordion').each(function(){
+        $(this).accordion({
+            header: $(this).children('h3'),
+            active: false,
+            collapsible: true,
+            heightStyle: 'content'
+        });
+    });
+
+    $('.accordion:first').attr('id', 'first');
 
     /******************************************************************************
      modal

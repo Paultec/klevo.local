@@ -4,58 +4,10 @@
     </div>
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
-
-        <div class="accordion">
-            <!-- Product 1-->
-            <section class="accordion-group">
-
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#product" href="#product1">
-                        <span class="glyphicon"></span> Удилища</a>
-                </div><!-- accordion heading -->
-
-                <div id="product1" class="accordion-body collapse">
-                    <section class="accordion-inner">
-                        <ul class="list-unstyled">
-                            <li><a href="#">Спиннинговые</a></li>
-                            <li><a href="#">Карповые</a></li>
-                            <li><a href="#">Поплавочные</a></li>
-                            <li><a href="#">Нахлыстовые</a></li>
-                        </ul>
-                    </section><!-- accordion-inner -->
-                </div><!-- accordion-body -->
-
-            </section><!-- accordion-group -->
-            <!-- Product 2-->
-            <section class="accordion-group">
-
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#product" href="#product2">
-                        <span class="glyphicon"></span> Катушки</a>
-                </div><!-- accordion heading -->
-
-                <div id="product2" class="accordion-body collapse">
-                    <section class="accordion-inner">
-                        <ul class="list-unstyled">
-                            <li><a href="#">Инерционные</a></li>
-                            <li><a href="#">Безынерционные</a></li>
-                            <li><a href="#">Мультипликаторные</a></li>
-                            <li><a href="#">С байтранером</a></li>
-                        </ul>
-                    </section><!-- accordion-inner -->
-                </div><!-- accordion-body -->
-
-            </section><!-- accordion-group -->
-            <!-- Product 3-->
-            <section class="accordion-group">
-
-                <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#product" href="#product3">
-                        <span class="glyphicon"></span> Катушки</a>
-                </div><!-- accordion heading -->
-
-            </section><!-- accordion-group -->
-        </div>
+        <!-- Accordion -->
+        <?php echo $this->catalog ;?>
+        <!-- /Accordion -->
+    </aside>
 </section>
 
 <section class="col col-lg-6">
