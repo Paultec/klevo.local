@@ -20,7 +20,9 @@ return array(
         'Catalog',
         'User',
         'Cart',
-        'Product'
+        'Product',
+        'GoSession',
+        'Register'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

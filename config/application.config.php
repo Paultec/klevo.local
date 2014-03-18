@@ -21,7 +21,9 @@ return array(
         'User',
         'Cart',
         'Product',
-        'GoSession'
+        'GoSession',
+        'Register',
+        'Data'
         ),
     'module_listener_options' => array(
         'module_paths' => array(
