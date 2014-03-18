@@ -39,23 +39,23 @@ return array(
         'driver' => array(
             'attribute_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Data\Attribute'),
+                'paths' => array(__DIR__ . '\..\src\Data\Entity'),
             ),
             'operation_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Data\Operation'),
+                'paths' => array(__DIR__ . '\..\src\Data\Entity'),
             ),
             'paymentType_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Data\PaymentType'),
+                'paths' => array(__DIR__ . '\..\src\Data\Entity'),
             ),
             'status_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Data\Status'),
+                'paths' => array(__DIR__ . '\..\src\Data\Entity'),
             ),
             'store_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Data\Store'),
+                'paths' => array(__DIR__ . '\..\src\Data\Entity'),
             ),
 
             'orm_default' => array(
