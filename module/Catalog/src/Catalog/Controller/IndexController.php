@@ -17,7 +17,7 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         $items = $this->getEntityManager()
-            ->getRepository('\Catalog\Entity\Item')
+            ->getRepository('\Catalog\Entity\Category')
             ->findBy(array());
 
         $categoryList = array();
