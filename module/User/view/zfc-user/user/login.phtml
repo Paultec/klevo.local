@@ -8,6 +8,8 @@ $form = $this->loginForm;
 $form->prepare();
 $form->setAttribute('action', $this->url('zfcuser/login'));
 $form->setAttribute('method', 'post');
+$form->setAttribute('class', 'auth_form');
+$form->setAttribute('name', 'auth_form');
 ?>
 
 <?php echo $this->form()->openTag($form) ?>

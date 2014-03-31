@@ -471,10 +471,10 @@ modal
 
 /* Content styles */
 .md-content {
-    /*color: #ffffff;*/
-    color: #000000;
-    /*background: #563D7C;*/
-    background: #ECEBE7 url("../img/misc/bg.png");
+    color: #ffffff;
+    /*color: #000000;*/
+    background: #563D7C;
+    /*background: #ECEBE7 url("../img/misc/bg.png");*/
     position: relative;
     border-radius: 3px;
     margin: 0 auto;
@@ -546,8 +546,8 @@ modal
 }
 
 .register-link {
-    /*color: #ffff00;*/
-    color: #cc0000;
+    color: #ffff00;
+    /*color: #cc0000;*/
     border-bottom: 1px dotted #cc0000;
 }
 
