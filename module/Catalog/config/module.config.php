@@ -6,6 +6,10 @@ return array(
                 'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'paths' => array(__DIR__ . '\..\src\Catalog\Entity')
             ),
+            'brand_entity' => array(
+                'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'paths' => array(__DIR__ . '\..\src\Catalog\Entity')
+            ),
             'orm_default' => array(
                 'drivers' => array(
                     'Catalog\Entity' => 'catalog_entity',

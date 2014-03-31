@@ -1,3 +1,12 @@
 <?php
+echo '<section id="accordion">';
+    // brand
+    echo '<div class="accordion">';
+    echo $this->partialLoop('catalog/partial/brandLoop.phtml', $this->brandList);
+    echo '</div>';
 
-echo $this->showList($this->categoryList);
+    echo '<hr class="delim">';
+
+    // category
+    echo $this->showList($this->categoryList);
+echo '</section>';

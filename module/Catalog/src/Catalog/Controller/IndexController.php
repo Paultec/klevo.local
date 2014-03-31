@@ -26,7 +26,18 @@ class IndexController extends AbstractActionController
             $categoryList[] = $item->getArrayCopy();
         }
 
+        $brands = $this->getEntityManager()
+            ->getRepository('\Catalog\Entity\Brand')
+            ->findBy(array());
+
+        $brandList = array();
+
+        foreach ($brands as $brand) {
+            $brandList[] = $brand->getArrayCopy();
+        }
+
         return new ViewModel(array(
+            'brandList'    => $brandList,
             'categoryList' => $categoryList,
         ));
     }

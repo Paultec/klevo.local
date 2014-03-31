@@ -387,7 +387,7 @@ Info on carousel
 /******************************************************************************
 accordion
 *******************************************************************************/
-#first > a {
+#accordion > div > a {
     padding-left: 2.2em;
 }
 
@@ -409,6 +409,18 @@ accordion
 .empty:hover {
     border: 1px solid #999999;
     text-decoration: none;
+}
+
+.delim {
+    margin: 10px 0;
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: -webkit-linear-gradient(left, #ccc, #333, #ccc);
+    background-image:    -moz-linear-gradient(left, #ccc, #333, #ccc);
+    background-image:     -ms-linear-gradient(left, #ccc, #333, #ccc);
+    background-image:      -o-linear-gradient(left, #ccc, #333, #ccc);
+    background-image:         linear-gradient(left, #ccc, #333, #ccc);
 }
 
 /******************************************************************************
@@ -529,4 +541,15 @@ modal
     -ms-transform: scale(1);
     transform: scale(1);
     opacity: 1;
+}
+
+.register-link {
+    color: #ffff00;
+    border-bottom: 1px dotted #cc0000;
+}
+
+.register-link:hover {
+    color: #d96c00;
+    text-decoration: none;
+    border-bottom: none;
 }

@@ -19,8 +19,8 @@
 
         <!-- Scripts -->
         <?php echo $this->headScript()
-            ->prependFile($this->basePath() . '/js/holder.js') // НЕ забыть удалить!!!
-            ->prependFile($this->basePath() . '/js/script.js')
+            ->prependFile($this->basePath() . '/js/holder.min.js') // НЕ забыть удалить!!
+            ->prependFile($this->basePath() . '/js/script.min.js')
             ->prependFile($this->basePath() . '/js/mosaic.min.js')
             ->prependFile($this->basePath() . '/js/bootstrap.min.js')
             ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js')
@@ -69,7 +69,7 @@
                     <li><a href="#" class="hover-shadow">Форум <span class="glyphicon glyphicon-comment"></span></a></li>
                     <li><a href="#" class="hover-shadow">Оплата и доставка <span class="glyphicon glyphicon-shopping-cart"></a></li>
                     <li><a href="#" class="hover-shadow">Контакты <span class="glyphicon glyphicon-earphone"></a></li>
-                    <li><a href="#" class="md-trigger hover-shadow" data-modal="modal-1">Войти <span class="glyphicon glyphicon-user"></a></li>
+                    <li><a href="" class="md-trigger hover-shadow" data-modal="modal-1">Войти <span class="glyphicon glyphicon-user"></a></li>
 
                     <!--Не забыть-->
                     <li><a href="/product" id="modal" class="hover-shadow">Товары </a></li>
@@ -102,25 +102,7 @@
         <a href="#" class="feedback hidden-sm hidden-xs">Обратная связь</a>
         <!-- login -->
         <div class="md-modal md-effect-1" id="modal-1">
-            <?php //echo $this->ZfcUserLoginWidget(); ?>
-
-            <div class="md-content">
-                <h3>Войти</h3>
-                <div>
-                    <p>Дополнительная информация:</p>
-                    <form action="/user/login" method="post">
-                        <label for="identity"> Введите имя:</label> <br />
-                        <input name="identity" type="text" value="" placeholder="Имя" />
-                        <br />
-                        <label for="credential"> Введите пароль:</label><br />
-                        <input name="credential" type="password" value="" placeholder="Пароль" />
-                        <br />
-                        <input type="submit" name="submit" value="Войти"/>
-                    </form>
-                    <div class="md-close glyphicon glyphicon-remove"></div>
-                </div>
-            </div>
-
+            <?php echo $this->ZfcUserLoginWidget(); ?>
         </div><!-- /login -->
         <!-- the overlay element -->
         <div class="md-overlay"></div><!-- /the overlay element -->
