@@ -26,6 +26,58 @@ return array(
                             ),
                         ),
                     ),
+                    'operation' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/operation[/:action]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Data\Controller\Operation',
+                                'action'     => 'index',
+                            ),
+                        ),
+                    ),
+                    'paymentType' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/paymentType[/:action]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Data\Controller\PaymentType',
+                                'action'     => 'index',
+                            ),
+                        ),
+                    ),
+                    'status' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/status[/:action]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Data\Controller\Status',
+                                'action'     => 'index',
+                            ),
+                        ),
+                    ),
+                    'store' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/store[/:action]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Data\Controller\Store',
+                                'action'     => 'index',
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),
