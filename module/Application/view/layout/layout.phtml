@@ -69,10 +69,15 @@
                     <li><a href="#" class="hover-shadow">Форум <span class="glyphicon glyphicon-comment"></span></a></li>
                     <li><a href="#" class="hover-shadow">Оплата и доставка <span class="glyphicon glyphicon-shopping-cart"></a></li>
                     <li><a href="#" class="hover-shadow">Контакты <span class="glyphicon glyphicon-earphone"></a></li>
+
+                    <?php if(!$this->zfcUserIdentity()): ?>
                     <li><a href="" class="md-trigger hover-shadow" data-modal="modal-1">Войти <span class="glyphicon glyphicon-user"></a></li>
+                    <?php else: ?>
+                    <li><a href="<?php echo $this->url('zfcuser/logout'); ?>" class="hover-shadow logout">Выйти <span class="glyphicon glyphicon-user"></a></li>
+                    <?php endif ?>
 
                     <!--Не забыть-->
-                    <li><a href="/product" id="modal" class="hover-shadow">Товары </a></li>
+                    <li><a href="<?php echo $this->url('product');?>" id="modal" class="hover-shadow">Товары </a></li>
                     <!--убрать-->
                 </ul>
             </div><!-- /Horizontal menu  -->
@@ -91,7 +96,7 @@
                     </form>
                 </div>
                 <div class="col col-lg-3">
-                    <a href="/cart" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span>Корзина (товаров: 0)</a>
+                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span>Корзина (товаров: 0)</a>
                 </div>
             </div><!-- /Search and Cart -->
 
@@ -103,7 +108,11 @@
         <a href="#" class="feedback hidden-sm hidden-xs">Обратная связь</a>
         <!-- login -->
         <div class="md-modal md-effect-1" id="modal-1">
-            <?php echo $this->ZfcUserLoginWidget(); ?>
+            <!-- Test if the User is connected -->
+            <?php if(!$this->zfcUserIdentity()): ?>
+                <!-- display the login form -->
+                <?php echo $this->zfcUserLoginWidget(); ?>
+            <?php endif ?>
         </div><!-- /login -->
         <!-- the overlay element -->
         <div class="md-overlay"></div><!-- /the overlay element -->

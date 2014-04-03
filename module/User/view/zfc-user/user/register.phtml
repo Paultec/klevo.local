@@ -27,8 +27,9 @@ $form->setAttribute('name', 'register_form');
             <?php echo $this->formCaptcha($element) . $this->formElementErrors($element) ?>
             <?php else: ?>
             <?php echo $this->formInput($element->setAttributes(array(
-                    'class' => 'form-control',
-                    'required' => true,
+                    'class'         => 'form-control',
+                    'autocomplete'  => 'off',
+                    'required'      => true,
                 )))
                      . $this->formElementErrors($element) ?>
         <?php endif ?>

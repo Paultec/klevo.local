@@ -37,10 +37,21 @@ class Module implements AutoloaderProviderInterface
 
     public function onBootstrap(MvcEvent $e)
     {
-        // You may not need to do this if you're doing it elsewhere in your
-        // application
-        $eventManager        = $e->getApplication()->getEventManager();
-        $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
+        $eventManager   = $e->getApplication()->getEventManager();
+
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, function(MvcEvent $e) {
+            $routeMatch = $e->getRouteMatch();
+            $controller = $routeMatch->getParam('controller');
+            $action     = $routeMatch->getParam('action');
+
+            if ($controller == 'zfcuser' && $action == 'login') {
+                //return $this->redirect()->toUrl($this->url()->fromRoute('home'));
+                $redirect = true;
+            } else {
+                $redirect = false;
+            }
+
+            //var_dump($redirect);
+        });
     }
 }

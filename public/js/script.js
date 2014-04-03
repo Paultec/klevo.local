@@ -58,7 +58,7 @@ $(function(){
                     //do your stuff
                 },
                 afterClose: function(button, modal) {
-                    //do your suff
+                    //do your stuff
                 }
             };
 
@@ -289,6 +289,14 @@ $(function(){
         .find('ul').addClass('list-unstyled')
         .find('li').css({'color' : '#cc0000', 'background' : '#FFDD7A'})
         .prepend('<span class="glyphicon glyphicon glyphicon-ban-circle"></span> ');
+
+    /******************************************************************************
+     Logout confirm
+     *******************************************************************************/
+    $('.logout').on('click', function(){
+        // TODO change standard confirm
+        confirm('Вы действительно хотите выйти из системы?');
+    });
 
     /******************************************************************************
      tooltip
