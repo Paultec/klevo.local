@@ -1,5 +1,5 @@
-<div class="col col-lg-7 col-lg-offset-2">
-<h1><?php echo $this->translate('Register'); ?></h1>
+<div class="col col-lg-7 col-lg-offset-2 form_wrap">
+<h1 class="text-center"><?php echo $this->translate('Register'); ?></h1>
 
 <?php
 if (!$this->enableRegistration) {
@@ -40,4 +40,5 @@ $form->setAttribute('name', 'register_form');
     <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
 <?php endif ?>
 <?php echo $this->form()->closeTag() ?>
+    <p class="register"><?php echo $this->translate('Already a member').'?'; ?> <a class="auth-link" href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Sign In'); ?></a></p>
 </div>

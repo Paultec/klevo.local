@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZfcUser\n"
 "Report-Msgid-Bugs-To: zf-devteam@zend.com\n"
 "POT-Creation-Date: 2013-07-22 12:24+0300\n"
-"PO-Revision-Date: 2014-03-31 22:53+0200\n"
+"PO-Revision-Date: 2014-04-04 18:53+0200\n"
 "Last-Translator: eugenzor <eugenzor@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: ru_RU\n"
@@ -148,3 +148,7 @@ msgstr "Пароль не совпадает. Проверьте правиль�
 #: language/msgIds.php:31
 msgid "Value is required and can't be empty"
 msgstr "Значение обязательно и не может быть пустым"
+
+#: language/msgIds.php:32
+msgid "Already a member"
+msgstr "Уже зарегистрированы"

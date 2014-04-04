@@ -29,3 +29,4 @@ translate('The input is not a valid email address. Use the basic format local-pa
 // Tokens Match
 translate('The two given tokens do not match');
 translate('Value is required and can\'t be empty');
+translate('Already a member');

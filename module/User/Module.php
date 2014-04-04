@@ -34,24 +34,4 @@ class Module implements AutoloaderProviderInterface
     {
         return include __DIR__ . '/config/module.config.php';
     }
-
-    public function onBootstrap(MvcEvent $e)
-    {
-        $eventManager   = $e->getApplication()->getEventManager();
-
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, function(MvcEvent $e) {
-            $routeMatch = $e->getRouteMatch();
-            $controller = $routeMatch->getParam('controller');
-            $action     = $routeMatch->getParam('action');
-
-            if ($controller == 'zfcuser' && $action == 'login') {
-                //return $this->redirect()->toUrl($this->url()->fromRoute('home'));
-                $redirect = true;
-            } else {
-                $redirect = false;
-            }
-
-            //var_dump($redirect);
-        });
-    }
 }
