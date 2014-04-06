@@ -63,19 +63,13 @@
             </div>
             <!-- Horizontal menu  -->
             <div class="navbar horizontal-nav center-block" role="navigation">
+                <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav'); ?>
                 <ul class="nav navbar-nav">
-                    <li><a href="#" class="float-shadow">Галерея <span class="glyphicon glyphicon-picture"></span></a></li>
-                    <li><a href="#" class="float-shadow">Статьи <span class="glyphicon glyphicon-pencil"></span></a></li>
-                    <li><a href="#" class="float-shadow">Форум <span class="glyphicon glyphicon-comment"></span></a></li>
-                    <li><a href="#" class="float-shadow">Оплата и доставка <span class="glyphicon glyphicon-shopping-cart"></a></li>
-                    <li><a href="#" class="float-shadow">Контакты <span class="glyphicon glyphicon-earphone"></a></li>
-
                     <?php if(!$this->zfcUserIdentity()): ?>
-                    <li><a href="<?php echo $this->url('zfcuser/login'); ?>" class="float-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
+                        <li><a href="<?php echo $this->url('zfcuser/login'); ?>" class="float-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
                     <?php else: ?>
-                    <li><a href="<?php echo $this->url('zfcuser/logout'); ?>" class="float-shadow logout">Выйти <span class="glyphicon glyphicon-user"></a></li>
+                        <li><a href="<?php echo $this->url('zfcuser/logout'); ?>" class="float-shadow logout">Выйти <span class="glyphicon glyphicon-user"></a></li>
                     <?php endif ?>
-
                     <!--Не забыть-->
                     <li><a href="<?php echo $this->url('product');?>" id="modal" class="float-shadow">Товары </a></li>
                     <!--убрать-->

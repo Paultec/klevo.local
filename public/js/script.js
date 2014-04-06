@@ -16,6 +16,18 @@ $(function(){
         }
     );
 
+    var menu_glyphicon = ['glyphicon-picture',
+                          'glyphicon-pencil',
+                          'glyphicon-comment',
+                          'glyphicon-shopping-cart',
+                          'glyphicon-earphone'];
+
+    var nav = $('.nav:first').find('li').find('a');
+
+    nav.each(function(index) {
+        $(this).append(' <span class="glyphicon '+ menu_glyphicon[index] +'\"><span>');
+    });
+
     /******************************************************************************
      Info on carousel
      *******************************************************************************/
@@ -140,8 +152,6 @@ $(function(){
     });
 
     passwordVerify.on('keyup', function(){
-        var val = $(this).val();
-
         if (pass_flag && password.val() == passwordVerify.val()) {
             $(this).css('border', '1px solid green');
             password.css('border', '1px solid green');
