@@ -1,13 +1,13 @@
-<div class="md-content">
-    <h3>Войти</h3>
+<div class="col col-lg-7 col-lg-offset-2 form_wrap">
+    <h1 class="text-center"><?php echo $this->translate('Sign In'); ?></h1>
     <div>
-        <p>Дополнительная информация:</p>
-
 <?php
 $form = $this->loginForm;
 $form->prepare();
 $form->setAttribute('action', $this->url('zfcuser/login'));
 $form->setAttribute('method', 'post');
+$form->setAttribute('class', 'auth_form');
+$form->setAttribute('name', 'auth_form');
 ?>
 
 <?php echo $this->form()->openTag($form) ?>
@@ -15,25 +15,24 @@ $form->setAttribute('method', 'post');
     <?php echo $this->formElementErrors($form->get('identity')) ?>
 
     <div class="form-group">
-        <label for="identity">Введите email:</label>
-        <input id="identity" name="identity" class="form-control" type="email" value="" placeholder="Email"  pattern="^[\w\.=-]+@[\w\.-]+\.[\w]{2,6}$" required autocomplete="off">
+        <label for="identity">Введите Email:</label>
+        <input id="identity" name="identity" class="form-control" type="email" value="" placeholder="Введите Email"  pattern="^[\w\.=-]+@[\w\.-]+\.[\w]{2,6}$" required autocomplete="off">
     </div>
     <div class="form-group">
-        <label for="credential">Введите пароль:</label>
-        <input id="credential" name="credential" class="form-control" type="password" value="" placeholder="Пароль" pattern="^[a-zA-z]{1}[a-zA-Z1-9]{7,20}$" required>
+        <label for="credential">Введите Пароль:</label>
+        <input id="credential" name="credential" class="form-control" type="password" value="" placeholder="Введите Пароль" pattern="^[a-zA-z]{1}[a-zA-Z1-9]{7,20}$" required>
     </div>
 
     <?php if ($this->redirect): ?>
         <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
     <?php endif ?>
 
-    <input type="submit" id="auth_btn" class="btn btn-default" name="submit" value="Войти"/>
+    <input type="submit" id="auth_btn" class="btn btn btn-primary" name="submit" value="Войти"/>
 
 <?php echo $this->form()->closeTag() ?>
-        <div class="md-close glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="right" title="Закрыть"></div>
-        <p>
-            <?php echo 'Еще не зарегистрированы?'; ?> <a class="register-link" href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>"><?php echo $this->translate('Sign up!'); ?></a>
-        </p>
+        <?php if ($this->enableRegistration) : ?>
+            <p class="sing_in"><?php echo $this->translate('Not registered?'); ?> <a class="register-link" href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>"><?php echo $this->translate('Sign up!'); ?></a></p>
+        <?php endif; ?>
     </div>
 
 </div>

@@ -1,5 +1,5 @@
-<div class="col col-lg-7 col-lg-offset-2">
-<h1><?php echo $this->translate('Register'); ?></h1>
+<div class="col col-lg-7 col-lg-offset-2 form_wrap">
+<h1 class="text-center"><?php echo $this->translate('Register'); ?></h1>
 
 <?php
 if (!$this->enableRegistration) {
@@ -11,6 +11,7 @@ $form->prepare();
 $form->setAttribute('action', $this->url('zfcuser/register'));
 $form->setAttribute('method', 'post');
 $form->setAttribute('class', 'register_form');
+$form->setAttribute('name', 'register_form');
 ?>
 
 <?php echo $this->form()->openTag($form) ?>
@@ -26,8 +27,9 @@ $form->setAttribute('class', 'register_form');
             <?php echo $this->formCaptcha($element) . $this->formElementErrors($element) ?>
             <?php else: ?>
             <?php echo $this->formInput($element->setAttributes(array(
-                    'class' => 'form-control',
-                    'required' => true,
+                    'class'         => 'form-control',
+                    'autocomplete'  => 'off',
+                    'required'      => true,
                 )))
                      . $this->formElementErrors($element) ?>
         <?php endif ?>
@@ -38,4 +40,5 @@ $form->setAttribute('class', 'register_form');
     <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
 <?php endif ?>
 <?php echo $this->form()->closeTag() ?>
+    <p class="register"><?php echo $this->translate('Already a member').'?'; ?> <a class="auth-link" href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Sign In'); ?></a></p>
 </div>

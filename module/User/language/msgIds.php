@@ -27,4 +27,6 @@ translate('The input is more than %max% characters long');
 // Email Validator
 translate('The input is not a valid email address. Use the basic format local-part@hostname');
 // Tokens Match
-traslate('The two given tokens do not match');
+translate('The two given tokens do not match');
+translate('Value is required and can\'t be empty');
+translate('Already a member');

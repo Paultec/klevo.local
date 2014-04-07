@@ -12,7 +12,7 @@
 
         <!-- Le styles -->
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                        ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/css/style.min.css')
                         ->prependStylesheet($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css')
                         ->prependStylesheet($this->basePath() . '/css/font-awesome.css')
                         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
@@ -63,23 +63,22 @@
             </div>
             <!-- Horizontal menu  -->
             <div class="navbar horizontal-nav center-block" role="navigation">
+                <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav'); ?>
                 <ul class="nav navbar-nav">
-                    <li><a href="#" class="hover-shadow">Галерея <span class="glyphicon glyphicon-picture"></span></a></li>
-                    <li><a href="#" class="hover-shadow">Статьи <span class="glyphicon glyphicon-pencil"></span></a></li>
-                    <li><a href="#" class="hover-shadow">Форум <span class="glyphicon glyphicon-comment"></span></a></li>
-                    <li><a href="#" class="hover-shadow">Оплата и доставка <span class="glyphicon glyphicon-shopping-cart"></a></li>
-                    <li><a href="#" class="hover-shadow">Контакты <span class="glyphicon glyphicon-earphone"></a></li>
-                    <li><a href="" class="md-trigger hover-shadow" data-modal="modal-1">Войти <span class="glyphicon glyphicon-user"></a></li>
-
+                    <?php if(!$this->zfcUserIdentity()): ?>
+                        <li><a href="<?php echo $this->url('zfcuser/login'); ?>" class="float-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
+                    <?php else: ?>
+                        <li><a href="<?php echo $this->url('zfcuser/logout'); ?>" class="float-shadow logout">Выйти <span class="glyphicon glyphicon-user"></a></li>
+                    <?php endif ?>
                     <!--Не забыть-->
-                    <li><a href="/product" id="modal" class="hover-shadow">Товары </a></li>
+                    <li><a href="<?php echo $this->url('product');?>" id="modal" class="float-shadow">Товары </a></li>
                     <!--убрать-->
                 </ul>
             </div><!-- /Horizontal menu  -->
             <!-- Search and Cart -->
             <div class="content row">
                 <div class="col col-lg-9">
-                    <form method="post" action="#" id="main-search" role="search">
+                    <form method="post" action="/" id="main-search" name="main-search" role="search">
                         <div class="form-group">
                             <input type="search" class="form-control search-input" placeholder="Искать...">
                             <span class="input-group-btn">
@@ -91,7 +90,7 @@
                     </form>
                 </div>
                 <div class="col col-lg-3">
-                    <a href="/cart" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span>Корзина (товаров: 0)</a>
+                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span>Корзина (товаров: 0)</a>
                 </div>
             </div><!-- /Search and Cart -->
 
@@ -101,11 +100,5 @@
             </footer>
         </div> <!-- /container -->
         <a href="#" class="feedback hidden-sm hidden-xs">Обратная связь</a>
-        <!-- login -->
-        <div class="md-modal md-effect-1" id="modal-1">
-            <?php echo $this->ZfcUserLoginWidget(); ?>
-        </div><!-- /login -->
-        <!-- the overlay element -->
-        <div class="md-overlay"></div><!-- /the overlay element -->
     </body>
 </html>
