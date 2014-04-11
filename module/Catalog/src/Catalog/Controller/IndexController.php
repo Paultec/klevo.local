@@ -16,30 +16,32 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        $items = $this->getEntityManager()
-            ->getRepository('\Catalog\Entity\Category')
-            ->findBy(array());
-
-        $categoryList = array();
-
-        foreach ($items as $item) {
-            $categoryList[] = $item->getArrayCopy();
-        }
-
-        $brands = $this->getEntityManager()
-            ->getRepository('\Catalog\Entity\Brand')
-            ->findBy(array());
-
-        $brandList = array();
-
-        foreach ($brands as $brand) {
-            $brandList[] = $brand->getArrayCopy();
-        }
+        $brandList    = $this->getLoop('Catalog\Entity\Brand');
+        $categoryList = $this->getLoop('Catalog\Entity\Category');
 
         return new ViewModel(array(
             'brandList'    => $brandList,
             'categoryList' => $categoryList,
         ));
+    }
+
+    /**
+     * @param $repository
+     * @return array
+     */
+    protected function getLoop($repository)
+    {
+        $items = $this->getEntityManager()
+            ->getRepository($repository)
+            ->findBy(array());
+
+        $tmpArray = array();
+
+        foreach ($items as $item) {
+            $tmpArray[] = $item->getArrayCopy();
+        }
+
+        return $tmpArray;
     }
 
     /**
