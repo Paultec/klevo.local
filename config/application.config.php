@@ -31,10 +31,10 @@ return array(
             './vendor'
             ),
         'config_glob_paths' => array('config/autoload/{,*.}{global,local}.php'),
-        'config_cache_enabled'     => true,
-        'config_cache_key'         => md5('config'),
-        'module_map_cache_enabled' => true,
-        'module_map_cache_key'     => md5('module_map'),
-        'cache_dir'                => './data/cache',
+//        'config_cache_enabled'     => true,
+//        'config_cache_key'         => md5('config'),
+//        'module_map_cache_enabled' => true,
+//        'module_map_cache_key'     => md5('module_map'),
+//        'cache_dir'                => './data/cache',
         )
     );
