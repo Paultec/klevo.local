@@ -6,6 +6,9 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+    const BRAND_ENTITY    = 'Catalog\Entity\Brand';
+    const CATEGORY_ENTITY = 'Catalog\Entity\Category';
+
     /**
      * @var null|object
      */
@@ -16,20 +19,50 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        $brandList    = $this->getLoop('Catalog\Entity\Brand');
-        $categoryList = $this->getLoop('Catalog\Entity\Category');
+        if (!$this->hasItem('brands') && !$this->hasItem('categories')) {
+            $this->getLoop(self::BRAND_ENTITY, 'brands');
+            $this->getLoop(self::CATEGORY_ENTITY, 'categories');
+        }
 
         return new ViewModel(array(
-            'brandList'    => $brandList,
-            'categoryList' => $categoryList,
+            'brandList'    => $this->getFromCache('brands'),
+            'categoryList' => $this->getFromCache('categories'),
         ));
     }
 
     /**
-     * @param $repository
-     * @return array
+     * @param $item
+     * @return mixed|string
      */
-    protected function getLoop($repository)
+    protected function getFromCache($item)
+    {
+        if ($this->hasItem($item)) {
+            $result = $this->getServiceLocator()->get('filesystem')->getItem($item);
+
+            return unserialize($result);
+        }
+
+        return 'There is no such key!';
+    }
+
+    /**
+     * @param $item
+     * @return bool
+     */
+    protected function hasItem($item)
+    {
+        if ($this->getServiceLocator()->get('filesystem')->hasItem($item)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $repository
+     * @param $cacheKey
+     */
+    protected function getLoop($repository, $cacheKey)
     {
         $items = $this->getEntityManager()
             ->getRepository($repository)
@@ -41,7 +74,10 @@ class IndexController extends AbstractActionController
             $tmpArray[] = $item->getArrayCopy();
         }
 
-        return $tmpArray;
+        $this->getServiceLocator()->get('filesystem')
+            ->setItem($cacheKey, serialize($tmpArray));
+
+        return;
     }
 
     /**
