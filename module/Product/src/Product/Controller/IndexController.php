@@ -9,15 +9,20 @@ use Cart;
 
 class IndexController extends AbstractActionController
 {
+    const PRODUCT_ENTITY = 'Product\Entity\Product';
 
+    /**
+     * @var null|object
+     */
+    protected $em;
+
+    /**
+     * @return ViewModel
+     */
     public function indexAction()
     {
-        $em = $this
-            ->getServiceLocator()
-            ->get('Doctrine\ORM\EntityManager');
-
-        $productList = $em
-            ->getRepository('\Product\Entity\Product')
+        $productList = $this->getEntityManager()
+            ->getRepository(self::PRODUCT_ENTITY)
             ->findBy(array());
 
         return new ViewModel(array(
@@ -25,6 +30,17 @@ class IndexController extends AbstractActionController
         ));
     }
 
+    /**
+     * @return object
+     */
+    public function getEntityManager()
+    {
+        if (null === $this->em) {
+            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        }
+
+        return $this->em;
+    }
 
 }
 

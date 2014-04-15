@@ -194,4 +194,21 @@ $(function(){
      *******************************************************************************/
     $('[data-toggle="tooltip"]').tooltip({animation: true});
 
+    /******************************************************************************
+     file upload
+     *******************************************************************************/
+    var excel_file_input  = $('.form_wrap').find('[type="file"]'),
+        excel_btn         = $('.excel-file-button').attr('disabled', true);
+
+    excel_file_input.on('change', function(){
+        if($(this).val().indexOf('xls') > 0 || $(this).val().indexOf('xlsx') > 0) {
+            setExcelUploadActive();
+        } else {
+            excel_btn.attr('disabled', true);
+        }
+    });
+
+    function setExcelUploadActive() {
+        excel_btn.attr('disabled', false);
+    }
 });
