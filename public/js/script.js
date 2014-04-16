@@ -197,11 +197,11 @@ $(function(){
     /******************************************************************************
      file upload
      *******************************************************************************/
-    var excel_file_input  = $('.form_wrap').find('[type="file"]'),
+    var excel_file_input  = $('.form_wrap').find('[type="file"]').val(''),
         excel_btn         = $('.excel-file-button').attr('disabled', true);
 
     excel_file_input.on('change', function(){
-        if($(this).val().indexOf('xls') > 0 || $(this).val().indexOf('xlsx') > 0) {
+        if($(this).val().indexOf('.xls') > 0 || $(this).val().indexOf('.xlsx') > 0) {
             setExcelUploadActive();
         } else {
             excel_btn.attr('disabled', true);
