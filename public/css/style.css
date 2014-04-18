@@ -4,6 +4,14 @@ fonts (16 18 20 22 24 26 28 36 48)
 @import url(http://fonts.googleapis.com/css?family=Noto+Serif&subset=latin,cyrillic);
 @import url(http://fonts.googleapis.com/css?family=Lemon);
 
+/******************************************************************************
+main
+*******************************************************************************/
+html {
+    position: relative;
+    min-height: 100%;
+}
+
 body {
     background: #ECEBE7 url("../img/misc/bg.png");
 }
@@ -13,7 +21,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .container {
+    margin-bottom: 60px;
+}
 
+/******************************************************************************
+footer
+*******************************************************************************/
+#footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    padding-top: 20px;
 }
 
 /******************************************************************************
