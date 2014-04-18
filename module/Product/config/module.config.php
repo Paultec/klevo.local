@@ -12,8 +12,45 @@ return array(
                     ),
                 ),
             ),
+
+            'fileupload' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/file-upload',
+                    'defaults' => array(
+                        'controller'    => 'Product\Controller\Upload',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'success' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/success',
+                            'defaults' => array(
+                                'controller'    => 'Product\Controller\Upload',
+                                'action'        => 'success',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+
         ),
     ),
+
+    'translator' => array(
+        'locale' => 'ru_RU',
+        'translation_file_patterns' => array(
+            array(
+                'type'     => 'gettext',
+                'base_dir' => __DIR__ . '/../language',
+                'pattern'  => '%s.mo',
+            ),
+        ),
+    ),
+
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
