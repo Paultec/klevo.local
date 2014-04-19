@@ -7,7 +7,7 @@ use Zend\View\Model\ViewModel;
 class IndexController extends AbstractActionController
 {
     const BRAND_ENTITY    = 'Catalog\Entity\Brand';
-    const CATEGORY_ENTITY = 'Catalog\Entity\Category';
+    const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
 
     /**
      * @var null|object

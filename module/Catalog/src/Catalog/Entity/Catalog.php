@@ -5,12 +5,12 @@ namespace Catalog\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Brand
+ * Catalog
  *
- * @ORM\Table(name="brand")
+ * @ORM\Table(name="catalog", indexes={@ORM\Index(name="id_parent", columns={"idParent"})})
  * @ORM\Entity
  */
-class Brand
+class Catalog
 {
     /**
      * @var integer
@@ -28,7 +28,15 @@ class Brand
      */
     private $name;
 
-
+    /**
+     * @var \Catalog\Entity\Catalog
+     *
+     * @ORM\ManyToOne(targetEntity="Catalog\Entity\Catalog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idParent", referencedColumnName="id")
+     * })
+     */
+    private $idParent;
 
     /**
      * Get id
@@ -44,7 +52,7 @@ class Brand
      * Set name
      *
      * @param string $name
-     * @return Brand
+     * @return Catalog
      */
     public function setName($name)
     {
@@ -61,6 +69,29 @@ class Brand
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set idParent
+     *
+     * @param \Catalog\Entity\Catalog $idParent
+     * @return Catalog
+     */
+    public function setIdParent(\Catalog\Entity\Catalog $idParent = null)
+    {
+        $this->idParent = $idParent;
+
+        return $this;
+    }
+
+    /**
+     * Get idParent
+     *
+     * @return \Catalog\Entity\Catalog
+     */
+    public function getIdParent()
+    {
+        return $this->idParent;
     }
 
     /**
