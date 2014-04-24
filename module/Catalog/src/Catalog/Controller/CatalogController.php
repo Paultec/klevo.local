@@ -64,6 +64,9 @@ class CatalogController extends AbstractActionController
         ));
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function editAction()
     {
         $id = (int)$this->params()->fromRoute('id', 0);
@@ -109,6 +112,9 @@ class CatalogController extends AbstractActionController
         ));
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function deleteAction()
     {
         $id = (int) $this->params()->fromRoute('id', 0);
