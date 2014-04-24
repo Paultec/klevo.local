@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Brand
  *
- * @ORM\Table(name="brand")
+ * @ORM\Table(name="brand", indexes={@ORM\Index(name="idStatus", columns={"idStatus"})})
  * @ORM\Entity
  */
 class Brand
@@ -27,6 +27,16 @@ class Brand
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
+
+    /**
+     * @var \Data\Entity\Status
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Status")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idStatus", referencedColumnName="id")
+     * })
+     */
+    private $idStatus;
 
     /**
      * Get id
@@ -62,6 +72,29 @@ class Brand
     }
 
     /**
+     * Set idStatus
+     *
+     * @param \Data\Entity\Status $idStatus
+     * @return Brand
+     */
+    public function setIdStatus(\Data\Entity\Status $idStatus = null)
+    {
+        $this->idStatus = $idStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatus
+     *
+     * @return \Data\Entity\Status
+     */
+    public function getIdStatus()
+    {
+        return $this->idStatus;
+    }
+	
+	/**
      * @return array
      */
     public function getArrayCopy()
@@ -76,7 +109,8 @@ class Brand
      */
     public function populate($data = array())
     {
-        $this->id   = $data['id'];
-        $this->name = $data['name'];
+        $this->id   	= $data['id'];
+        $this->name 	= $data['name'];
+		$this->idStatus = $data['idStatus'];
     }
 }

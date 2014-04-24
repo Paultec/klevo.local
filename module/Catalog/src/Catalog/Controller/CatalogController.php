@@ -12,6 +12,9 @@ use Catalog\Model\Catalog;
 
 class CatalogController extends AbstractActionController
 {
+    const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
+    const STATUS_ENTITY = 'Data\Entity\Status';
+
     /**
      * @var
      */
@@ -22,7 +25,7 @@ class CatalogController extends AbstractActionController
      */
     public function indexAction()
     {
-        $re = $this->getEntityManager()->getRepository('Catalog\Entity\Catalog');
+        $re = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY);
         $categories = $re->findAll();
 
         return new ViewModel(array(
@@ -46,7 +49,7 @@ class CatalogController extends AbstractActionController
             if ($form->isValid()) {
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
-                    find('Catalog\Entity\Catalog', $postData['idParent']);
+                    find(self::CATEGORY_ENTITY, $postData['idParent']);
 
                 $catalog->populate($postData);
 
@@ -75,7 +78,7 @@ class CatalogController extends AbstractActionController
             return $this->redirect()->toRoute('category');
         }
 
-        $catalog = $this->getEntityManager()->find('Catalog\Entity\Catalog', $id);
+        $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
 
         $form = $this->getForm();
         $form->setData($catalog->getArrayCopy());
@@ -92,7 +95,7 @@ class CatalogController extends AbstractActionController
             if ($form->isValid()) {
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
-                    find('Catalog\Entity\Catalog', $postData['idParent']);
+                    find(self::CATEGORY_ENTITY, $postData['idParent']);
 
                 $catalog->populate($postData);
 
@@ -115,7 +118,7 @@ class CatalogController extends AbstractActionController
     /**
      * @return \Zend\Http\Response|ViewModel
      */
-    public function deleteAction()
+    public function hideAction()
     {
         $id = (int) $this->params()->fromRoute('id', 0);
 
@@ -126,13 +129,22 @@ class CatalogController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
 
-            $del = $request->getPost('del', 'Нет');
+            $hide = $request->getPost('hide', 'Нет');
 
-            if ($del == 'Да') {
+            if ($hide == 'Да') {
                 $id = (int)$request->getPost('id');
-                $category = $this->getEntityManager()->find('Catalog\Entity\Catalog', $id);
+                $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
+
+                if (is_null($category->getIdStatus()) || ($category->getIdStatus()->getId() === 3)) {
+                    $category->setIdStatus($this->getEntityManager()->
+                        find(self::STATUS_ENTITY, $id = 4));
+                } else {
+                    $category->setIdStatus($this->getEntityManager()->
+                        find(self::STATUS_ENTITY, $id = 3));
+                }
+
                 if ($category) {
-                    $this->getEntityManager()->remove($category);
+                    $this->getEntityManager()->persist($category);
                     $this->getEntityManager()->flush();
                 }
             }
@@ -143,9 +155,46 @@ class CatalogController extends AbstractActionController
 
         return new ViewModel(array(
             'id'       => $id,
-            'category' => $this->getEntityManager()->find('Catalog\Entity\Catalog', $id)
+            'category' => $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id)
         ));
     }
+
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
+//    public function deleteAction()
+//    {
+//        $id = (int) $this->params()->fromRoute('id', 0);
+//
+//        if (!$id) {
+//            return $this->redirect()->toRoute('category');
+//        }
+//
+//        $request = $this->getRequest();
+//        if ($request->isPost()) {
+//
+//            $del = $request->getPost('del', 'Нет');
+//
+//            if ($del == 'Да') {
+//                $id = (int)$request->getPost('id');
+//                $category = $this->getEntityManager()
+//                    ->find(self::CATEGORY_ENTITY, $id);
+//                if ($category) {
+//                    $this->getEntityManager()->remove($category);
+//                    $this->getEntityManager()->flush();
+//                }
+//            }
+//
+//            // Redirect to list of category
+//            return $this->redirect()->toRoute('category');
+//        }
+//
+//        return new ViewModel(array(
+//            'id'       => $id,
+//            'category' => $this->getEntityManager()
+//                    ->find(self::CATEGORY_ENTITY, $id)
+//        ));
+//    }
 
     /**
      * @return array
@@ -153,7 +202,7 @@ class CatalogController extends AbstractActionController
     protected function setOptionItems()
     {
         $categories = $this->getEntityManager()
-            ->getRepository('Catalog\Entity\Catalog')->findAll();
+            ->getRepository(self::CATEGORY_ENTITY)->findAll();
 
         $option_arr = array();
 

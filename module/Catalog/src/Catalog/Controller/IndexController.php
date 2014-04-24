@@ -19,7 +19,7 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        if (!$this->hasItem('brands') && !$this->hasItem('categories')) {
+        if (!$this->hasCacheItem('brands') && !$this->hasCacheItem('categories')) {
             $this->getLoop(self::BRAND_ENTITY, 'brands');
             $this->getLoop(self::CATEGORY_ENTITY, 'categories');
         }
@@ -36,7 +36,7 @@ class IndexController extends AbstractActionController
      */
     protected function getFromCache($item)
     {
-        if ($this->hasItem($item)) {
+        if ($this->hasCacheItem($item)) {
             $result = $this->getServiceLocator()->get('filesystem')->getItem($item);
 
             return unserialize($result);
@@ -49,7 +49,7 @@ class IndexController extends AbstractActionController
      * @param $item
      * @return bool
      */
-    protected function hasItem($item)
+    protected function hasCacheItem($item)
     {
         if ($this->getServiceLocator()->get('filesystem')->hasItem($item)) {
             return true;
@@ -66,12 +66,15 @@ class IndexController extends AbstractActionController
     {
         $items = $this->getEntityManager()
             ->getRepository($repository)
-            ->findBy(array());
+            ->findAll();
 
         $tmpArray = array();
 
         foreach ($items as $item) {
-            $tmpArray[] = $item->getArrayCopy();
+            // Если статус NULL или 3 - показать
+            if (is_null($item->getIdStatus()) || ($item->getIdStatus()->getId() == 3)) {
+                $tmpArray[] = $item->getArrayCopy();
+            }
         }
 
         $this->getServiceLocator()->get('filesystem')

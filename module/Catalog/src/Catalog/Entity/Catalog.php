@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Catalog
  *
- * @ORM\Table(name="catalog", indexes={@ORM\Index(name="id_parent", columns={"idParent"})})
+ * @ORM\Table(name="catalog", indexes={@ORM\Index(name="id_parent", columns={"idParent"}), @ORM\Index(name="idStatus", columns={"idStatus"})})
  * @ORM\Entity
  */
 class Catalog
@@ -37,6 +37,16 @@ class Catalog
      * })
      */
     private $idParent;
+
+    /**
+     * @var \Data\Entity\Status
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Status")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idStatus", referencedColumnName="id")
+     * })
+     */
+    private $idStatus;
 
     /**
      * Get id
@@ -87,7 +97,7 @@ class Catalog
     /**
      * Get idParent
      *
-     * @return \Catalog\Entity\Catalog
+     * @return \Catalog\Entity\Catalog 
      */
     public function getIdParent()
     {
@@ -95,12 +105,36 @@ class Catalog
     }
 
     /**
+     * Set idStatus
+     *
+     * @param \Data\Entity\Status $idStatus
+     * @return Catalog
+     */
+    public function setIdStatus(\Data\Entity\Status $idStatus = null)
+    {
+        $this->idStatus = $idStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatus
+     *
+     * @return \Data\Entity\Status
+     */
+    public function getIdStatus()
+    {
+        return $this->idStatus;
+    }
+	
+	/**
      * @return array
      */
     public function getArrayCopy()
     {
         return get_object_vars($this);
     }
+
     /**
      * Populate from an array.
      *
@@ -111,5 +145,6 @@ class Catalog
         $this->id       = $data['id'];
         $this->name     = $data['name'];
         $this->idParent = $data['idParent'];
+		$this->idStatus = $data['idStatus'];
     }
 }

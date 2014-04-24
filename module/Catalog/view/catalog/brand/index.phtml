@@ -18,13 +18,24 @@ $this->headTitle($title);
             <th>Действия</th>
         </tr>
         <?php foreach ($this->brands as $brand) : ?>
-            <tr>
+            <?php
+                if (is_object($brand->getIdStatus())) {
+                    if ($brand->getIdStatus()->getId() != 4) {
+                        $class = '';
+                    } else {
+                        $class = 'hide_row';
+                    }
+                }
+            ?>
+            <tr class="<?php echo $class;?>">
                 <td><?php echo $this->escapeHtml($brand->getName());?></td>
                 <td>
                     <a class="btn btn-primary" href="<?php echo $this->url('brand',
                         array('action'=>'edit', 'id' => $brand->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
-                    <a class="btn btn-danger" href="<?php echo $this->url('brand',
-                        array('action'=>'delete', 'id' => $brand->getId()));?>"><span class="glyphicon glyphicon-remove"></span> Удалить</a>
+                    <a class="btn btn-warning show-hide" href="<?php echo $this->url('brand',
+                        array('action'=>'hide', 'id' => $brand->getId()));?>"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>
+<!--                    <a class="btn btn-danger" href="--><?php //echo $this->url('brand',
+//                        array('action'=>'delete', 'id' => $brand->getId()));?><!--"><span class="glyphicon glyphicon-remove"></span> Удалить</a>-->
                 </td>
             </tr>
         <?php endforeach; ?>

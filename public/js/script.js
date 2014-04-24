@@ -227,6 +227,13 @@ $(function(){
     });
 
     /******************************************************************************
+     show/hide brand and category list
+     *******************************************************************************/
+    $('.hide_row').addClass('text-muted')
+                  .find('a').css('opacity', 0.4).end()
+                  .find('.show-hide').html('<span class="glyphicon glyphicon glyphicon-eye-open"></span> Показать');
+
+    /******************************************************************************
      file upload
      *******************************************************************************/
     var excel_file_input  = $('.form_wrap').find('[type="file"]').val(''),

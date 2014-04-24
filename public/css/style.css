@@ -402,3 +402,10 @@ login & register wrap div style
 .back:hover {
     font-weight: bold;
 }
+
+/******************************************************************************
+ identity button width in table
+ *******************************************************************************/
+.table .btn {
+    min-width: 105px;
+}

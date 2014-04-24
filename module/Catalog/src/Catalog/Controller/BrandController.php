@@ -13,6 +13,9 @@ use Catalog\Model\Brand;
 
 class BrandController extends AbstractActionController
 {
+    const BRAND_ENTITY  = 'Catalog\Entity\Brand';
+    const STATUS_ENTITY = 'Data\Entity\Status';
+
     /**
      * @var
      */
@@ -23,7 +26,7 @@ class BrandController extends AbstractActionController
      */
     public function indexAction()
     {
-        $re = $this->getEntityManager()->getRepository('Catalog\Entity\Brand');
+        $re = $this->getEntityManager()->getRepository(self::BRAND_ENTITY);
         $brands = $re->findAll();
 
         return new ViewModel(array(
@@ -70,7 +73,7 @@ class BrandController extends AbstractActionController
             return $this->redirect()->toRoute('brand');
         }
 
-        $brand = $this->getEntityManager()->find('Catalog\Entity\Brand', $id);
+        $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $id);
 
         $form = $this->getForm();
         $form->setData($brand->getArrayCopy());
@@ -91,14 +94,14 @@ class BrandController extends AbstractActionController
 
         return new ViewModel(array(
             'form' => $form,
-            'id' => $id
+            'id'   => $id
         ));
     }
 
     /**
-     * @return ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
-    public function deleteAction()
+    public function hideAction()
     {
         $id = (int) $this->params()->fromRoute('id', 0);
 
@@ -109,13 +112,22 @@ class BrandController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
 
-            $del = $request->getPost('del', 'Нет');
+            $hide = $request->getPost('hide', 'Нет');
 
-            if ($del == 'Да') {
+            if ($hide == 'Да') {
                 $id = (int)$request->getPost('id');
-                $brand = $this->getEntityManager()->find('Catalog\Entity\Brand', $id);
+                $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $id);
+
+                if (is_null($brand->getIdStatus()) || ($brand->getIdStatus()->getId() === 3)) {
+                    $brand->setIdStatus($this->getEntityManager()->
+                        find(self::STATUS_ENTITY, $id = 4));
+                } else {
+                    $brand->setIdStatus($this->getEntityManager()->
+                        find(self::STATUS_ENTITY, $id = 3));
+                }
+
                 if ($brand) {
-                    $this->getEntityManager()->remove($brand);
+                    $this->getEntityManager()->persist($brand);
                     $this->getEntityManager()->flush();
                 }
             }
@@ -126,9 +138,44 @@ class BrandController extends AbstractActionController
 
         return new ViewModel(array(
             'id'    => $id,
-            'brand' => $this->getEntityManager()->find('Catalog\Entity\Brand', $id)
+            'brand' => $this->getEntityManager()->find(self::BRAND_ENTITY, $id)
         ));
     }
+
+    /**
+     * @return ViewModel
+     */
+//    public function deleteAction()
+//    {
+//        $id = (int) $this->params()->fromRoute('id', 0);
+//
+//        if (!$id) {
+//            return $this->redirect()->toRoute('brand');
+//        }
+//
+//        $request = $this->getRequest();
+//        if ($request->isPost()) {
+//
+//            $del = $request->getPost('del', 'Нет');
+//
+//            if ($del == 'Да') {
+//                $id = (int)$request->getPost('id');
+//                $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $id);
+//                if ($brand) {
+//                    $this->getEntityManager()->remove($brand);
+//                    $this->getEntityManager()->flush();
+//                }
+//            }
+//
+//            // Redirect to list of brand
+//            return $this->redirect()->toRoute('brand');
+//        }
+//
+//        return new ViewModel(array(
+//            'id'    => $id,
+//            'brand' => $this->getEntityManager()->find(self::BRAND_ENTITY, $id)
+//        ));
+//    }
 
     /**
      * @return \Zend\Form\ElementInterface|\Zend\Form\FieldsetInterface|\Zend\Form\Form|\Zend\Form\FormInterface

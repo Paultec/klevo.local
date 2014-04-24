@@ -20,12 +20,15 @@ class ShowList extends AbstractHelper
     {
         if (empty($this->newList)) {
             for ($i = 0, $item = count($list); $i < $item; $i++) {
-                if (is_object($list[$i]['idParent'])) {
-                    $this->newList[$i] = $list[$i];
-                    $this->newList[$i]['idParent'] = (int)$list[$i]['idParent']->getId();
-                } else {
-                    $this->newList[$i] = $list[$i];
-                }
+                // Если статус NULL или 3 - показать -> перенес в IndexController
+                //if (is_null($list[$i]['idStatus']) || ($list[$i]['idStatus'] == 3)) {
+                    if (is_object($list[$i]['idParent'])) {
+                        $this->newList[$i] = $list[$i];
+                        $this->newList[$i]['idParent'] = (int)$list[$i]['idParent']->getId();
+                    } else {
+                        $this->newList[$i] = $list[$i];
+                    }
+                //}
             }
 
             /**
