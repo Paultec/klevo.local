@@ -21,6 +21,8 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Catalog\Controller\Index' => 'Catalog\Controller\IndexController',
+            'Catalog\Controller\Brand' => 'Catalog\Controller\BrandController',
+            'Catalog\Controller\Catalog' => 'Catalog\Controller\CatalogController',
         ),
     ),
 
@@ -39,6 +41,36 @@ return array(
                     'defaults' => array(
                         '__NAMESPACE__' => 'Catalog\Controller',
                         'controller'    => 'Index',
+                        'action'        => 'index',
+                    ),
+                ),
+            ),
+            'brand' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/brand[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Catalog\Controller',
+                        'controller'    => 'Brand',
+                        'action'        => 'index',
+                    ),
+                ),
+            ),
+            'category' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/category[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Catalog\Controller',
+                        'controller'    => 'Catalog',
                         'action'        => 'index',
                     ),
                 ),

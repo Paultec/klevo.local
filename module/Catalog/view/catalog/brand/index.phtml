@@ -1,0 +1,32 @@
+<?php
+$title = 'Производители';
+$this->headTitle($title);
+?>
+
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+
+<p>
+    <a class="btn btn-success" href="<?php echo $this->url('brand', array('action'=>'add'));?>"><span class="glyphicon glyphicon-plus"></span> Добавить производителя</a>
+</p>
+    <table class="table">
+        <tr>
+            <th>Название</th>
+            <th>Действия</th>
+        </tr>
+        <?php foreach ($this->brands as $brand) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($brand->getName());?></td>
+                <td>
+                    <a class="btn btn-primary" href="<?php echo $this->url('brand',
+                        array('action'=>'edit', 'id' => $brand->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
+                    <a class="btn btn-danger" href="<?php echo $this->url('brand',
+                        array('action'=>'delete', 'id' => $brand->getId()));?>"><span class="glyphicon glyphicon-remove"></span> Удалить</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</section>

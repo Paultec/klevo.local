@@ -2,74 +2,70 @@
 
 namespace Product\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Product
+ *
+ * @ORM\Table(name="product", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code"})}, indexes={@ORM\Index(name="id_ratio_category", columns={"idCatalog", "idBrand"}), @ORM\Index(name="idBrand", columns={"idBrand"}), @ORM\Index(name="IDX_D34A04ADB9559B5", columns={"idCatalog"})})
  * @ORM\Entity
- * @ORM\Table(name="product")
  */
-
 class Product
 {
     /**
-     * @var int
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @var int
-     * @ORM\Column(type="string")
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    protected $name;
+    private $name;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=11, nullable=false)
      */
-    protected $idCatalog;
+    private $code;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var string
+     *
+     * @ORM\Column(name="img", type="string", length=255, nullable=true)
      */
-    protected $idBrand;
+    private $img;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \Catalog\Entity\Catalog
+     *
+     * @ORM\ManyToOne(targetEntity="Catalog\Entity\Catalog")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idCatalog", referencedColumnName="id")
+     * })
      */
-    protected $code;
+    private $idCatalog;
 
     /**
-     * @param int $code
+     * @var \Catalog\Entity\Brand
+     *
+     * @ORM\ManyToOne(targetEntity="Catalog\Entity\Brand")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idBrand", referencedColumnName="id")
+     * })
      */
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
+    private $idBrand;
 
     /**
-     * @return int
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -77,46 +73,21 @@ class Product
     }
 
     /**
-     * @param int $idBrand
-     */
-    public function setIdBrand($idBrand)
-    {
-        $this->idBrand = $idBrand;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdBrand()
-    {
-        return $this->idBrand;
-    }
-
-    /**
-     * @param int $idCatalog
-     */
-    public function setIdCatalog($idCatalog)
-    {
-        $this->idCatalog = $idCatalog;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdCatalog()
-    {
-        return $this->idCatalog;
-    }
-
-    /**
+     * Set name
+     *
      * @param string $name
+     * @return Product
      */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
+     * Get name
+     *
      * @return string
      */
     public function getName()
@@ -124,5 +95,95 @@ class Product
         return $this->name;
     }
 
+    /**
+     * Set code
+     *
+     * @param string $code
+     * @return Product
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
 
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set img
+     *
+     * @param string $img
+     * @return Product
+     */
+    public function setImg($img)
+    {
+        $this->img = $img;
+
+        return $this;
+    }
+
+    /**
+     * Get img
+     *
+     * @return string
+     */
+    public function getImg()
+    {
+        return $this->img;
+    }
+
+    /**
+     * Set idCatalog
+     *
+     * @param \Catalog\Entity\Catalog $idCatalog
+     * @return Product
+     */
+    public function setIdCatalog(\Catalog\Entity\Catalog $idCatalog = null)
+    {
+        $this->idCatalog = $idCatalog;
+
+        return $this;
+    }
+
+    /**
+     * Get idCatalog
+     *
+     * @return \Catalog\Entity\Catalog
+     */
+    public function getIdCatalog()
+    {
+        return $this->idCatalog;
+    }
+
+    /**
+     * Set idBrand
+     *
+     * @param \Catalog\Entity\Brand $idBrand
+     * @return Product
+     */
+    public function setIdBrand(\Catalog\Entity\Brand $idBrand = null)
+    {
+        $this->idBrand = $idBrand;
+
+        return $this;
+    }
+
+    /**
+     * Get idBrand
+     *
+     * @return \Catalog\Entity\Brand
+     */
+    public function getIdBrand()
+    {
+        return $this->idBrand;
+    }
 }

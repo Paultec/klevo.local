@@ -1,0 +1,34 @@
+<?php
+$title = 'Добавить категорию';
+$this->headTitle($title);
+
+//var_dump($this->categories);
+?>
+
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+    <?php
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('category', array('action' => 'add')));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+    echo '<div class="form-group">' . "\n";
+
+    echo '<label>Список категорий:' . "\n";
+    echo '<select class="form-control" name="idParent">' . "\n";
+    echo $this->partialLoop('catalog/partial/categoryLoop.phtml', $this->categories);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
+
+//    echo $this->formRow($form->get('idParent')->setValueOptions($this->categories)) . "\n";
+    echo $this->formRow($form->get('name')) . "\n";
+    echo $this->formSubmit($form->get('submit')) . "\n";
+
+    echo  '</div>' . "\n";
+    echo $this->form()->closeTag();
+    ?>
+</section>

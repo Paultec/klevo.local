@@ -101,4 +101,15 @@ class Catalog
     {
         return get_object_vars($this);
     }
+    /**
+     * Populate from an array.
+     *
+     * @param array $data
+     */
+    public function populate($data = array())
+    {
+        $this->id       = $data['id'];
+        $this->name     = $data['name'];
+        $this->idParent = $data['idParent'];
+    }
 }
