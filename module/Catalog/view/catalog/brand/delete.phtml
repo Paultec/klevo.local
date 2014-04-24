@@ -22,9 +22,9 @@ $url = $this->url('brand', array(
 
 <form action="<?php echo $url; ?>" method="post">
     <div>
-        <input type="hidden" name="id" value="<?php echo (int)$brand->getId(); ?>" />
-        <input type="submit" class="btn btn-success" name="del" value="Да" />
-        <input type="submit" class="btn btn-danger" name="del" value="Нет" />
+        <input type="hidden" name="id" value="<?php echo (int)$brand->getId(); ?>">
+        <input type="submit" class="btn btn-danger warning" name="del" value="Да">
+        <input type="submit" class="btn btn-success" name="del" value="Нет">
     </div>
 </form>
 </section>

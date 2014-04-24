@@ -1,8 +1,6 @@
 <?php
 namespace Catalog\Controller;
 
-use ArrayObject;
-
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
@@ -46,7 +44,11 @@ class CatalogController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $catalog->populate($form->getData());
+                $postData = $form->getData();
+                $postData['idParent'] = $this->getEntityManager()->
+                    find('Catalog\Entity\Catalog', $postData['idParent']);
+
+                $catalog->populate($postData);
 
                 $this->getEntityManager()->persist($catalog);
                 $this->getEntityManager()->flush();
@@ -59,6 +61,83 @@ class CatalogController extends AbstractActionController
         return new ViewModel(array(
             'form'       => $form,
             'categories' => $this->setOptionItems()
+        ));
+    }
+
+    public function editAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('category');
+        }
+
+        $catalog = $this->getEntityManager()->find('Catalog\Entity\Catalog', $id);
+
+        $form = $this->getForm();
+        $form->setData($catalog->getArrayCopy());
+
+        if (is_null($catalog->getIdParent())) {
+            $parentState = $catalog->getIdParent();
+        } else {
+            $parentState = $catalog->getIdParent()->getId();
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $postData = $form->getData();
+                $postData['idParent'] = $this->getEntityManager()->
+                    find('Catalog\Entity\Catalog', $postData['idParent']);
+
+                $catalog->populate($postData);
+
+                $this->getEntityManager()->persist($catalog);
+                $this->getEntityManager()->flush();
+
+                // Redirect to list of categories
+                $this->redirect()->toRoute('category');
+            }
+        }
+
+        return new ViewModel(array(
+            'form'       => $form,
+            'id'         => $id,
+            'parentState'=> $parentState,
+            'categories' => $this->setOptionItems()
+        ));
+    }
+
+    public function deleteAction()
+    {
+        $id = (int) $this->params()->fromRoute('id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('category');
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $del = $request->getPost('del', 'Нет');
+
+            if ($del == 'Да') {
+                $id = (int)$request->getPost('id');
+                $category = $this->getEntityManager()->find('Catalog\Entity\Catalog', $id);
+                if ($category) {
+                    $this->getEntityManager()->remove($category);
+                    $this->getEntityManager()->flush();
+                }
+            }
+
+            // Redirect to list of category
+            return $this->redirect()->toRoute('category');
+        }
+
+        return new ViewModel(array(
+            'id'       => $id,
+            'category' => $this->getEntityManager()->find('Catalog\Entity\Catalog', $id)
         ));
     }
 
@@ -75,10 +154,12 @@ class CatalogController extends AbstractActionController
         for ($i = 0, $category = count($categories); $i < $category; $i++) {
             $option_arr[$i]['id']   = $categories[$i]->getId();
             $option_arr[$i]['name'] = $categories[$i]->getName();
-
-//            $option_arr[0] = 'Главная';
-//            $option_arr[$categories[$i]->getId()] = $categories[$i]->getName();
         }
+
+        array_unshift($option_arr, array(
+            'id'   => null,
+            'name' => 'Главная'
+        ));
 
         return $option_arr;
     }

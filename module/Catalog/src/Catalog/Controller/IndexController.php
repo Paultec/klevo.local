@@ -19,6 +19,10 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
+        $this->getServiceLocator()->get('filesystem')->removeItem('brands');
+        $this->getServiceLocator()->get('filesystem')->removeItem('categories');
+
+
         if (!$this->hasItem('brands') && !$this->hasItem('categories')) {
             $this->getLoop(self::BRAND_ENTITY, 'brands');
             $this->getLoop(self::CATEGORY_ENTITY, 'categories');

@@ -21,7 +21,7 @@ class Catalog
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":"1"}})
      * @Annotation\Options({"label":"Название: "})
-     * @Annotation\Attributes({"class":"form-control","placeholder":"Название"})
+     * @Annotation\Attributes({"class":"form-control name_input","placeholder":"Название"})
      * @Annotation\Filter({"name":"StringTrim"})
      */
     public $name;

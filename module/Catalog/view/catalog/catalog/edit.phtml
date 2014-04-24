@@ -1,5 +1,5 @@
 <?php
-$title = 'Добавить категорию';
+$title = 'Редактирование категорию';
 $this->headTitle($title);
 ?>
 
@@ -9,23 +9,27 @@ $this->headTitle($title);
 <section class="col col-lg-7">
     <h3><?php echo $this->escapeHtml($title); ?></h3>
     <?php
+
     $form = $this->form;
-    $form->setAttribute('action', $this->url('category', array('action' => 'add')));
+    $form->setAttribute('action', $this->url('category',
+        array('action' => 'edit',
+              'id'     => $this->id,
+        )));
     $form->prepare();
 
     echo $this->form()->openTag($form);
-    echo '<div class="form-group">' . "\n";
+    echo $this->formHidden($form->get('id'));
+
+    echo '<input type="hidden" name="parent_state" value="'. $this->parentState .'">';
 
     echo '<label>Список категорий:' . "\n";
-    echo '<select class="form-control" name="idParent">' . "\n";
+    echo '<select class="form-control category_select" name="idParent">' . "\n";
     echo $this->partialLoop('catalog/partial/categoryLoop.phtml', $this->categories);
     echo '</select>' . "\n";
     echo '</label>' . "\n";
 
-    echo $this->formRow($form->get('name')) . "\n";
-    echo $this->formSubmit($form->get('submit')) . "\n";
-
-    echo  '</div>' . "\n";
+    echo $this->formRow($form->get('name'));
+    echo $this->formSubmit($form->get('submit'));
     echo $this->form()->closeTag();
     ?>
 </section>

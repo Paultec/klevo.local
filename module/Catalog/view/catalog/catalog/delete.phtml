@@ -1,0 +1,30 @@
+<?php
+$title = 'Удалить категорию';
+$this->headTitle($title);
+?>
+
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+
+    <p>Вы действительно хотите удалить
+        <strong>"<?php echo $this->escapeHtml($category->getName()); ?>"</strong>?
+    </p>
+
+    <?php
+    $url = $this->url('category', array(
+        'action' => 'delete',
+        'id'     => $this->id,
+    ));
+    ?>
+
+    <form action="<?php echo $url; ?>" method="post">
+        <div>
+            <input type="hidden" name="id" value="<?php echo (int)$category->getId(); ?>">
+            <input type="submit" class="btn btn-danger warning" name="del" value="Да">
+            <input type="submit" class="btn btn-success" name="del" value="Нет">
+        </div>
+    </form>
+</section>
