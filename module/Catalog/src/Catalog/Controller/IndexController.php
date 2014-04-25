@@ -19,8 +19,11 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        if (!$this->hasCacheItem('brands') && !$this->hasCacheItem('categories')) {
+        if (!$this->hasCacheItem('brands')) {
             $this->getLoop(self::BRAND_ENTITY, 'brands');
+        }
+
+        if (!$this->hasCacheItem('categories')) {
             $this->getLoop(self::CATEGORY_ENTITY, 'categories');
         }
 

@@ -52,6 +52,8 @@ class BrandController extends AbstractActionController
                 $this->getEntityManager()->persist($brand);
                 $this->getEntityManager()->flush();
 
+                $this->clearCache();
+
                 // Redirect to list of brands
                 return $this->redirect()->toRoute('brand');
             }
@@ -86,6 +88,8 @@ class BrandController extends AbstractActionController
 
                 $this->getEntityManager()->persist($brand);
                 $this->getEntityManager()->flush();
+
+                $this->clearCache();
 
                 // Redirect to list of brands
                 $this->redirect()->toRoute('brand');
@@ -132,6 +136,8 @@ class BrandController extends AbstractActionController
                 }
             }
 
+            $this->clearCache();
+
             // Redirect to list of brand
             return $this->redirect()->toRoute('brand');
         }
@@ -167,6 +173,8 @@ class BrandController extends AbstractActionController
 //                }
 //            }
 //
+//             $this->clearCache();
+//
 //            // Redirect to list of brand
 //            return $this->redirect()->toRoute('brand');
 //        }
@@ -176,6 +184,21 @@ class BrandController extends AbstractActionController
 //            'brand' => $this->getEntityManager()->find(self::BRAND_ENTITY, $id)
 //        ));
 //    }
+
+    /**
+     * @param string $cacheKey
+     * @return ViewModel
+     */
+    public function clearCache($cacheKey = 'brands')
+    {
+        if ($this->getServiceLocator()->get('filesystem')->hasItem($cacheKey)) {
+            $this->getServiceLocator()->get('filesystem')->removeItem($cacheKey);
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * @return \Zend\Form\ElementInterface|\Zend\Form\FieldsetInterface|\Zend\Form\Form|\Zend\Form\FormInterface

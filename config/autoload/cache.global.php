@@ -5,7 +5,7 @@ return array(
         'filesystem' => array(
             'adapter' => array(
                 'name'    =>'filesystem', // filesystem, memory, apc are working
-                'options' => array('ttl' => 120), //28800
+                'options' => array('ttl' => 28800), //28800
             ),
             'plugins' => array(
                 'exception_handler' => array(
