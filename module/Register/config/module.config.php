@@ -52,11 +52,11 @@ return array(
         'driver' => array(
             'register_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Register\Entity'),
+                'paths' => array(__DIR__ . '/../src/Register/Entity'),
             ),
             'registerTable_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Register\Entity'),
+                'paths' => array(__DIR__ . '/../src/Register/Entity'),
             ),
 
             'orm_default' => array(

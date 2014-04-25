@@ -26,11 +26,11 @@ return array(
         'driver' => array(
             'cart_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Cart\Entity'),
+                'paths' => array(__DIR__ . '/../src/Cart/Entity'),
             ),
             'cart_table' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Cart\Entity'),
+                'paths' => array(__DIR__ . '/../src/Cart/Entity'),
             ),
 
             'orm_default' => array(

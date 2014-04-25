@@ -4,11 +4,11 @@ return array(
         'driver' => array(
             'catalog_entity' => array(
                 'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Catalog\Entity')
+                'paths' => array(__DIR__ . '/../src/Catalog/Entity')
             ),
             'brand_entity' => array(
                 'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Catalog\Entity')
+                'paths' => array(__DIR__ . '/../src/Catalog/Entity')
             ),
             'orm_default' => array(
                 'drivers' => array(
@@ -20,8 +20,8 @@ return array(
 
     'controllers' => array(
         'invokables' => array(
-            'Catalog\Controller\Index' => 'Catalog\Controller\IndexController',
-            'Catalog\Controller\Brand' => 'Catalog\Controller\BrandController',
+            'Catalog\Controller\Index'   => 'Catalog\Controller\IndexController',
+            'Catalog\Controller\Brand'   => 'Catalog\Controller\BrandController',
             'Catalog\Controller\Catalog' => 'Catalog\Controller\CatalogController',
         ),
     ),

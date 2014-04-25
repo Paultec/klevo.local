@@ -60,7 +60,7 @@ return array(
         'driver' => array(
             'product_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => array(__DIR__ . '\..\src\Product\Entity'),
+                'paths' => array(__DIR__ . '/../src/Product/Entity'),
             ),
 
             'orm_default' => array(
