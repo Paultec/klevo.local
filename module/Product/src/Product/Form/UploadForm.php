@@ -20,7 +20,7 @@ class UploadForm extends Form
                 'type'  => 'file',
             ),
             'options' => array(
-                'label' => 'Загрузить файл',
+                'label' => 'Загрузить Excel файл',
             ),
         ));
 

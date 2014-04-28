@@ -18,11 +18,11 @@
                         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
 
         <!-- Scripts -->
-        <?php echo $this->headScript()
-            ->prependFile($this->basePath() . '/js/holder.min.js') // НЕ забыть удалить!!!
-            ->prependFile($this->basePath() . '/js/script.min.js')
+        <?php echo $this->headScript()->setAllowArbitraryAttributes(true)
+            ->prependFile($this->basePath() . '/js/holder.min.js', 'text/javascript', array('async' => 'async',)) // НЕ забыть удалить!!!
+            ->prependFile($this->basePath() . '/js/script.min.js', 'text/javascript', array('async' => 'async',))
             ->prependFile($this->basePath() . '/js/mosaic.min.js')
-            ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+            ->prependFile($this->basePath() . '/js/bootstrap.min.js', 'text/javascript', array('async' => 'async',))
             ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js')
             ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js')
             ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))

@@ -13,7 +13,7 @@ use Catalog\Model\Catalog;
 class CatalogController extends AbstractActionController
 {
     const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
-    const STATUS_ENTITY = 'Data\Entity\Status';
+    const STATUS_ENTITY   = 'Data\Entity\Status';
 
     /**
      * @var

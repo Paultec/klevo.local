@@ -19,6 +19,7 @@
         "zf-commons/zfc-admin": "dev-master",
         "zf-commons/zfc-user" : "dev-master",
         "zf-commons/zfc-user-doctrine-orm" : "dev-master",
-        "bjyoungblood/bjy-authorize": "1.4.*"
+        "bjyoungblood/bjy-authorize": "1.4.*",
+        "codeplex/phpexcel": "1.7.8"
     }
 }

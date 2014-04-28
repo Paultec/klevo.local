@@ -3,6 +3,7 @@ namespace Product\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+
 use Product\Form;
 
 class UploadController extends AbstractActionController
@@ -12,18 +13,18 @@ class UploadController extends AbstractActionController
      */
     public function indexAction()
     {
-        $this->clearAction();
+        $this->clearUploadDir();
 
         $form = new Form\UploadForm('file-form');
 
         if ($this->getRequest()->isPost()) {
             $data = array_merge_recursive(
-            //$this->getRequest()->getPost()->toArray(),
+//                $this->getRequest()->getPost()->toArray(),
                 $this->getRequest()->getFiles()->toArray()
             );
 
             $form->setData($data);
-            $request = $this->getRequest();
+//            $request = $this->getRequest();
 
             if ($form->isValid()) {
                 //
@@ -39,21 +40,11 @@ class UploadController extends AbstractActionController
     }
 
     /**
-     * @return ViewModel
-     */
-    public function successAction()
-    {
-        return new ViewModel(array(
-            'ok' => 'ok'
-        ));
-    }
-
-    /**
      * @return \Zend\Http\Response
      */
     protected function redirectToSuccessPage()
     {
-        $response = $this->redirect()->toRoute('fileupload/success');
+        $response = $this->redirect()->toRoute('parse');
         $response->setStatusCode(303);
 
         return $response;
@@ -63,7 +54,7 @@ class UploadController extends AbstractActionController
      *
      * @return ViewModel
      */
-    public function clearAction()
+    protected function clearUploadDir()
     {
         /**
          * @todo use cron

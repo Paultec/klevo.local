@@ -186,4 +186,27 @@ class Product
     {
         return $this->idBrand;
     }
+
+    /**
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * Populate from an array.
+     *
+     * @param array $data
+     */
+    public function populate($data = array())
+    {
+        $this->id        = $data['id'];
+        $this->name      = $data['name'];
+        $this->code      = $data['code'];
+        $this->img       = $data['img'];
+        $this->idCatalog = $data['idCatalog'];
+        $this->idBrand   = $data['idBrand'];
+    }
 }

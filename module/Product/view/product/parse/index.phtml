@@ -1,0 +1,14 @@
+<?php
+/**
+ * @todo change for real URI
+ */
+
+//$this->headMeta()->appendHttpEquiv('Refresh',
+//        '5;URL=/file-upload');
+?>
+<section class="col col-lg-7 col-lg-offset-2">
+    <h3>Процесс успешно завершен</h3>
+    <small>Через 5 секунд Вы будете перенаправлены на страницу <a href="<?php echo $this->url('fileupload'); ?>">Загрузка файла</a></small>
+    <p>Добавлено записей: <strong><?php echo $this->insertRow; ?></strong></strong></p>
+    <p>Пропущено записей: <strong><?php echo $this->skipRow; ?></strong></p>
+</section>

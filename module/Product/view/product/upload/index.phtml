@@ -1,6 +1,15 @@
+<style>
+    .upload_warning{color:#c00;font-weight:bold}.waiting{background-color:#ff0;color:#000}
+</style>
 <div class="col col-lg-7 col-lg-offset-2 form_wrap">
+    <p>
+        Запись данных о товарах из Excel документа в Базу данных.<br>
+        Если товар есть в базе данных - он будет пропущен!
+    </p>
+    <p class="upload_warning">
+        Внимание! При большом объеме файла, процесс может занять длительное время!
+    </p>
 <?php
-
 $form = $this->form;
 $form->setAttribute('action', $this->url('fileupload',
     array('controller'=>'upload', 'action' => 'index')));
@@ -15,4 +24,8 @@ echo '<div class="form-group">' .
 echo $this->formSubmit($form->get('submit'));
 echo $this->form()->closeTag();
 ?>
+    <p class="waiting">Ожидайте окончания операции...</p>
 </div>
+<script>
+    var waiting=$(".waiting").css("display","none");var submit=$(".form_wrap").find('input[type="submit"]');submit.on("click",function(){waiting.css("display","block")});
+</script>

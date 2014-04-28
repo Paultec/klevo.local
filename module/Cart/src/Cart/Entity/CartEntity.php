@@ -2,42 +2,39 @@
 
 namespace Cart\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * CartEntity
+ *
+ * @ORM\Table(name="cart_entity", indexes={@ORM\Index(name="idUser", columns={"idUser"})})
  * @ORM\Entity
- * @ORM\Table(name="cart_entity")
  */
-
 class CartEntity
 {
     /**
-     * @var int
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=true)
+     * @var \User\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="User\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idUser", referencedColumnName="id")
+     * })
      */
-    protected $idUser;
+    private $idUser;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $created;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $modified;
-
-    /**
-     * @return int
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -45,17 +42,22 @@ class CartEntity
     }
 
     /**
-     * @param int $id
+     * Set idUser
      *
-     * @return void
+     * @param \User\Entity\User $idUser
+     * @return CartEntity
      */
-    public function setId($id)
+    public function setIdUser(\User\Entity\User $idUser = null)
     {
-        $this->id = $id;
+        $this->idUser = $idUser;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get idUser
+     *
+     * @return \User\Entity\User
      */
     public function getIdUser()
     {
@@ -63,49 +65,22 @@ class CartEntity
     }
 
     /**
-     * @param int $idUser
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * Populate from an array.
      *
-     * @return void
+     * @param array $data
      */
-    public function setIdUser($idUser)
+    public function populate($data = array())
     {
-        $this->idUser = $idUser;
-    }
-
-    /**
-     * @return datetime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * @param datetime $created
-     *
-     * @return void
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * @return datetime
-     */
-    public function getModified()
-    {
-        return $this->modified;
-    }
-
-    /**
-     * @param datetime $modified
-     *
-     * @return void
-     */
-    public function setModified($modified)
-    {
-        $this->modified = $modified;
+        $this->id     = $data['id'];
+        $this->idUser = $data['idUser'];
     }
 }
 

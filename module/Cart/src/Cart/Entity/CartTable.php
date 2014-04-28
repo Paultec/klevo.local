@@ -2,52 +2,63 @@
 
 namespace Cart\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * CartTable
+ *
+ * @ORM\Table(name="cart_table", indexes={@ORM\Index(name="idCartEntity", columns={"idCartEntity"}), @ORM\Index(name="idProduct", columns={"idProduct"})})
  * @ORM\Entity
- * @ORM\Table(name="cart_table")
  */
-
 class CartTable
 {
     /**
-     * @var int
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
-
+     * @var integer
+     *
+     * @ORM\Column(name="qty", type="integer", nullable=false)
      */
-    protected $idCartEntity;
+    private $qty;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
-
+     * @var integer
+     *
+     * @ORM\Column(name="price", type="integer", nullable=false)
      */
-    protected $idProduct;
+    private $price;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")")
+     * @var \Cart\Entity\CartEntity
+     *
+     * @ORM\ManyToOne(targetEntity="Cart\Entity\CartEntity")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idCartEntity", referencedColumnName="id")
+     * })
      */
-    protected $qty;
+    private $idCartEntity;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")")
+     * @var \Product\Entity\Product
+     *
+     * @ORM\ManyToOne(targetEntity="Product\Entity\Product")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idProduct", referencedColumnName="id")
+     * })
      */
-    protected $price;
+    private $idProduct;
 
     /**
-     * @return int
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -55,53 +66,22 @@ class CartTable
     }
 
     /**
-     * @param int $id
+     * Set qty
      *
-     * @return void
+     * @param integer $qty
+     * @return CartTable
      */
-    public function setId($id)
+    public function setQty($qty)
     {
-        $this->id = $id;
+        $this->qty = $qty;
+
+        return $this;
     }
 
     /**
-     * @return int
-     */
-    public function getIdCartEntity()
-    {
-        return $this->idCartEntity;
-    }
-
-    /**
-     * @param int $id
+     * Get qty
      *
-     * @return void
-     */
-    public function setIdCartEntity($idCartEntity)
-    {
-        $this->idCartEntity = $idCartEntity;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdProduct()
-    {
-        return $this->idProduct;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return void
-     */
-    public function setIdProduct($idProduct)
-    {
-        $this->idProduct = $idProduct;
-    }
-
-    /**
-     * @return int
+     * @return integer
      */
     public function getQty()
     {
@@ -109,17 +89,22 @@ class CartTable
     }
 
     /**
-     * @param int $id
+     * Set price
      *
-     * @return void
+     * @param integer $price
+     * @return CartTable
      */
-    public function setQty($qty)
+    public function setPrice($price)
     {
-        $this->qty = $qty;
+        $this->price = $price;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get price
+     *
+     * @return integer
      */
     public function getPrice()
     {
@@ -127,12 +112,71 @@ class CartTable
     }
 
     /**
-     * @param int $id
+     * Set idCartEntity
      *
-     * @return void
+     * @param \Cart\Entity\CartEntity $idCartEntity
+     * @return CartTable
      */
-    public function setPrice($price)
+    public function setIdCartEntity(\Cart\Entity\CartEntity $idCartEntity = null)
     {
-        $this->price = $price;
+        $this->idCartEntity = $idCartEntity;
+
+        return $this;
+    }
+
+    /**
+     * Get idCartEntity
+     *
+     * @return \Cart\Entity\CartEntity
+     */
+    public function getIdCartEntity()
+    {
+        return $this->idCartEntity;
+    }
+
+    /**
+     * Set idProduct
+     *
+     * @param \Product\Entity\Product $idProduct
+     * @return CartTable
+     */
+    public function setIdProduct(\Product\Entity\Product $idProduct = null)
+    {
+        $this->idProduct = $idProduct;
+
+        return $this;
+    }
+
+    /**
+     * Get idProduct
+     *
+     * @return \Product\Entity\Product
+     */
+    public function getIdProduct()
+    {
+        return $this->idProduct;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * Populate from an array.
+     *
+     * @param array $data
+     */
+    public function populate($data = array())
+    {
+        $this->id           = $data['id'];
+        $this->qty          = $data['modified'];
+        $this->price        = $data['price'];
+        $this->idCartEntity = $data['idCartEntity'];
+        $this->idProduct    = $data['idProduct'];
+
     }
 }

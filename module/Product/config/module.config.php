@@ -12,7 +12,6 @@ return array(
                     ),
                 ),
             ),
-
             'fileupload' => array(
                 'type'    => 'Literal',
                 'options' => array(
@@ -22,24 +21,20 @@ return array(
                         'action'        => 'index',
                     ),
                 ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'success' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/success',
-                            'defaults' => array(
-                                'controller'    => 'Product\Controller\Upload',
-                                'action'        => 'success',
-                            ),
-                        ),
+            ),
+            'parse' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route'    => '/parse',
+                    'defaults' => array(
+                        'controller' => 'Product\Controller\Parse',
+                        'action'     => 'index',
                     ),
                 ),
             ),
 
         ),
     ),
-
     'translator' => array(
         'locale' => 'ru_RU',
         'translation_file_patterns' => array(

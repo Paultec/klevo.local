@@ -3,6 +3,7 @@ namespace Catalog\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Serializer\Adapter\PhpSerialize as Serializer;
 
 class IndexController extends AbstractActionController
 {
@@ -39,10 +40,12 @@ class IndexController extends AbstractActionController
      */
     protected function getFromCache($item)
     {
+        $serializer = new Serializer();
+
         if ($this->hasCacheItem($item)) {
             $result = $this->getServiceLocator()->get('filesystem')->getItem($item);
 
-            return unserialize($result);
+            return $serializer->unserialize($result);
         }
 
         return 'There is no such key!';
@@ -67,6 +70,8 @@ class IndexController extends AbstractActionController
      */
     protected function getLoop($repository, $cacheKey)
     {
+        $serializer = new Serializer();
+
         $items = $this->getEntityManager()
             ->getRepository($repository)
             ->findAll();
@@ -81,7 +86,7 @@ class IndexController extends AbstractActionController
         }
 
         $this->getServiceLocator()->get('filesystem')
-            ->setItem($cacheKey, serialize($tmpArray));
+            ->setItem($cacheKey, $serializer->serialize($tmpArray));
 
         return;
     }
