@@ -1,7 +1,7 @@
 <?php
 namespace Product\Controller;
 
-ini_set('max_execution_time', 480);
+ini_set('max_execution_time', 240);
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -46,6 +46,9 @@ class ParseController extends AbstractActionController
         ));
     }
 
+    /**
+     * Insert data
+     */
     protected function insertData()
     {
         $currentData = $this->getCurrentData();
@@ -56,12 +59,12 @@ class ParseController extends AbstractActionController
         $prepareData = array();
 
         foreach ($parse as $dataRow) {
-            $prepareData['name']      = (string)$dataRow[0];
-            $prepareData['idCatalog'] = (object)$this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[1]);
-            $prepareData['idBrand']   = (object)$this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[2]);
-
             if (!isset($currentData[strtolower($dataRow[0])])) {
                 $product = new Product();
+
+                $prepareData['name']      = (string)$dataRow[0];
+                $prepareData['idCatalog'] = (object)$this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[1]);
+                $prepareData['idBrand']   = (object)$this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[2]);
 
                 $product->populate($prepareData);
 
@@ -75,6 +78,9 @@ class ParseController extends AbstractActionController
         }
     }
 
+    /**
+     * @return array
+     */
     protected function getCurrentData()
     {
         $currentData = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findAll();

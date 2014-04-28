@@ -55,6 +55,7 @@ return array(
         'driver' => array(
             'product_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
                 'paths' => array(__DIR__ . '/../src/Product/Entity'),
             ),
 

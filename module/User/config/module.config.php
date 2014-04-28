@@ -5,6 +5,7 @@ return array(
             // overriding zfc-user-doctrine-orm's config
             'zfcuser_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
                 'paths' => array(__DIR__ . '/../src/User/Entity'),
             ),
 

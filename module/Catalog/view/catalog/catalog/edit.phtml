@@ -22,13 +22,13 @@ $this->headTitle($title);
 
     echo '<input type="hidden" name="parent_state" value="'. $this->parentState .'">';
 
-    echo '<label>Список категорий:' . "\n";
+    echo '<label><span>Список категорий:</span>' . "\n";
     echo '<select class="form-control category_select" name="idParent">' . "\n";
     echo $this->partialLoop('catalog/partial/categoryLoop.phtml', $this->categories);
     echo '</select>' . "\n";
-    echo '</label>' . "\n";
+    echo '</label><br>' . "\n";
 
-    echo $this->formRow($form->get('name'));
+    echo $this->formRow($form->get('name')) . '<br>';
     echo $this->formSubmit($form->get('submit'));
     echo $this->form()->closeTag();
     ?>
