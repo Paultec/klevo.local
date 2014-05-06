@@ -2,92 +2,96 @@
 
 namespace Register\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Register
+ *
+ * @ORM\Table(name="register", indexes={@ORM\Index(name="idStoreFrom", columns={"idStoreFrom", "idStoreTo", "idOperation", "idPaymentType", "idUser"}), @ORM\Index(name="idStatus", columns={"idStatus"}), @ORM\Index(name="idStoreTo", columns={"idStoreTo"}), @ORM\Index(name="idUser", columns={"idUser"}), @ORM\Index(name="idOperation", columns={"idOperation"}), @ORM\Index(name="idPaymentType", columns={"idPaymentType"}), @ORM\Index(name="IDX_5FF94014A97DE62B", columns={"idStoreFrom"})})
  * @ORM\Entity
- * @ORM\Table(name="register")
  */
-
 class Register
 {
     /**
-     * @var int
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @var date
-     * @ORM\Column(type="date")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date", nullable=false)
      */
-    protected $date;
+    private $date;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \Data\Entity\Store
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Store")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idStoreFrom", referencedColumnName="id")
+     * })
      */
-    protected $idStoreFrom;
+    private $idStoreFrom;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \Data\Entity\Store
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Store")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idStoreTo", referencedColumnName="id")
+     * })
      */
-    protected $idStoreTo;
+    private $idStoreTo;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \Data\Entity\Status
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Status")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idStatus", referencedColumnName="id")
+     * })
      */
-    protected $idOperation;
+    private $idStatus;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \Data\Entity\Operation
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Operation")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idOperation", referencedColumnName="id")
+     * })
      */
-    protected $idPaymentType;
+    private $idOperation;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \Data\Entity\PaymentType
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\PaymentType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idPaymentType", referencedColumnName="id")
+     * })
      */
-    protected $idStatus;
+    private $idPaymentType;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \User\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="User\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idUser", referencedColumnName="id")
+     * })
      */
-    protected $idUser;
+    private $idUser;
 
     /**
-     * @param mixed $date
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -95,63 +99,45 @@ class Register
     }
 
     /**
-     * @param int $idOperation
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return Register
      */
-    public function setIdOperation($idOperation)
+    public function setDate($date)
     {
-        $this->idOperation = $idOperation;
+        $this->date = $date;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get date
+     *
+     * @return \DateTime
      */
-    public function getIdOperation()
+    public function getDate()
     {
-        return $this->idOperation;
+        return $this->date;
     }
 
     /**
-     * @param int $idPaymentType
+     * Set idStoreFrom
+     *
+     * @param \Data\Entity\Store $idStoreFrom
+     * @return Register
      */
-    public function setIdPaymentType($idPaymentType)
-    {
-        $this->idPaymentType = $idPaymentType;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdPaymentType()
-    {
-        return $this->idPaymentType;
-    }
-
-    /**
-     * @param int $idStatus
-     */
-    public function setIdStatus($idStatus)
-    {
-        $this->idStatus = $idStatus;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIdStatus()
-    {
-        return $this->idStatus;
-    }
-
-    /**
-     * @param int $idStoreFrom
-     */
-    public function setIdStoreFrom($idStoreFrom)
+    public function setIdStoreFrom(\Data\Entity\Store $idStoreFrom = null)
     {
         $this->idStoreFrom = $idStoreFrom;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get idStoreFrom
+     *
+     * @return \Data\Entity\Store
      */
     public function getIdStoreFrom()
     {
@@ -159,15 +145,22 @@ class Register
     }
 
     /**
-     * @param int $idStoreTo
+     * Set idStoreTo
+     *
+     * @param \Data\Entity\Store $idStoreTo
+     * @return Register
      */
-    public function setIdStoreTo($idStoreTo)
+    public function setIdStoreTo(\Data\Entity\Store $idStoreTo = null)
     {
         $this->idStoreTo = $idStoreTo;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get idStoreTo
+     *
+     * @return \Data\Entity\Store
      */
     public function getIdStoreTo()
     {
@@ -175,20 +168,119 @@ class Register
     }
 
     /**
-     * @param int $idUser
+     * Set idStatus
+     *
+     * @param \Data\Entity\Status $idStatus
+     * @return Register
      */
-    public function setIdUser($idUser)
+    public function setIdStatus(\Data\Entity\Status $idStatus = null)
     {
-        $this->idUser = $idUser;
+        $this->idStatus = $idStatus;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get idStatus
+     *
+     * @return \Data\Entity\Status
+     */
+    public function getIdStatus()
+    {
+        return $this->idStatus;
+    }
+
+    /**
+     * Set idOperation
+     *
+     * @param \Data\Entity\Operation $idOperation
+     * @return Register
+     */
+    public function setIdOperation(\Data\Entity\Operation $idOperation = null)
+    {
+        $this->idOperation = $idOperation;
+
+        return $this;
+    }
+
+    /**
+     * Get idOperation
+     *
+     * @return \Data\Entity\Operation
+     */
+    public function getIdOperation()
+    {
+        return $this->idOperation;
+    }
+
+    /**
+     * Set idPaymentType
+     *
+     * @param \Data\Entity\PaymentType $idPaymentType
+     * @return Register
+     */
+    public function setIdPaymentType(\Data\Entity\PaymentType $idPaymentType = null)
+    {
+        $this->idPaymentType = $idPaymentType;
+
+        return $this;
+    }
+
+    /**
+     * Get idPaymentType
+     *
+     * @return \Data\Entity\PaymentType
+     */
+    public function getIdPaymentType()
+    {
+        return $this->idPaymentType;
+    }
+
+    /**
+     * Set idUser
+     *
+     * @param \User\Entity\User $idUser
+     * @return Register
+     */
+    public function setIdUser(\User\Entity\User $idUser = null)
+    {
+        $this->idUser = $idUser;
+
+        return $this;
+    }
+
+    /**
+     * Get idUser
+     *
+     * @return \User\Entity\User
      */
     public function getIdUser()
     {
         return $this->idUser;
     }
 
+    /**
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
 
+    /**
+     * Populate from an array.
+     *
+     * @param array $data
+     */
+    public function populate($data = array())
+    {
+        $this->id   	     = $data['id'];
+        $this->date 	     = $data['date'];
+        $this->idStoreFrom   = $data['idStoreFrom'];
+        $this->idStoreTo     = $data['idStoreTo'];
+        $this->idStatus      = $data['idStatus'];
+        $this->idOperation   = $data['idOperation'];
+        $this->idPaymentType = $data['idPaymentType'];
+        $this->idUser        = $data['idUser'];
+    }
 }

@@ -2,12 +2,40 @@
 return array(
     'router' => array(
         'routes' => array(
-            'product' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+            'edit' => array(
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/product',
+                    'route'    => '/edit-product',
                     'defaults' => array(
                         'controller' => 'Product\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'producer' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/producer[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Product\Controller\Producer',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'product' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/product[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Product\Controller\Product',
                         'action'     => 'index',
                     ),
                 ),

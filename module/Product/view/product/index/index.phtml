@@ -1,34 +1,80 @@
 <?php
 
-use Zend\Form\Form;
-use Zend\Form\Element;
-
-$productList = $this->productList;
-
-//$form = new Form();
+//use Zend\Form\Form;
+//use Zend\Form\Element;
 //
-//$form->prepare();
-//$form->setAttribute('action', $this->url('cart', array('action' => 'add')));
-//$form->setAttribute('method', 'post');
+//$productList = $this->productList;
 //
-//echo $this->form()->openTag($form);
-
-foreach ($productList as $product) {
-    echo '<h3>'.$product->getName().'</h3>';
-    echo '<form class="form-horizontal" method="POST" action="/cart/add">';
-    echo '<input type="hidden" name="idProduct" value="';
-    echo $product->getId();
-    echo '" />';
-    echo '<label><input class="btn-success" type="submit" name="addToCart" value="В корзину" /></label></form>';
-//    $idProduct = new Element\Hidden('idProduct');
-//    $idProduct->setValue($product->getId());
-//    echo $this->formHidden($idProduct);
+////$form = new Form();
+////
+////$form->prepare();
+////$form->setAttribute('action', $this->url('cart', array('action' => 'add')));
+////$form->setAttribute('method', 'post');
+////
+////echo $this->form()->openTag($form);
 //
-//    $submit = new Element\Submit('addToCart');
-//    $submit->setValue('В корзину');
-//    echo $this->formSubmit($submit);
-}
+//foreach ($productList as $product) {
+//    echo '<h3>'.$product->getName().'</h3>';
+//    echo '<form class="form-horizontal" method="POST" action="/cart/add">';
+//    echo '<input type="hidden" name="idProduct" value="';
+//    echo $product->getId();
+//    echo '" />';
+//    echo '<label><input class="btn btn-success" type="submit" name="addToCart" value="В корзину" /></label></form>';
+////    $idProduct = new Element\Hidden('idProduct');
+////    $idProduct->setValue($product->getId());
+////    echo $this->formHidden($idProduct);
+////
+////    $submit = new Element\Submit('addToCart');
+////    $submit->setValue('В корзину');
+////    echo $this->formSubmit($submit);
+//}
+//
+////echo $this->form()->closeTag();
 
-//echo $this->form()->closeTag();
-
+//var_dump($this->productList);
 ?>
+
+<link rel="stylesheet" href="/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="/css/shCore.min.css"/>
+
+<section class="col col-lg-12">
+    <table id="product-table" class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена (коп.)</th>
+            <th>Изображение</th>
+            <th>Операции</th>
+        </tr>
+        </thead>
+
+        <tfoot>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена (коп.)</th>
+            <th>Изображение</th>
+            <th>Операции</th>
+        </tr>
+        </tfoot>
+
+        <tbody>
+        <?php foreach ($this->productList as $product): ?>
+        <tr>
+            <td><?php echo $product->getName(); ?></td>
+            <td><?php echo $product->getDescription(); ?></td>
+            <td><?php echo $product->getPrice(); ?></td>
+            <td><?php echo $product->getImg(); ?></td>
+            <td>&nbsp;</td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</section>
+
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="/js/shCore.min.js"></script>
+<script>
+    $('#product-table').dataTable();
+</script>

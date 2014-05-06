@@ -2,54 +2,53 @@
 
 namespace Data\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Store
+ *
+ * @ORM\Table(name="store", indexes={@ORM\Index(name="idAttrib", columns={"idAttrib"})})
  * @ORM\Entity
- * @ORM\Table(name="store")
  */
-
 class Store
 {
     /**
-     * @var int
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, unique=true)
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    protected $name;
+    private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=1000, unique=true)
+     *
+     * @ORM\Column(name="description", type="string", length=1000, nullable=true)
      */
-    protected $description;
+    private $description;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var \Data\Entity\Attribute
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Attribute")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idAttrib", referencedColumnName="id")
+     * })
      */
-    protected $idAttribute;
-
-
+    private $idAttrib;
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -57,14 +56,21 @@ class Store
     }
 
     /**
+     * Set name
+     *
      * @param string $name
+     * @return Store
      */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
+     * Get name
+     *
      * @return string
      */
     public function getName()
@@ -73,14 +79,21 @@ class Store
     }
 
     /**
+     * Set description
+     *
      * @param string $description
+     * @return Store
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
     }
 
     /**
+     * Get description
+     *
      * @return string
      */
     public function getDescription()
@@ -89,18 +102,46 @@ class Store
     }
 
     /**
-     * @param int $idAttribute
+     * Set idAttrib
+     *
+     * @param \Data\Entity\Attribute $idAttrib
+     * @return Store
      */
-    public function setIdAttribute($idAttribute)
+    public function setIdAttrib(\Data\Entity\Attribute $idAttrib = null)
     {
-        $this->idAttribute = $idAttribute;
+        $this->idAttrib = $idAttrib;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get idAttrib
+     *
+     * @return \Data\Entity\Attribute
      */
-    public function getIdAttribute()
+    public function getIdAttrib()
     {
-        return $this->idAttribute;
+        return $this->idAttrib;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * Populate from an array.
+     *
+     * @param array $data
+     */
+    public function populate($data = array())
+    {
+        $this->id          = $data['id'];
+        $this->name        = $data['name'];
+        $this->description = $data['description'];
+        $this->idAttrib    = $data['idAttrib'];
     }
 }

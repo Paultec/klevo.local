@@ -11,4 +11,7 @@
     <small>Через 5 секунд Вы будете перенаправлены на страницу <a href="<?php echo $this->url('fileupload'); ?>">Загрузка файла</a></small>
     <p>Добавлено записей: <strong><?php echo $this->insertRow; ?></strong></strong></p>
     <p>Пропущено записей: <strong><?php echo $this->skipRow; ?></strong></p>
+    <?php if ($this->errorRow > 0): ?>
+    <p>Неверный формат данных: <strong><?php echo $this->errorRow; ?></strong></p>
+    <?php endif; ?>
 </section>

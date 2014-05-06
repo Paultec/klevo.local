@@ -1,7 +1,7 @@
 <?php
 namespace Product\Controller;
 
-ini_set('max_execution_time', 240);
+ini_set('max_execution_time', 7200);
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -29,6 +29,7 @@ class ParseController extends AbstractActionController
 
     protected $insertRow = 0;
     protected $skipRow   = 0;
+    protected $errorRow  = 0;
 
     /**
      * @return ViewModel
@@ -42,7 +43,8 @@ class ParseController extends AbstractActionController
 
         return new ViewModel(array(
             'insertRow' => $this->insertRow,
-            'skipRow'   => $this->skipRow
+            'skipRow'   => $this->skipRow,
+            'errorRow'  => $this->errorRow
         ));
     }
 
@@ -59,17 +61,24 @@ class ParseController extends AbstractActionController
         $prepareData = array();
 
         foreach ($parse as $dataRow) {
-            if (!isset($currentData[strtolower($dataRow[0])])) {
+            if (!isset($currentData[strtolower($dataRow[6])])) {
                 $product = new Product();
 
-                $prepareData['name']      = (string)$dataRow[0];
-                $prepareData['idCatalog'] = (object)$this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[1]);
-                $prepareData['idBrand']   = (object)$this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[2]);
+                try {
+                    $prepareData['name']      = (string)$dataRow[6];
+                    $prepareData['idCatalog'] = (object)$this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[5]);
+                    $prepareData['idBrand']   = (object)$this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[3]);
+                    $prepareData['price']     = (int)$dataRow[7] * 100;
 
-                $product->populate($prepareData);
+                    $product->populate($prepareData);
 
-                $this->getEntityManager()->persist($product);
-                $this->getEntityManager()->flush();
+                    $this->getEntityManager()->persist($product);
+                    $this->getEntityManager()->flush();
+                } catch(\Exception $e) {
+                    $this->errorRow++;
+
+                    continue;
+                }
 
                 $this->insertRow++;
             } else {
@@ -124,7 +133,6 @@ class ParseController extends AbstractActionController
 
         $this->inputFileName = $file[0];
     }
-
 
     /**
      * @param $file

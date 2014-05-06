@@ -23,7 +23,7 @@ class IndexController extends AbstractActionController
     {
         $productList = $this->getEntityManager()
             ->getRepository(self::PRODUCT_ENTITY)
-            ->findBy(array());
+            ->findAll();
 
         return new ViewModel(array(
             'productList' => $productList,

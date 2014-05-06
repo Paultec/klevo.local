@@ -250,4 +250,20 @@ $(function(){
     function setExcelUploadActive() {
         excel_btn.attr('disabled', false);
     }
+
+    /******************************************************************************
+     product the same height
+     *******************************************************************************/
+    var product = $('.product');
+    var max_height = 0;
+
+    product.each(function(index){
+        var this_height = $(this).height();
+
+        if (this_height > max_height) {
+            max_height = this_height;
+        }
+    });
+
+    product.height(max_height);
 });

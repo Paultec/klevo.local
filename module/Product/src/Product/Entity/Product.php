@@ -31,9 +31,16 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=11, nullable=false)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
-    private $code;
+    private $description;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="price", type="integer", nullable=false)
+     */
+    private $price = '0';
 
     /**
      * @var string
@@ -96,26 +103,49 @@ class Product
     }
 
     /**
-     * Set code
+     * Set description
      *
-     * @param string $code
+     * @param string $description
      * @return Product
      */
-    public function setCode($code)
+    public function setDescription($description)
     {
-        $this->code = $code;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get code
+     * Get description
      *
      * @return string
      */
-    public function getCode()
+    public function getDescription()
     {
-        return $this->code;
+        return $this->description;
+    }
+
+    /**
+     * Set price
+     *
+     * @param integer $price
+     * @return Product
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return integer
+     */
+    public function getPrice()
+    {
+        return $this->price;
     }
 
     /**
@@ -202,11 +232,12 @@ class Product
      */
     public function populate($data = array())
     {
-        $this->id        = $data['id'];
-        $this->name      = $data['name'];
-        $this->code      = $data['code'];
-        $this->img       = $data['img'];
-        $this->idCatalog = $data['idCatalog'];
-        $this->idBrand   = $data['idBrand'];
+        $this->id          = $data['id'];
+        $this->name        = $data['name'];
+        $this->description = $data['description'];
+        $this->price       = $data['price'];
+        $this->img         = $data['img'];
+        $this->idCatalog   = $data['idCatalog'];
+        $this->idBrand     = $data['idBrand'];
     }
 }
