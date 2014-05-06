@@ -15,7 +15,7 @@ return array(
             'producer' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/producer[/:action][/:id]',
+                    'route' => '/producer[/:action]/:id',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',

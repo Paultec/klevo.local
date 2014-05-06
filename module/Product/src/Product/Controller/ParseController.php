@@ -73,6 +73,10 @@ class ParseController extends AbstractActionController
                     $product->populate($prepareData);
 
                     $this->getEntityManager()->persist($product);
+
+                    /**
+                     * @todo change the place of flush
+                     */
                     $this->getEntityManager()->flush();
                 } catch(\Exception $e) {
                     $this->errorRow++;

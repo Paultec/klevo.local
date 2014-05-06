@@ -38,7 +38,7 @@ class Payment
     /**
      * @var \Data\Entity\Store
      *
-     * @ORM\ManyToOne(targetEntity="DoctrineTest\Entity\Store")
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Store")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idStore", referencedColumnName="id")
      * })
