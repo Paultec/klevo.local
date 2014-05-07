@@ -28,7 +28,6 @@ return array(
                             ),
                         ),
                     ),
-
                     'pager' => array(
                         'type'    => 'Segment',
                         'options' => array(
