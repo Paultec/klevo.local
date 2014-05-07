@@ -2,41 +2,46 @@
 return array(
     'router' => array(
         'routes' => array(
-            'edit' => array(
-                'type' => 'Literal',
+            'Product' => array(
+                'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/edit-product',
+                    'route'    => '/product',
                     'defaults' => array(
-                        'controller' => 'Product\Controller\Index',
-                        'action'     => 'index',
+                        '__NAMESPACE__' => 'Product\Controller',
+                        'controller'    => 'Index',
+                        'action'        => 'index',
                     ),
                 ),
-            ),
-            'producer' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/producer[/:action]/:id',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller'    => 'Index',
+                                'action'        => 'index',
+                            ),
+                        ),
                     ),
-                    'defaults' => array(
-                        'controller' => 'Product\Controller\Producer',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
-            'product' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/product[/:action][/:id]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Product\Controller\Product',
-                        'action'     => 'index',
+
+                    'pager' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '[/:page]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller'    => 'Index',
+                                'action'        => 'index',
+                            ),
+                        ),
                     ),
                 ),
             ),
@@ -73,7 +78,11 @@ return array(
             ),
         ),
     ),
-
+    'view_helpers' => array(
+        'factories' => array(
+            'Requesthelper' => 'Product\View\Helper\Factory\RequestHelperFactory',
+        )
+    ),
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',

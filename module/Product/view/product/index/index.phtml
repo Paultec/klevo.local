@@ -1,80 +1,30 @@
-<?php
-
-//use Zend\Form\Form;
-//use Zend\Form\Element;
-//
-//$productList = $this->productList;
-//
-////$form = new Form();
-////
-////$form->prepare();
-////$form->setAttribute('action', $this->url('cart', array('action' => 'add')));
-////$form->setAttribute('method', 'post');
-////
-////echo $this->form()->openTag($form);
-//
-//foreach ($productList as $product) {
-//    echo '<h3>'.$product->getName().'</h3>';
-//    echo '<form class="form-horizontal" method="POST" action="/cart/add">';
-//    echo '<input type="hidden" name="idProduct" value="';
-//    echo $product->getId();
-//    echo '" />';
-//    echo '<label><input class="btn btn-success" type="submit" name="addToCart" value="В корзину" /></label></form>';
-////    $idProduct = new Element\Hidden('idProduct');
-////    $idProduct->setValue($product->getId());
-////    echo $this->formHidden($idProduct);
-////
-////    $submit = new Element\Submit('addToCart');
-////    $submit->setValue('В корзину');
-////    echo $this->formSubmit($submit);
-//}
-//
-////echo $this->form()->closeTag();
-
-//var_dump($this->productList);
-?>
-
-<link rel="stylesheet" href="/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="/css/shCore.min.css"/>
-
-<section class="col col-lg-12">
-    <table id="product-table" class="table table-striped table-hover">
-        <thead>
-        <tr>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Цена (коп.)</th>
-            <th>Изображение</th>
-            <th>Операции</th>
-        </tr>
-        </thead>
-
-        <tfoot>
-        <tr>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Цена (коп.)</th>
-            <th>Изображение</th>
-            <th>Операции</th>
-        </tr>
-        </tfoot>
-
-        <tbody>
-        <?php foreach ($this->productList as $product): ?>
-        <tr>
-            <td><?php echo $product->getName(); ?></td>
-            <td><?php echo $product->getDescription(); ?></td>
-            <td><?php echo $product->getPrice(); ?></td>
-            <td><?php echo $product->getImg(); ?></td>
-            <td>&nbsp;</td>
-        </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+<section class="col col-lg-3">
+    <aside class="filter">
+        <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
+        <!-- Accordion -->
+        <?php echo $this->catalog ;?><!-- /Accordion -->
+</aside>
 </section>
 
-<script src="/js/jquery.dataTables.min.js"></script>
-<script src="/js/shCore.min.js"></script>
-<script>
-    $('#product-table').dataTable();
-</script>
+<section class="col col-lg-9">
+    <?php foreach($this->paginator as $item): ?>
+        <section class="col col-sm-6 col-md-4 product">
+            <div class="thumbnail">
+                <img data-src="holder.js/300x200" alt="300x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MzAweDIwMDwvdGV4dD48L3N2Zz4=" style="width: 300px; height: 200px;">
+                <div class="caption">
+                    <h5><a href=""><?php echo $item->getName(); ?></a></h5>
+                    <p><?php echo $item->getDescription(); ?></p>
+                    <p>
+                        <a href="#" class="btn btn-primary" role="button">Button</a>
+                        <a href="#" class="btn btn-default" role="button">Button</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    <?php endforeach; ?>
+</section>
+<section class="col col-lg-9 col-lg-offset-3 text-center">
+<?php
+    echo (count($this->paginator) > 0) ? $this->paginationControl($this->paginator, 'Sliding', 'product/paginator/pagination.phtml') : "";
+?>
+</section>

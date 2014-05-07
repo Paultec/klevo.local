@@ -3,35 +3,49 @@
 namespace Product\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\View\Model\ViewModel;
-use Cart;
+use Zend\Paginator\Paginator;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use DoctrineModule\Paginator\Adapter\Collection as Adapter;
 
 class IndexController extends AbstractActionController
 {
-    const PRODUCT_ENTITY = 'Product\Entity\Product';
+    const PRODUCT_ENTITY  = 'Product\Entity\Product';
 
     /**
-     * @var null|object
+     * @var
      */
     protected $em;
 
-    /**
-     * @return ViewModel
-     */
     public function indexAction()
     {
-        $productList = $this->getEntityManager()
-            ->getRepository(self::PRODUCT_ENTITY)
-            ->findAll();
+        $result = $this->getEntityManager()
+            ->getRepository(self::PRODUCT_ENTITY)->findBy(array('idCatalog' => 45));
 
-        return new ViewModel(array(
-            'productList' => $productList,
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
+
+        // Pagination
+        $matches = $this->getEvent()->getRouteMatch();
+        $page    = $matches->getParam('page', 1);
+
+        $collection = new ArrayCollection($result);
+        $paginator  = new Paginator(new Adapter($collection));
+        $paginator
+            ->setCurrentPageNumber($page)
+            ->setItemCountPerPage(12);
+
+        $res = new ViewModel(array(
+            'paginator' => $paginator
         ));
+
+        $res->addChild($catalog, 'catalog');
+
+        return $res;
     }
 
     /**
-     * @return object
+     * @return array|object
      */
     public function getEntityManager()
     {
@@ -41,6 +55,4 @@ class IndexController extends AbstractActionController
 
         return $this->em;
     }
-
 }
-

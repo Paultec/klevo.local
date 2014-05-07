@@ -4,10 +4,10 @@ namespace Product\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Paginator\Paginator;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineModule\Paginator\Adapter\Collection as Adapter;
-use Zend\Paginator\Paginator;
 
 class ProducerController extends AbstractActionController
 {
@@ -21,33 +21,27 @@ class ProducerController extends AbstractActionController
 
     public function indexAction()
     {
-        $id = (int)$this->params()->fromRoute('id', 0);
+        $id = (int)$this->params()->fromRoute('id');
 
         $producer = $this->getEntityManager()
             ->getRepository(self::PRODUCT_ENTITY)->findBy(array('idBrand' => $id));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
 
+        // Pagination
+        $collection = new ArrayCollection($producer);
+        $paginator  = new Paginator(new Adapter($collection));
+        $paginator
+            ->setCurrentPageNumber(1)
+            ->setItemCountPerPage(12);
+
         $res = new ViewModel(array(
-            'producerList' => $producer,
-            'routeId'      => $id
+            'paginator' => $paginator
         ));
 
         $res->addChild($catalog, 'catalog');
 
         return $res;
-
-//        $collection = new ArrayCollection(range(1, 101));
-//
-//        $paginator = new Paginator(new Adapter($collection));
-//
-//        $paginator
-//            ->setCurrentPageNumber(1)
-//            ->setItemCountPerPage(12);
-//
-//        return new ViewModel(array(
-//            'paginator' => $paginator
-//        ));
     }
 
     /**
