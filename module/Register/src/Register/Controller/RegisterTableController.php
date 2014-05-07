@@ -13,6 +13,13 @@ class RegisterTableController extends AbstractActionController
         return new ViewModel();
     }
 
+    public function addAction()
+    {
+        $idRegister = $this->params('content');
+        var_dump($idRegister);
+        return new ViewModel(array('idRegister' => $idRegister));
+    }
+
 
 }
 
