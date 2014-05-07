@@ -1,15 +1,65 @@
 <?php
+//
+//$form = $this->form;
+//$form->setAttribute('action', $this->url('register', array('action' => 'add')));
+//$form->prepare();
+//
+//echo $this->form()->openTag($form);
+//echo $this->formCollection($form);
+//echo $this->form()->closeTag();
 
-$form = $this->form;
-$form->setAttribute('action', $this->url(
-    'register',
-    array(
-        'action'     => 'add',
-        'controller' => 'register'
-    )
-));
-$form->prepare();
+$title = 'Журнал движения товаров';
+$this->headTitle($title);
+?>
 
-echo $this->form()->openTag($form);
-echo $this->formCollection($form);
-echo $this->form()->closeTag();
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+    <?php
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('register', array('action' => 'add')));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+    echo '<div class="form-group">' . "\n";
+
+    echo $this->formRow($form->get('date')) . "<br/>";
+
+    echo '<label>От кого:' . "\n";
+    echo '<select class="form-control" name="idStoreFrom">' . "\n";
+    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->storeFrom);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
+
+    echo '<label>Кому:' . "\n";
+    echo '<select class="form-control" name="idStoreTo">' . "\n";
+    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->storeTo);
+    echo '</select>' . "\n";
+    echo '</label>' . "<br/>";
+
+    echo '<label>Тип операции:' . "\n";
+    echo '<select class="form-control" name="idOperation">' . "\n";
+    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->operation);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
+
+    echo '<label>Вид оплаты:' . "\n";
+    echo '<select class="form-control" name="idPaymentType">' . "\n";
+    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->paymentType);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
+
+    echo '<label>Статус операции:' . "\n";
+    echo '<select class="form-control" name="idStatus">' . "\n";
+    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->status);
+    echo '</select>' . "\n";
+    echo '</label>' . "<br/>";
+
+    echo $this->formSubmit($form->get('submit')) . "\n";
+
+    echo  '</div>' . "\n";
+    echo $this->form()->closeTag();
+    ?>
+</section>

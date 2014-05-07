@@ -46,7 +46,7 @@ class CartController extends AbstractActionController
 
         $view = new ViewModel(array(
             'cart' => $cart,
-            'cartTable' => $cartTable,
+            //'cartTable' => $cartTable,
             'currentUser' => $currentUser,
             'conteiner' => $conteiner,
         ));

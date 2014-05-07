@@ -3,7 +3,7 @@ return array(
     'router' => array(
         'routes' => array(
             'register' => array(
-                'type' => 'segment',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/register',
                     'defaults' => array(
@@ -11,33 +11,30 @@ return array(
                         'action'     => 'index',
                     ),
                 ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'register' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/register[/:action]',
-                            'constraints' => array(
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Register\Controller\Register',
-                                'action'     => 'index',
-                            ),
-                        ),
+            ),
+            'register' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/register[/:action]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),
-                    'registerTable' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/registerTable[/:action]',
-                            'constraints' => array(
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Register\Controller\RegisterTable',
-                                'action'     => 'index',
-                            ),
-                        ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\Register',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'register-table' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/register-table[/:action]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\RegisterTable',
+                        'action'     => 'index',
                     ),
                 ),
             ),

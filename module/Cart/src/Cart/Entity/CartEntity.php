@@ -2,39 +2,32 @@
 
 namespace Cart\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CartEntity
- *
- * @ORM\Table(name="cart_entity", indexes={@ORM\Index(name="idUser", columns={"idUser"})})
  * @ORM\Entity
+ * @ORM\Table(name="cart_entity")
  */
+
 class CartEntity
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @var int
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
-     * @var \User\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="User\Entity\User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idUser", referencedColumnName="id")
-     * })
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $idUser;
+    protected $idUser;
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -42,22 +35,17 @@ class CartEntity
     }
 
     /**
-     * Set idUser
+     * @param int $id
      *
-     * @param \User\Entity\User $idUser
-     * @return CartEntity
+     * @return void
      */
-    public function setIdUser(\User\Entity\User $idUser = null)
+    public function setId($id)
     {
-        $this->idUser = $idUser;
-
-        return $this;
+        $this->id = $id;
     }
 
     /**
-     * Get idUser
-     *
-     * @return \User\Entity\User
+     * @return int
      */
     public function getIdUser()
     {
@@ -65,22 +53,14 @@ class CartEntity
     }
 
     /**
-     * @return array
+     * @param int $idUser
+     *
+     * @return void
      */
-    public function getArrayCopy()
+    public function setIdUser($idUser)
     {
-        return get_object_vars($this);
+        $this->idUser = $idUser;
     }
 
-    /**
-     * Populate from an array.
-     *
-     * @param array $data
-     */
-    public function populate($data = array())
-    {
-        $this->id     = $data['id'];
-        $this->idUser = $data['idUser'];
-    }
 }
 
