@@ -3,6 +3,7 @@
 namespace Register\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Stdlib\DateTime;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Authentication\AuthenticationService;
@@ -109,6 +110,9 @@ class RegisterController extends AbstractActionController
 
                 $formData = $form->getData();
                 var_dump($formData);
+
+                $date = new \DateTime($formData['date']);
+                $formData['date'] = $date;
 
                 $formData['idStoreFrom'] = $this->getEntityManager()->
                     find(self::STORE_ENTITY, $formData['idStoreFrom']);
