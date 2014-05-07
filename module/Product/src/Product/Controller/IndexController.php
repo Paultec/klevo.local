@@ -21,7 +21,10 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         $result = $this->getEntityManager()
-            ->getRepository(self::PRODUCT_ENTITY)->findBy(array('idCatalog' => 45));
+            ->getRepository(self::PRODUCT_ENTITY)->findBy(array(
+                    'idCatalog' => 45,
+//                    'idBrand'   => ''
+                ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
 
