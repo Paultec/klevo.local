@@ -5,18 +5,20 @@ namespace Register\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
-use Register\Model\Register;
 use Zend\Authentication\AuthenticationService;
-use Doctrine\ORM\EntityManager;
+
+use Register\Model\Register;
 use Register\Entity\Register as RegisterEntity;
+
+use Doctrine\ORM\EntityManager;
 
 class RegisterController extends AbstractActionController
 {
-    const OPERATION_ENTITY = 'Data\Entity\Operation';
+    const OPERATION_ENTITY    = 'Data\Entity\Operation';
     const PAYMENT_TYPE_ENTITY = 'Data\Entity\PaymentType';
-    const STATUS_ENTITY = 'Data\Entity\Status';
-    const STORE_ENTITY = 'Data\Entity\Store';
-    const USER_ENTITY = 'User\Entity\User';
+    const STATUS_ENTITY       = 'Data\Entity\Status';
+    const STORE_ENTITY        = 'Data\Entity\Store';
+    const USER_ENTITY         = 'User\Entity\User';
 
     /**
      * @var
@@ -141,7 +143,4 @@ class RegisterController extends AbstractActionController
             'status' => $this->setOptionItems(self::STATUS_ENTITY),
         ));
     }
-
-
 }
-
