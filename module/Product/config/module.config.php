@@ -2,7 +2,7 @@
 return array(
     'router' => array(
         'routes' => array(
-            'Product' => array(
+            'product' => array(
                 'type'    => 'Literal',
                 'options' => array(
                     'route'    => '/product',

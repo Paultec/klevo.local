@@ -343,4 +343,15 @@ $(function(){
 
         e.preventDefault();
     });
+
+    $('.product-list').on('click', function(e) {
+        window.location = '/product'
+
+        e.preventDefault();
+    });
+
+    if (location.indexOf('brand') == -1 && location.indexOf('catalog') == -1) {
+        $('.breadcrumb').css('visibility', 'hidden');
+    }
+
 });

@@ -418,3 +418,16 @@ login & register wrap div style
 .thumbnail {
     padding: 5px 20px;
 }
+
+/******************************************************************************
+ product filter
+ *******************************************************************************/
+.product-list {
+    color: #428BCA;
+    text-decoration: underline;
+}
+
+.product-list:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
