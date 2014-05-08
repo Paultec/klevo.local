@@ -330,4 +330,17 @@ $(function(){
 
         e.preventDefault();
     });
+
+    /******************************************************************************
+     breadcrumb
+     *******************************************************************************/
+    $('.breadcrumb').find('a').on('click', function(e) {
+        var href = window.location.href;
+
+        var firstPart = href.slice(0, href.lastIndexOf('/') + 1);
+
+        window.location = firstPart + $(this).attr('href');
+
+        e.preventDefault();
+    });
 });

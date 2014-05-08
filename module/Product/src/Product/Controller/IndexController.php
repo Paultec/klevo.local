@@ -12,6 +12,8 @@ use DoctrineModule\Paginator\Adapter\Collection as Adapter;
 class IndexController extends AbstractActionController
 {
     const PRODUCT_ENTITY  = 'Product\Entity\Product';
+    const BRAND_ENTITY    = 'Catalog\Entity\Brand';
+    const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
 
     /**
      * @var
@@ -23,20 +25,27 @@ class IndexController extends AbstractActionController
         $param = $this->params()->fromQuery();
 
         if (isset($param['brand']) && isset($param['catalog'])) {
-           $query = array(
+            $query = array(
                'idBrand'   => $param['brand'],
                'idCatalog' => $param['catalog']
-           );
+            );
+
+            $brand    = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
+            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
         } elseif (isset($param['brand'])) {
-           $query = array(
+            $query = array(
                'idBrand'   => $param['brand']
-           );
+            );
+
+            $brand    = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
         } elseif (isset($param['catalog'])) {
-           $query = array(
+            $query = array(
                'idCatalog' => $param['catalog']
-           );
+            );
+
+            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
         } else {
-           $query = array();
+            $query = array();
         }
 
         $result = $this->getEntityManager()
@@ -55,7 +64,9 @@ class IndexController extends AbstractActionController
             ->setItemCountPerPage(12);
 
         $res = new ViewModel(array(
-            'paginator' => $paginator
+            'paginator'  => $paginator,
+            'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
+            'result'     => $result
         ));
 
         $res->addChild($catalog, 'catalog');

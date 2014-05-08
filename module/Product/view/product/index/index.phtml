@@ -7,27 +7,38 @@
 </section>
 
 <section class="col col-lg-9">
-    <?php
-        if (is_null($this->paginator->_elements)) {
-            echo '<h3>Извините, такого товара нет в магазине. <br>
-                  Вы можете воспользоваться поиском или изменить критерии выбора.</h3>';
-        }
-    ?>
-    <?php foreach($this->paginator as $item): ?>
-        <section class="col col-sm-6 col-md-4 product">
-            <div class="thumbnail">
-                <img data-src="holder.js/300x200" alt="300x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MzAweDIwMDwvdGV4dD48L3N2Zz4=" style="width: 300px; height: 200px;">
-                <div class="caption">
-                    <h5><a href=""><?php echo $item->getName(); ?></a></h5>
-                    <p><?php echo $item->getDescription(); ?></p>
-                    <p>
-                        <a href="#" class="btn btn-primary" role="button">Button</a>
-                        <a href="#" class="btn btn-default" role="button">Button</a>
-                    </p>
+    <?php if (count($this->breadcrumbs) > 0 && (!empty($this->result))): ?>
+    <ol class="breadcrumb">
+        <?php
+            foreach ($this->breadcrumbs as $key => $value) {
+                if (is_object($value)) {
+                    echo '<li><a href="?' . $key . '=' . $value->getId() . '">' . $value->getName() . '</a></li>';
+                }
+            }
+        ?>
+    </ol>
+    <?php endif ?>
+
+    <?php if (!empty($this->result)): ?>
+        <?php foreach($this->paginator as $item): ?>
+            <section class="col col-sm-6 col-md-4 product">
+                <div class="thumbnail">
+                    <img data-src="holder.js/300x200" alt="300x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MzAweDIwMDwvdGV4dD48L3N2Zz4=" style="width: 300px; height: 200px;">
+                    <div class="caption">
+                        <h5><a href=""><?php echo $item->getName(); ?></a></h5>
+                        <p><?php echo $item->getDescription(); ?></p>
+                        <p>
+                            <a href="#" class="btn btn-primary" role="button">Button</a>
+                            <a href="#" class="btn btn-default" role="button">Button</a>
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
-    <?php endforeach; ?>
+            </section>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <h3>Извините, такого товара нет в магазине. <br>
+            Вы можете воспользоваться поиском или изменить критерии выбора.</h3>
+    <?php endif ?>
 </section>
 <section class="col col-lg-9 col-lg-offset-3 text-center">
 <?php
