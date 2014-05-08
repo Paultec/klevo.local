@@ -51,7 +51,7 @@ class ShowList extends AbstractHelper
 
                     $this->__invoke($this->newList, $elem['id']);
                 } else {
-                    echo '<a href="/product/' . $elem['id'] . '" class="empty">' . $elem['name'] . '</a>' . "\n";
+                    echo '<a href="/product/?catalog=' . $elem['id'] . '" class="empty catalog-link">' . $elem['name'] . '</a>' . "\n";
 
                     $this->__invoke($this->newList, $elem['id']);
                 }

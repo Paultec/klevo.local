@@ -7,6 +7,12 @@
 </section>
 
 <section class="col col-lg-9">
+    <?php
+        if (is_null($this->paginator->_elements)) {
+            echo '<h3>Извините, такого товара нет в магазине. <br>
+                  Вы можете воспользоваться поиском или изменить критерии выбора.</h3>';
+        }
+    ?>
     <?php foreach($this->paginator as $item): ?>
         <section class="col col-sm-6 col-md-4 product">
             <div class="thumbnail">
@@ -25,6 +31,6 @@
 </section>
 <section class="col col-lg-9 col-lg-offset-3 text-center">
 <?php
-    echo (count($this->paginator) > 0) ? $this->paginationControl($this->paginator, 'Sliding', 'product/paginator/pagination.phtml') : "";
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'product/paginator/pagination.phtml') : "";
 ?>
 </section>

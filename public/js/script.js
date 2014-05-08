@@ -266,4 +266,68 @@ $(function(){
     });
 
     product.height(max_height);
+
+    /******************************************************************************
+     url query
+     *******************************************************************************/
+    var location = window.location.search,
+        brand    = $('.brand-link'),
+        catalog  = $('.catalog-link');
+
+    if (location.indexOf('brand') != -1) {
+        catalog.each(function(index){
+            var brand =  location.slice(1, location.length) + '&';
+
+            var href = $(this).attr('href');
+
+            var firstPart = href.slice(0, href.indexOf('?') + 1);
+            var lastPart  = href.slice(href.indexOf('?') + 1, href.length);
+
+            var res = firstPart + brand + lastPart;
+
+            $(this).attr('href', res);
+        });
+    }
+
+    if (location.indexOf('catalog') != -1) {
+        brand.each(function(index){
+            $(this).attr('href', ($(this).attr('href') + '&' + location.slice(1, location.length)));
+        });
+    }
+
+    if (location.indexOf('brand') > 0 && location.indexOf('catalog') > 0) {
+        brand.each(function(index){
+            var href = $(this).attr('href');
+
+            var firstPart = href.slice(0, href.indexOf('&'));
+            var lastPart  = href.slice(href.lastIndexOf('&'), href.length);
+
+            $(this).attr('href', firstPart + lastPart);
+        });
+
+        catalog.each(function(){
+            var href = $(this).attr('href');
+
+            var firstPart = href.slice(0, href.indexOf('&'));
+            var lastPart  = href.slice(href.lastIndexOf('&'), href.length);
+
+            $(this).attr('href', firstPart + lastPart);
+        });
+    }
+
+    /******************************************************************************
+     fix first page pagination
+     *******************************************************************************/
+    var first_page = $('.first-page');
+
+    first_page.on('click', function(e){
+        var href = window.location.href;
+
+        var firstPart = href.slice(0, href.indexOf('?') - 1);
+        var lastPart  = href.slice(href.indexOf('?'), href.length);
+
+        window.location = firstPart + '1' + lastPart;
+
+        e.preventDefault();
+    });
 });

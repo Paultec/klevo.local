@@ -11,7 +11,7 @@ if ($parameterGet != ""){
         <!-- Previous page link -->
         <?php if (isset($this->previous)): ?>
             <li>
-                <a href="<?php echo $url.'/1'; ?>" data-toggle="tooltip" data-placement="top" title="Первая">&lt;&lt;&lt;</a>
+                <a href="<?php echo $url.'/1'?>" class="first-page" data-toggle="tooltip" data-placement="top" title="Первая">&lt;&lt;&lt;</a>
             </li>
             <li>
                 <a href="<?php echo $url.'/'.$this->previous.$parameterGet; ?>" data-toggle="tooltip" data-placement="top" title="Предыдущая">&lt;&lt;</a>

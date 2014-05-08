@@ -20,11 +20,27 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
+        $param = $this->params()->fromQuery();
+
+        if (isset($param['brand']) && isset($param['catalog'])) {
+           $query = array(
+               'idBrand'   => $param['brand'],
+               'idCatalog' => $param['catalog']
+           );
+        } elseif (isset($param['brand'])) {
+           $query = array(
+               'idBrand'   => $param['brand']
+           );
+        } elseif (isset($param['catalog'])) {
+           $query = array(
+               'idCatalog' => $param['catalog']
+           );
+        } else {
+           $query = array();
+        }
+
         $result = $this->getEntityManager()
-            ->getRepository(self::PRODUCT_ENTITY)->findBy(array(
-                    'idCatalog' => 45,
-//                    'idBrand'   => ''
-                ));
+            ->getRepository(self::PRODUCT_ENTITY)->findBy($query);
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
 
