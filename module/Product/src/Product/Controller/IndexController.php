@@ -51,7 +51,7 @@ class IndexController extends AbstractActionController
         $result = $this->getEntityManager()
             ->getRepository(self::PRODUCT_ENTITY)->findBy($query);
 
-        $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 
         // Pagination
         $matches = $this->getEvent()->getRouteMatch();

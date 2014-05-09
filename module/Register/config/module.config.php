@@ -2,16 +2,16 @@
 return array(
     'router' => array(
         'routes' => array(
-            'register' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    'route'    => '/register',
-                    'defaults' => array(
-                        'controller' => 'Register\Controller\Index',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
+//            'register' => array(
+//                'type' => 'Literal',
+//                'options' => array(
+//                    'route'    => '/register',
+//                    'defaults' => array(
+//                        'controller' => 'Register\Controller\Index',
+//                        'action'     => 'index',
+//                    ),
+//                ),
+//            ),
             'register' => array(
                 'type'    => 'Segment',
                 'options' => array(
