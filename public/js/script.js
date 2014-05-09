@@ -323,18 +323,22 @@ $(function(){
     first_page.on('click', function(e){
         var href = window.location.href;
 
-        var firstPart = href.slice(0, href.indexOf('?') - 1);
-        var lastPart  = href.slice(href.indexOf('?'), href.length);
+        if (location.indexOf('brand') > 0 || location.indexOf('catalog') > 0) {
+            var firstPart = href.slice(0, href.lastIndexOf('/') + 1);
+            var lastPart  = href.slice(href.indexOf('?'), href.length);
 
-        window.location = firstPart + '1' + lastPart;
+            window.location = firstPart + '1' + lastPart;
 
-        e.preventDefault();
+            e.preventDefault();
+        }
     });
 
     /******************************************************************************
      breadcrumb
      *******************************************************************************/
-    $('.breadcrumb').find('a').on('click', function(e) {
+    var breadcrumb = $('.breadcrumb');
+
+    breadcrumb.find('a').on('click', function(e) {
         var href = window.location.href;
 
         var firstPart = href.slice(0, href.lastIndexOf('/') + 1);
@@ -351,7 +355,7 @@ $(function(){
     });
 
     if (location.indexOf('brand') == -1 && location.indexOf('catalog') == -1) {
-        $('.breadcrumb').css('visibility', 'hidden');
+        breadcrumb.css('visibility', 'hidden');
     }
 
 });
