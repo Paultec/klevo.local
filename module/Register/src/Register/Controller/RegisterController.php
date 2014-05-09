@@ -90,7 +90,7 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * @return ViewModel
+     * @return
      */
     public function addAction()
     {
@@ -109,7 +109,6 @@ class RegisterController extends AbstractActionController
             if ($form->isValid()){
 
                 $formData = $form->getData();
-                //var_dump($formData);
 
                 $date = new \DateTime($formData['date']);
                 $formData['date'] = $date;
@@ -128,18 +127,14 @@ class RegisterController extends AbstractActionController
                     find(self::USER_ENTITY, $currentUser);
 
                 $registerNote->populate($formData);
-                //var_dump($registerNote);
 
                 $this->getEntityManager()->persist($registerNote);
                 $this->getEntityManager()->flush();
 
                 $idRegister = $registerNote->getId();
-                //var_dump($idRegister);
 
-                $this->forward()->dispatch('Register/Controller/RegisterTable',
+                return $this->forward()->dispatch('Register/Controller/RegisterTable',
                     array('action' => 'add', 'content' => $idRegister));
-                //return $this->redirect()->toRoute('register-table');
-
             }
         }
 
