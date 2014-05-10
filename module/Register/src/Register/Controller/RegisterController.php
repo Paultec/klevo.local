@@ -139,12 +139,12 @@ class RegisterController extends AbstractActionController
         }
 
         return new ViewModel(array(
-            'form'       => $form,
-            'storeFrom' => $this->setOptionItems(self::STORE_ENTITY),
-            'storeTo' => $this->setOptionItems(self::STORE_ENTITY),
-            'operation' => $this->setOptionItems(self::OPERATION_ENTITY),
+            'form'        => $form,
+            'storeFrom'   => $this->setOptionItems(self::STORE_ENTITY),
+            'storeTo'     => $this->setOptionItems(self::STORE_ENTITY),
+            'operation'   => $this->setOptionItems(self::OPERATION_ENTITY),
             'paymentType' => $this->setOptionItems(self::PAYMENT_TYPE_ENTITY),
-            'status' => $this->setOptionItems(self::STATUS_ENTITY),
+            'status'      => $this->setOptionItems(self::STATUS_ENTITY),
         ));
     }
 }

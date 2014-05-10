@@ -17,7 +17,8 @@ class RegisterTableController extends AbstractActionController
     {
         $idRegister = $this->params('content');
 
-        $product = $this->forward()->dispatch('Product\Controller\Index', array('action' => 'index'));
+        $product = $this->forward()->dispatch('Product\Controller\Index',
+            array('action' => 'index', 'externalCall' => true));
 
         $res =  new ViewModel(array(
             'idRegister' => $idRegister

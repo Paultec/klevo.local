@@ -20,10 +20,19 @@ class IndexController extends AbstractActionController
      */
     protected $em;
 
+    /**
+     * @return ViewModel
+     */
     public function indexAction()
     {
+        // Тип вызова (внутренний или внешний через dispatch)
+        // default = false (внутренний)
+        $externalCall = $this->params('externalCall', false);
+
+        // Получение queryString параметров (array)
         $param = $this->params()->fromQuery();
 
+        // Формирование запроса, в зависимости от к-ва параметров
         if (isset($param['brand']) && isset($param['catalog'])) {
             $query = array(
                'idBrand'   => $param['brand'],
@@ -53,15 +62,21 @@ class IndexController extends AbstractActionController
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 
-        // Pagination
-        $matches = $this->getEvent()->getRouteMatch();
-        $page    = $matches->getParam('page', 1);
+        // Если вызов внутренний - формируем pagination
+        if (!$externalCall) {
+            // Pagination
+            $matches = $this->getEvent()->getRouteMatch();
+            $page    = $matches->getParam('page', 1);
 
-        $collection = new ArrayCollection($result);
-        $paginator  = new Paginator(new Adapter($collection));
-        $paginator
-            ->setCurrentPageNumber($page)
-            ->setItemCountPerPage(12);
+            $collection = new ArrayCollection($result);
+            $paginator  = new Paginator(new Adapter($collection));
+            $paginator
+                ->setCurrentPageNumber($page)
+                ->setItemCountPerPage(12);
+        } else {
+            // ...если внешний, без pagination
+            $paginator = null;
+        }
 
         $res = new ViewModel(array(
             'paginator'  => $paginator,
