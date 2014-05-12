@@ -44,6 +44,16 @@ return array(
                     ),
                 ),
             ),
+            'editproduct' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/edit-product',
+                    'defaults' => array(
+                        'controller'    => 'Product\Controller\Edit',
+                        'action'        => 'index',
+                    ),
+                ),
+            ),
             'fileupload' => array(
                 'type'    => 'Literal',
                 'options' => array(
