@@ -45,9 +45,12 @@ return array(
                 ),
             ),
             'editproduct' => array(
-                'type'    => 'Literal',
+                'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/edit-product',
+                    'route'    => '/edit-product[/][/:action]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
                     'defaults' => array(
                         'controller'    => 'Product\Controller\Edit',
                         'action'        => 'index',

@@ -6,9 +6,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Paginator\Paginator;
 
-//use Doctrine\Common\Collections\ArrayCollection;
-//use DoctrineModule\Paginator\Adapter\Collection as Adapter;
-
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
@@ -36,7 +33,7 @@ class IndexController extends AbstractActionController
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
                 WHERE p.idBrand = ' . $param['brand'] .
-                'AND p.idCatalog = ' . $param['catalog']
+                ' AND p.idCatalog = ' . $param['catalog']
             );
 
             $brand    = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
@@ -65,8 +62,7 @@ class IndexController extends AbstractActionController
         $matches = $this->getEvent()->getRouteMatch();
         $page    = $matches->getParam('page', 1);
 
-        $adapter = new DoctrineAdapter(new ORMPaginator($dql));
-
+        $adapter   = new DoctrineAdapter(new ORMPaginator($dql));
         $paginator = new Paginator($adapter);
 
         $paginator
@@ -76,7 +72,6 @@ class IndexController extends AbstractActionController
         $res = new ViewModel(array(
             'paginator'  => $paginator,
             'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
-//            'result'     => $result
         ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));

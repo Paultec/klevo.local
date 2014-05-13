@@ -18,7 +18,8 @@ class EditController extends AbstractActionController
 
     public function indexAction()
     {
-        $type = $this->params('type', 'edit');
+        $type = $this->params('type', 'edit-product');
+        $externalCall = $this->params('externalCall', false);
 
         // Получение queryString параметров (array)
         $param = $this->params()->fromQuery();
@@ -51,15 +52,20 @@ class EditController extends AbstractActionController
         if (!is_null($query)) {
             $result = $this->getEntityManager()
                 ->getRepository(self::PRODUCT_ENTITY)->findBy($query);
+        } else {
+            $result = false;
         }
 
         $res = new ViewModel(array(
-            'type'   => $type,
-            'result' => $result
+            'type'       => $type,
+            'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
+            'result'     => $result
         ));
 
-        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
-        $res->addChild($catalog, 'catalog');
+        if (!$externalCall) {
+            $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+            $res->addChild($catalog, 'catalog');
+        }
 
         return $res;
     }

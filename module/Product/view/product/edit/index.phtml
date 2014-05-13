@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="/css/jquery.dataTables.css">
+<link rel="stylesheet" href="/css/shCore.css">
+
 <section class="col col-lg-3">
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
@@ -6,6 +9,63 @@
         <?php echo $this->catalog ;?><!-- /Accordion -->
     </aside>
 </section>
+
 <section class="col col-lg-9">
-    <h2>Выберите категорию для редактирования.</h2>
+    <?php if (count($this->breadcrumbs) > 0) : ?>
+        <ol class="breadcrumb">
+            <?php
+            foreach ($this->breadcrumbs as $key => $value) {
+                if (is_object($value)) {
+                    echo '<li><a href="?' . $key . '=' . $value->getId() . '">' . $value->getName() . '</a></li>';
+                }
+            }
+            ?>
+        </ol>
+    <?php endif ?>
+    <?php if ($this->result): ?>
+        <table id="product-table" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Изображение</th>
+            <th>Действие</th>
+        </tr>
+        </thead>
+
+        <tfoot>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Изображение</th>
+            <th>Действие</th>
+        </tr>
+        </tfoot>
+        <tbody>
+        <?php foreach($this->result as $item): ?>
+            <tr>
+                <td><?php echo $item->getName(); ?></td>
+                <td><?php echo $item->getDescription(); ?></td>
+                <td><?php echo $item->getPrice(); ?></td>
+                <td><?php echo $item->getImg(); ?></td>
+                <td>&nbsp;</td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+        </table>
+    <?php else: ?>
+        <h2>Выберите категорию для редактирования.</h2>
+    <?php endif ?>
 </section>
+
+<script src="/js/jquery.dataTables.js"></script>
+<script src="/js/shCore.js"></script>
+<script>
+    $('#product-table').dataTable({
+        "language": {
+            "url": "/resources/ru_RU.lg"
+        }
+    });
+</script>
