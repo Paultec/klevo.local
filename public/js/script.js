@@ -320,7 +320,7 @@ $(function(){
      *******************************************************************************/
     var link_type = $('.link-type').data('type');
 
-    if (link_type != '') {
+    if (link_type != '' && link_type !== undefined) {
         brand.each(function(index){
             var href = $(this).attr('href');
 
@@ -380,5 +380,4 @@ $(function(){
     if (location.indexOf('brand') == -1 && location.indexOf('catalog') == -1) {
         breadcrumb.css('visibility', 'hidden');
     }
-
 });
