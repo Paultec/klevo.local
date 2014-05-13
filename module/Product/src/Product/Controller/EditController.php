@@ -18,7 +18,6 @@ class EditController extends AbstractActionController
 
     public function indexAction()
     {
-        $type = $this->params('type', 'edit-product');
         $externalCall = $this->params('externalCall', false);
 
         // Получение queryString параметров (array)
@@ -57,7 +56,7 @@ class EditController extends AbstractActionController
         }
 
         $res = new ViewModel(array(
-            'type'       => $type,
+            'type'       => 'edit-product',
             'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
             'result'     => $result
         ));

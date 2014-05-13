@@ -7,27 +7,29 @@ use Zend\View\Model\ViewModel;
 
 class RegisterTableController extends AbstractActionController
 {
-
     public function indexAction()
     {
-        return new ViewModel();
+        $idRegister = $this->params('content');
+
+        $product = $this->forward()->dispatch('Product\Controller\Edit',
+            array('action' => 'index', 'externalCall' => true));
+
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+
+        $res =  new ViewModel(array(
+            'idRegister' => $idRegister,
+            'product'    => $product,
+            'type'       => 'register-table'
+        ));
+
+        $res->addChild($catalog, 'catalog');
+
+        return $res;
     }
 
     public function addAction()
     {
-        $idRegister = $this->params('content');
-
-        $product = $this->forward()->dispatch('Product\Controller\Index',
-            array('action' => 'index', 'externalCall' => true));
-
-        $res =  new ViewModel(array(
-            'idRegister' => $idRegister
-        ));
-
-        $res->addChild($product, 'product');
-
-        return $res;
-
+        return new ViewModel();
     }
 
 }

@@ -320,7 +320,7 @@ $(function(){
      *******************************************************************************/
     var link_type = $('.link-type').data('type');
 
-    if (link_type == 'edit-product') {
+    if (link_type != '') {
         brand.each(function(index){
             var href = $(this).attr('href');
 

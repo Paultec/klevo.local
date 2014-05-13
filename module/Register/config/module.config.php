@@ -28,7 +28,7 @@ return array(
             'register-table' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/register-table[/:action]',
+                    'route'    => '/register-table[/][/:action][/]',
                     'constraints' => array(
                         'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),
