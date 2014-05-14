@@ -1,13 +1,14 @@
 <section id="accordion">
 
+    <?php echo $this->showList($this->categoryList); ?>
+
+   <hr class="delim">
+
     <div class="accordion">
-    <h3 class="filled">Производители</h3>
+        <h3 class="filled">Производители</h3>
         <div>
             <?php echo $this->partialLoop('catalog/partial/brandLoop.phtml', $this->brandList); ?>
         </div>
     </div>
 
-   <hr class="delim">
-
-    <?php echo $this->showList($this->categoryList); ?>
 </section>
