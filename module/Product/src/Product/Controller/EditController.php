@@ -3,7 +3,10 @@
 namespace Product\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
+
+use GoSession;
 
 class EditController extends AbstractActionController
 {
@@ -18,10 +21,24 @@ class EditController extends AbstractActionController
 
     public function indexAction()
     {
+        $currentSession = new Container();
+
         $externalCall = $this->params('externalCall', false);
 
         // Получение queryString параметров (array)
         $param = $this->params()->fromQuery();
+
+        // Сохранение/подстановка параметров запроса в/из сессии
+        if (isset($currentSession->idBrand) && !isset($param['brand'])) {
+            $param['brand'] = $currentSession->idBrand;
+        } elseif (isset($param['brand'])) {
+            $currentSession->idBrand = $param['brand'];
+        }
+        if (isset($currentSession->idCatalog) && !isset($param['catalog'])) {
+            $param['catalog'] = $currentSession->idCatalog;
+        } elseif (isset($param['catalog'])) {
+            $currentSession->idCatalog = $param['catalog'];
+        }
 
         // Формирование запроса, в зависимости от к-ва параметров
         if (isset($param['brand']) && isset($param['catalog'])) {

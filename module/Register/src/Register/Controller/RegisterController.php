@@ -134,7 +134,7 @@ class RegisterController extends AbstractActionController
                 $idRegister = $registerNote->getId();
 
                 return $this->forward()->dispatch('Register/Controller/RegisterTable',
-                    array('action' => 'add', 'content' => $idRegister));
+                    array('action' => 'index', 'content' => $idRegister));
             }
         }
 
