@@ -22,6 +22,43 @@
 </div>
 <!--Конец блока с информацией о записи в таблице Register-->
 
+<!--Блок с информацией о записи товаров в таблице RegisterTable-->
+<div>Товары:
+    <?php
+    $productList = $this->productList;
+    if ($productList): ;
+    ?>
+    <table id="productList-table" class="table">
+        <thead>
+        <tr>
+            <th>Производитель</th>
+            <th>Категория</th>
+            <th>Название</th>
+            <th>К-во</th>
+            <th>Цена</th>
+            <th>Сумма</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($productList as $item): ?>
+        <tr>
+            <td><?php echo $item->brand; ?></td>
+            <td><?php echo $item->category; ?></td>
+            <td><?php echo $item->getName(); ?></td>
+            <td><?php echo $item->currentQty; ?></td>
+            <td><?php echo $item->currentPrice; ?></td>
+            <td><?php echo $item->currentPrice * $item->currentQty; ?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<!--Конец блока с информацией о записи товаров в таблице RegisterTable-->
+<form method="post" action="add">Нажмите
+    <input type="submit" value="Готово"> если закончили ввод товаров
+</form>
+<?php endif; ?>
+
 <section class="col col-lg-3">
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
@@ -43,12 +80,8 @@
             ?>
         </ol>
     <?php endif ?>
-    <form method="post" action="index">
-        <input type="hidden" name="idRegister" value="<?php echo $register['id']; ?>">
+
     <?php if ($data['result']): ?>
-
-            <input type="submit" value="Готово">
-
         <table id="product-table" class="table table-striped">
             <thead>
             <tr>
@@ -84,7 +117,6 @@
     <?php else: ?>
         <h2>Выберите производителя или категорию для продолжения.</h2>
     <?php endif ?>
-    </form>
 </section>
 
 <script src="/js/jquery.dataTables.js"></script>

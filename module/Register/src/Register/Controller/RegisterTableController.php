@@ -10,18 +10,24 @@ use GoSession;
 
 class RegisterTableController extends AbstractActionController
 {
-    const REGISTER_ENTITY  = 'Register\Entity\Register';
+    const REGISTER_ENTITY     = 'Register\Entity\Register';
     const PRODUCT_QTY_ENTITY  = 'Product\Entity\ProductCurrentQty';
+    const PRODUCT_ENTITY      = 'Product\Entity\Product';
+    const BRAND_ENTITY        = 'Catalog\Entity\Brand';
+    const CATEGORY_ENTITY     = 'Catalog\Entity\Catalog';
 
     /**
      * @var
      */
     protected $em;
 
+    protected $fullName;
+
     public function indexAction()
     {
-        //Сохранение и получение текущего id записи из таблицы Register
         $currentSession = new Container();
+
+        //Сохранение и получение текущего id записи из таблицы Register
         if (isset($currentSession->idRegister)) {
             $idRegister = $currentSession->idRegister;
         } else {
@@ -31,10 +37,27 @@ class RegisterTableController extends AbstractActionController
 
         $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
 
-        $post = $this->getRequest()->getPost();
-        var_dump($post);
-        $post = $this->getRequest()->getPost('idRegister');
-        var_dump($post);
+        // Добавление введенных к-ва и цены в свойства выбранного товара
+        $idProduct = $this->getRequest()->getPost('idProduct');
+        if ($idProduct) {
+            $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+            $currentProduct->currentQty = $this->getRequest()->getPost('qty');
+            $currentProduct->currentPrice = $this->getRequest()->getPost('price');
+            $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $currentProduct->getIdBrand());
+            $currentProduct->brand = $brand->getName();
+            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $currentProduct->getIdCatalog());
+            $currentProduct->category = $this->getFullNameCategory($category->getId());
+        }
+
+        //var_dump($currentProduct);
+        //var_dump($currentSession->productList);
+        if (isset($currentSession->productList)) {
+            $currentSession->productList[] = $currentProduct;
+        } elseif ($currentProduct) {
+            $currentSession->productList = array();
+            $currentSession->productList[] = $currentProduct;
+        }
+        //var_dump($currentSession->idRegister);
 
         $product = $this->forward()->dispatch('Product\Controller\Edit',
             array('action' => 'index', 'externalCall' => true));
@@ -50,14 +73,13 @@ class RegisterTableController extends AbstractActionController
             }
         }
 
-        //var_dump($product->result);
-
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 
         $res =  new ViewModel(array(
             'register' => $register,
             'product'    => $product,
-            'type'       => 'register-table'
+            'type'       => 'register-table',
+            'productList' => $currentSession->productList,
         ));
 
         $res->addChild($catalog, 'catalog');
@@ -68,9 +90,18 @@ class RegisterTableController extends AbstractActionController
     public function addAction()
     {
         $currentSession = new Container();
+
+        var_dump($currentSession->idRegister);
+        $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $currentSession->idRegister);
+        //$productList = $currentSession->productList;
+
+        var_dump($register);
+        //var_dump($productList);
+
         unset($currentSession->idBrand);
         unset($currentSession->idCatalog);
         unset($currentSession->idRegister);
+        unset($currentSession->productList);
         return new ViewModel();
     }
 
@@ -84,6 +115,33 @@ class RegisterTableController extends AbstractActionController
         }
 
         return $this->em;
+    }
+
+    /**
+     * Get full name with parent category
+     *
+     * @return string
+     */
+    public function getFullNameCategory($id)
+    {
+        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
+        $fullName = $category->getName();
+
+        if (null == $category->getIdParent()) {
+            if (!$this->fullName) {
+                $this->fullName = $fullName;
+            }
+            return $this->fullName;
+        } else {
+            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
+            $parentName = $parent->getName();
+            if ($this->fullName) {
+                $this->fullName = $parentName . " :: " . $this->fullName;
+            } else {
+                $this->fullName = $parentName . " :: " . $fullName;
+            }
+            return $this->getFullNameCategory($parent->getId());
+        }
     }
 
 }

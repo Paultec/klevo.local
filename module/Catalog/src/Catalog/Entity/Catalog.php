@@ -147,4 +147,5 @@ class Catalog
         $this->idParent = $data['idParent'];
 		$this->idStatus = $data['idStatus'];
     }
+
 }
