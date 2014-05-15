@@ -12,22 +12,19 @@
 //    var_dump($date);
 //    var_dump($register);
 //    echo 'Дата: ' . $date->date;
-    echo 'От кого: ' . $register['idStoreFrom']->getName();
-    echo 'Кому: ' . $register['idStoreTo']->getName();
+    echo 'От кого: '      . $register['idStoreFrom']->getName();
+    echo 'Кому: '         . $register['idStoreTo']->getName();
     echo 'Тип операции: ' . $register['idOperation']->getName();
     echo 'Форма оплаты: ' . $register['idPaymentType']->getName();
-    echo 'Статус: ' . $register['idStatus']->getName();
-    echo 'Кто оформил: ' . $register['idUser']->getEmail();
+    echo 'Статус: '       . $register['idStatus']->getName();
+    echo 'Кто оформил: '  . $register['idUser']->getEmail();
     ?>
 </div>
 <!--Конец блока с информацией о записи в таблице Register-->
 
 <!--Блок с информацией о записи товаров в таблице RegisterTable-->
 <div>Товары:
-    <?php
-    $productList = $this->productList;
-    if ($productList): ;
-    ?>
+    <?php if ($this->productList): ;?>
     <table id="productList-table" class="table">
         <thead>
         <tr>
@@ -40,7 +37,7 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($productList as $item): ?>
+        <?php foreach ($this->productList as $item): ?>
         <tr>
             <td><?php echo $item->brand; ?></td>
             <td><?php echo $item->category; ?></td>
@@ -86,34 +83,41 @@
             <thead>
             <tr>
                 <th>Название</th>
-                <th>к-во</th>
-                <th>Цена</th>
-                <th>Действие</th>
+                <th>К-во / Цена / Действие</th>
             </tr>
             </thead>
 
             <tfoot>
             <tr>
                 <th>Название</th>
-                <th>К-во</th>
-                <th>Цена</th>
-                <th>Действие</th>
+                <th>К-во / Цена / Действие</th>
             </tr>
             </tfoot>
             <tbody>
             <?php foreach($data['result'] as $item): ?>
                 <tr>
-                    <form method="post" action="index">
                     <td><?php echo $item->getName(); ?></td>
-                    <td><input type="text" name="qty" value="<?php echo $item->qty; ?>"></td>
-                    <td><input type="text" name="price" value="<?php echo $item->getPrice() / 100; ?>"></td>
-                    <td><input type="hidden" name="idProduct" value="<?php echo $item->getId(); ?>"><input type="submit" value="Добавить"></td>
-                    </form>
+                    <td>
+                        <form method="post" action="index" class="form-inline" role="form">
+                            <input type="hidden" name="idProduct" value="<?php echo $item->getId(); ?>">
+
+                            <div class="form-group">
+                                <label class="sr-only" for="qty">К-во:</label>
+                                <input type="number" min="0" step="1" id="qty" class="form-control" name="qty" value="<?php echo $item->qty; ?>">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="sr-only" for="price">Цена:</label>
+                                <input type="number" min="0" step="1" id="price" class="form-control" name="price" value="<?php echo $item->getPrice() / 100; ?>">
+                            </div>
+
+                            <input type="submit" class="btn btn-primary" value="Добавить">
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
-
     <?php else: ?>
         <h2>Выберите производителя или категорию для продолжения.</h2>
     <?php endif ?>

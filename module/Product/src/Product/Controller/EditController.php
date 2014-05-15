@@ -34,6 +34,7 @@ class EditController extends AbstractActionController
         } elseif (isset($param['brand'])) {
             $currentSession->idBrand = $param['brand'];
         }
+
         if (isset($currentSession->idCatalog) && !isset($param['catalog'])) {
             $param['catalog'] = $currentSession->idCatalog;
         } elseif (isset($param['catalog'])) {

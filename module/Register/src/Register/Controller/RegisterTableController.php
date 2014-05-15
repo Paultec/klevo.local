@@ -41,10 +41,12 @@ class RegisterTableController extends AbstractActionController
         $idProduct = $this->getRequest()->getPost('idProduct');
         if ($idProduct) {
             $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
-            $currentProduct->currentQty = $this->getRequest()->getPost('qty');
+            $currentProduct->currentQty   = $this->getRequest()->getPost('qty');
             $currentProduct->currentPrice = $this->getRequest()->getPost('price');
+
             $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $currentProduct->getIdBrand());
             $currentProduct->brand = $brand->getName();
+
             $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $currentProduct->getIdCatalog());
             $currentProduct->category = $this->getFullNameCategory($category->getId());
         }
@@ -64,10 +66,10 @@ class RegisterTableController extends AbstractActionController
 
         //Добавление свойства с текущим количеством товара
         if ($product->result) {
-            $count = count($product->result);
-            for ($i=0; $i<$count; ++$i) {
+            for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
                 $idProduct = $product->result[$i]->getId();
                 $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
+
                 $qtyProduct = $entityQtyProduct->getQty();
                 $product->result[$i]->qty = $qtyProduct;
             }
@@ -76,9 +78,9 @@ class RegisterTableController extends AbstractActionController
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 
         $res =  new ViewModel(array(
-            'register' => $register,
-            'product'    => $product,
-            'type'       => 'register-table',
+            'register'    => $register,
+            'product'     => $product,
+            'type'        => 'register-table',
             'productList' => $currentSession->productList,
         ));
 
@@ -91,17 +93,18 @@ class RegisterTableController extends AbstractActionController
     {
         $currentSession = new Container();
 
-        var_dump($currentSession->idRegister);
+//        var_dump($currentSession->idRegister);
         $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $currentSession->idRegister);
         //$productList = $currentSession->productList;
 
-        var_dump($register);
+//        var_dump($register);
         //var_dump($productList);
 
         unset($currentSession->idBrand);
         unset($currentSession->idCatalog);
         unset($currentSession->idRegister);
         unset($currentSession->productList);
+
         return new ViewModel();
     }
 
@@ -117,10 +120,12 @@ class RegisterTableController extends AbstractActionController
         return $this->em;
     }
 
+
     /**
      * Get full name with parent category
+     * @param $id
      *
-     * @return string
+     * @return mixed
      */
     public function getFullNameCategory($id)
     {
@@ -131,15 +136,18 @@ class RegisterTableController extends AbstractActionController
             if (!$this->fullName) {
                 $this->fullName = $fullName;
             }
+
             return $this->fullName;
         } else {
             $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
             $parentName = $parent->getName();
+
             if ($this->fullName) {
                 $this->fullName = $parentName . " :: " . $this->fullName;
             } else {
                 $this->fullName = $parentName . " :: " . $fullName;
             }
+
             return $this->getFullNameCategory($parent->getId());
         }
     }
