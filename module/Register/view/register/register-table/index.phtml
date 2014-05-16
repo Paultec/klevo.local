@@ -3,6 +3,16 @@
 ?>
 <link rel="stylesheet" href="/css/jquery.dataTables.css">
 <link rel="stylesheet" href="/css/shCore.css">
+<style>
+    input[type="number"], input[type="submit"] {
+        max-width: 80px;
+    }
+
+    .add {
+        font-size: 18px;
+        cursor: pointer;
+    }
+</style>
 
 <!--Блок с информацией о записи в таблице Register-->
 <div>Данные о записи:
@@ -12,12 +22,12 @@
 //    var_dump($date);
 //    var_dump($register);
 //    echo 'Дата: ' . $date->date;
-    echo 'От кого: '      . $register['idStoreFrom']->getName();
-    echo 'Кому: '         . $register['idStoreTo']->getName();
-    echo 'Тип операции: ' . $register['idOperation']->getName();
-    echo 'Форма оплаты: ' . $register['idPaymentType']->getName();
-    echo 'Статус: '       . $register['idStatus']->getName();
-    echo 'Кто оформил: '  . $register['idUser']->getEmail();
+    echo '<p><strong>От кого:</strong> '      . $register['idStoreFrom']->getName()    . " \n";
+    echo '<strong>Кому:</strong> '            . $register['idStoreTo']->getName()      . "</p> \n";
+    echo '<p><strong>Тип операции:</strong> ' . $register['idOperation']->getName()    . " \n";
+    echo '<strong>Форма оплаты:</strong> '    . $register['idPaymentType']->getName()  . "</p> \n";
+    echo '<p><strong>Статус:</strong> '       . $register['idStatus']->getName()       . " \n";
+    echo '<strong>Кто оформил:</strong> '     . $register['idUser']->getEmail()        . "</p> \n";
     ?>
 </div>
 <!--Конец блока с информацией о записи в таблице Register-->
@@ -25,7 +35,7 @@
 <!--Блок с информацией о записи товаров в таблице RegisterTable-->
 <div>Товары:
     <?php if ($this->productList): ;?>
-    <table id="productList-table" class="table">
+    <table id="productList-table" class="table table-striped table-hover">
         <thead>
         <tr>
             <th>Производитель</th>
@@ -52,7 +62,7 @@
 </div>
 <!--Конец блока с информацией о записи товаров в таблице RegisterTable-->
 <form method="post" action="add">Нажмите
-    <input type="submit" value="Готово"> если закончили ввод товаров
+    <input type="submit" class="btn btn-warning" value="Готово"> если закончили ввод товаров
 </form>
 <?php endif; ?>
 
@@ -97,7 +107,7 @@
             <tbody>
             <?php foreach($data['result'] as $item): ?>
                 <tr>
-                    <td><?php echo $item->getName(); ?></td>
+                    <td style="max-width: 500px"><?php echo $item->getName(); ?></td>
                     <td>
                         <form method="post" action="index" class="form-inline" role="form">
                             <input type="hidden" name="idProduct" value="<?php echo $item->getId(); ?>">
@@ -112,7 +122,10 @@
                                 <input type="number" min="0" step="1" id="price" class="form-control" name="price" value="<?php echo $item->getPrice() / 100; ?>">
                             </div>
 
-                            <input type="submit" class="btn btn-primary" value="Добавить">
+                            <label class="add">
+                                <input class="btn btn-default hide" type="submit" value="Добавить">
+                                <span class="glyphicon glyphicon-circle-arrow-up" data-toggle="tooltip" data-placement="top" title="Добавить"></span>
+                            </label>
                         </form>
                     </td>
                 </tr>

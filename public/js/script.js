@@ -380,4 +380,8 @@ $(function(){
     if (location.indexOf('brand') == -1 && location.indexOf('catalog') == -1) {
         breadcrumb.css('visibility', 'hidden');
     }
+
+    if ($('#productList-table').length > 0) {
+        breadcrumb.css('visibility', 'visible');
+    }
 });
