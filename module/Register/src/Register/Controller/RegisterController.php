@@ -7,11 +7,14 @@ use Zend\Stdlib\DateTime;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Authentication\AuthenticationService;
+use Zend\Session\Container;
 
 use Register\Model\Register;
 use Register\Entity\Register as RegisterEntity;
 
 use Doctrine\ORM\EntityManager;
+
+use GoSession;
 
 class RegisterController extends AbstractActionController
 {
@@ -94,6 +97,12 @@ class RegisterController extends AbstractActionController
      */
     public function addAction()
     {
+        $currentSession = new Container();
+        unset($currentSession->idBrand);
+        unset($currentSession->idCatalog);
+        unset($currentSession->idRegister);
+        unset($currentSession->productList);
+
         $auth = new AuthenticationService();
         $currentUser = $auth->getIdentity();
 

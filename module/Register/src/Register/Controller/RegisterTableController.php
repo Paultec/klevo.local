@@ -8,13 +8,21 @@ use Zend\Session\Container;
 
 use GoSession;
 
+use Register\Entity\RegisterTable as RegisterTableEntity;
+
 class RegisterTableController extends AbstractActionController
 {
-    const REGISTER_ENTITY     = 'Register\Entity\Register';
-    const PRODUCT_QTY_ENTITY  = 'Product\Entity\ProductCurrentQty';
-    const PRODUCT_ENTITY      = 'Product\Entity\Product';
-    const BRAND_ENTITY        = 'Catalog\Entity\Brand';
-    const CATEGORY_ENTITY     = 'Catalog\Entity\Catalog';
+    const REGISTER_ENTITY           = 'Register\Entity\Register';
+    const REGISTER_TABLE_ENTITY     = 'Register\Entity\RegisterTable';
+    const PRODUCT_QTY_ENTITY        = 'Product\Entity\ProductCurrentQty';
+    const PRODUCT_ENTITY            = 'Product\Entity\Product';
+    const BRAND_ENTITY              = 'Catalog\Entity\Brand';
+    const CATEGORY_ENTITY           = 'Catalog\Entity\Catalog';
+    const OPERATION_ENTITY          = 'Data\Entity\Operation';
+    const PAYMENT_TYPE_ENTITY       = 'Data\Entity\PaymentType';
+    const STATUS_ENTITY             = 'Data\Entity\Status';
+    const STORE_ENTITY              = 'Data\Entity\Store';
+    const USER_ENTITY               = 'User\Entity\User';
 
     /**
      * @var
@@ -37,12 +45,19 @@ class RegisterTableController extends AbstractActionController
 
         $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
 
-        // Добавление введенных к-ва и цены в свойства выбранного товара
         $idProduct = $this->getRequest()->getPost('idProduct');
         if ($idProduct) {
             $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+
+            // Добавление введенных к-ва и цены в свойства выбранного товара
             $currentProduct->currentQty   = $this->getRequest()->getPost('qty');
             $currentProduct->currentPrice = $this->getRequest()->getPost('price');
+
+            // Добавление idRegister, idOperation, idUser текущей операции к свойствам,
+            // чтобы не делать дополнительные запросы в addAction
+            //$currentProduct->currentIdRegister  = $register->getId();
+            //$currentProduct->currentIdUser      = $register->getIdUser();
+            //$currentProduct->currentIdOperation = $register->getIdOperation();
 
             $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $currentProduct->getIdBrand());
             $currentProduct->brand = $brand->getName();
@@ -51,15 +66,13 @@ class RegisterTableController extends AbstractActionController
             $currentProduct->category = $this->getFullNameCategory($category->getId());
         }
 
-        //var_dump($currentProduct);
-        //var_dump($currentSession->productList);
+        // Формирование массива с выбранными товарами
         if (isset($currentSession->productList)) {
             $currentSession->productList[] = $currentProduct;
         } elseif ($currentProduct) {
             $currentSession->productList = array();
             $currentSession->productList[] = $currentProduct;
         }
-        //var_dump($currentSession->idRegister);
 
         $product = $this->forward()->dispatch('Product\Controller\Edit',
             array('action' => 'index', 'externalCall' => true));
@@ -93,12 +106,56 @@ class RegisterTableController extends AbstractActionController
     {
         $currentSession = new Container();
 
-//        var_dump($currentSession->idRegister);
         $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $currentSession->idRegister);
-        //$productList = $currentSession->productList;
 
-//        var_dump($register);
-        //var_dump($productList);
+        $registerTable = array();
+
+        $productList = $currentSession->productList;
+
+        $count = count($productList);
+        for ($i=0; $i<$count; ++$i) {
+            //var_dump($productList[$i]);
+            $idProduct = $productList[$i]->getId();
+            $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+            $qty = $productList[$i]->currentQty;
+            unset($productList[$i]->currentQty);
+            $price = $productList[$i]->currentPrice;
+            unset($productList[$i]->currentPrice);
+            //$idUser = $productList[$i]->currentIdUser;
+            //var_dump($idUser);
+            $idUser = $register->getIdUser();
+            $user = $this->getEntityManager()->find(self::USER_ENTITY, $idUser);
+            //unset($productList[$i]->currentIdUser);
+            //$idOperation = $productList[$i]->currentIdOperation;
+            //var_dump($idOperation);
+            $idOperation = $register->getIdOperation();
+            $operation = $this->getEntityManager()->find(self::OPERATION_ENTITY, $idOperation);
+            //unset($productList[$i]->currentIdOperation);
+            unset($productList[$i]->brand);
+            unset($productList[$i]->qty);
+            unset($productList[$i]->category);
+            //var_dump($productList[$i]);
+            $noteRegisterTable = array(
+                'idProduct'   => $product,
+                'qty'         => $qty,
+                'price'       => $price,
+                'idRegister'  => $register,
+                'idUser'      => $user,
+                'idOperation' => $operation
+            );
+            $registerTable[] = $noteRegisterTable;
+        }
+
+        foreach ($registerTable as $item) {
+//            var_dump($item);
+            $registerTableNote = new RegisterTableEntity();
+
+            $registerTableNote->populate($item);
+            //var_dump($registerTableNote);
+
+            $this->getEntityManager()->persist($registerTableNote);
+            $this->getEntityManager()->flush();
+        }
 
         unset($currentSession->idBrand);
         unset($currentSession->idCatalog);

@@ -48,7 +48,7 @@ class RegisterTable
     /**
      * @var \Register\Entity\Register
      *
-     * @ORM\ManyToOne(targetEntity="Register\Entity\Register")
+     * @ORM\ManyToOne(targetEntity="Register\Entity\Register", cascade="detach")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idRegister", referencedColumnName="id")
      * })
