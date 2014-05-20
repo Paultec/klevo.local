@@ -2,6 +2,13 @@
 <link rel="stylesheet" href="/css/shCore.css">
 
 <section class="col col-lg-3">
+    <form id="redirect-form" action="<?php $this->url('product', array('controller' => 'edit'));?>" method="post">
+        <input type="hidden" name="redirect" value="yes">
+        <p>
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        <input type="submit" class="btn btn-link" value="К добавлению товара">
+        </p>
+    </form>
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
         <span class="link-type" data-type="<?php echo $this->type;?>"></span>
@@ -23,7 +30,7 @@
         </ol>
     <?php endif ?>
     <?php if ($this->result): ?>
-        <table id="product-table" class="table table-striped">
+        <table id="productList-table" class="table table-striped">
         <thead>
         <tr>
             <th>Название</th>
@@ -57,13 +64,14 @@
         </table>
     <?php else: ?>
         <h2>Выберите категорию для редактирования.</h2>
+        <h2>Или добавьте <a href="/edit-product/add">новый</a> продукт.</h2>
     <?php endif ?>
 </section>
 
 <script src="/js/jquery.dataTables.js"></script>
 <script src="/js/shCore.js"></script>
 <script>
-    $('#product-table').dataTable({
+    $('#productList-table').dataTable({
         "language": {
             "url": "/resources/ru_RU.lg"
         }

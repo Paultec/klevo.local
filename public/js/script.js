@@ -254,18 +254,18 @@ $(function(){
     /******************************************************************************
      product the same height
      *******************************************************************************/
-    var product = $('.product');
-    var max_height = 0;
-
-    product.each(function(index){
-        var this_height = $(this).height();
-
-        if (this_height > max_height) {
-            max_height = this_height;
-        }
-    });
-
-    product.height(max_height);
+//    var thumbnail = $('.thumbnail'),
+//        max_height = 0;
+//
+//    thumbnail.each(function(){
+//        var this_height = $(this).height();
+//
+//        if (this_height > max_height) {
+//            max_height = this_height;
+//        }
+//    });
+//
+//    thumbnail.height(max_height);
 
     /******************************************************************************
      url query
@@ -383,5 +383,17 @@ $(function(){
 
     if ($('#productList-table').length > 0) {
         breadcrumb.css('visibility', 'visible');
+    } else {
+        $('#redirect-form').css('display', 'none');
     }
+
+    /******************************************************************************
+     set number input
+     *******************************************************************************/
+    $('.number').attr({'type': 'number', 'min': 0, 'step': 0.1});
+
+    /******************************************************************************
+     wrap form element
+     *******************************************************************************/
+    $('#product').find('label').wrap('<div class="form-group"></div>');
 });

@@ -1,0 +1,38 @@
+<?php
+$title = 'Добавить продукт';
+$this->headTitle($title);
+?>
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+    <?php
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('editproduct', array('action' => 'add')));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+
+    echo $this->formRow($form->get('name')) . "\n";
+    echo $this->formRow($form->get('description')) . "\n";
+    echo $this->formRow($form->get('price')) . "\n";
+    echo $this->formRow($form->get('img')) . "\n";
+
+    echo '<label>Список категорий:' . "\n";
+    echo '<select class="form-control" name="idCatalog">' . "\n";
+    echo $this->partialLoop('product/partial/loops.phtml', $this->catalog);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
+
+    echo '<label>Список производителей:' . "\n";
+    echo '<select class="form-control" name="idBrand">' . "\n";
+    echo $this->partialLoop('product/partial/loops.phtml', $this->brand);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
+
+    echo $this->formSubmit($form->get('submit')) . "\n";
+
+    echo $this->form()->closeTag();
+    ?>
+</section>

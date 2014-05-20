@@ -8,35 +8,35 @@
 
 <section class="col col-lg-9">
     <?php if (count($this->breadcrumbs) > 0) : ?>
-    <ol class="breadcrumb">
-        <?php
+        <ol class="breadcrumb">
+            <?php
             /*foreach ($this->breadcrumbs as $key => $value) {
                 if (is_object($value)) {
                     echo '<li><a href="?' . $key . '=' . $value->getId() . '">' . $value->getName() . '</a></li>';
                 }
             }*/
 
-        if (is_null($this->breadcrumbs['catalog'])) {
-            foreach ($this->breadcrumbs as $key => $value) {
-                if (is_array($value)) {
-                    echo '<li>' . $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a></li>';
-                }
-            }
-        } elseif (is_null($this->breadcrumbs['brand'])) {
-            foreach ($this->breadcrumbs as $key => $value) {
-                if (is_null($value[0])) {
+            if (is_null($this->breadcrumbs['catalog'])) {
+                foreach ($this->breadcrumbs as $key => $value) {
                     if (is_array($value)) {
-                        echo '<li>' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
-                    }
-                } else {
-                    if (is_array($value)) {
-                        echo '<li>' .$value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+                        echo '<li>' . $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a></li>';
                     }
                 }
-            }
-        } else {
-            foreach ($this->breadcrumbs as $key => $value) {
-                echo '<li>';
+            } elseif (is_null($this->breadcrumbs['brand'])) {
+                foreach ($this->breadcrumbs as $key => $value) {
+                    if (is_null($value[0])) {
+                        if (is_array($value)) {
+                            echo '<li>' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+                        }
+                    } else {
+                        if (is_array($value)) {
+                            echo '<li>' .$value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+                        }
+                    }
+                }
+            } else {
+                foreach ($this->breadcrumbs as $key => $value) {
+                    echo '<li>';
                     if (is_string($value[0])) {
                         echo $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a>';
                     } else {
@@ -46,13 +46,15 @@
                             echo $value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
                         }
                     }
-                echo '</li>';
+                    echo '</li>';
+                }
             }
-        }
-        ?>
-    </ol>
+            ?>
+        </ol>
     <?php endif ?>
+</section>
 
+<section id="product-holder" class="col col-lg-9">
     <?php if ($this->paginator->count() > 0): ?>
         <?php foreach($this->paginator as $item): ?>
             <section class="col col-sm-6 col-md-4 product">
@@ -74,8 +76,17 @@
             Вы можете воспользоваться поиском или изменить критерии выбора.</h3>
     <?php endif ?>
 </section>
+<div class="clearfix"></div>
 <section class="col col-lg-9 col-lg-offset-3 text-center">
 <?php
     echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'product/paginator/pagination.phtml') : "";
 ?>
 </section>
+<script src="/js/masonry.pkgd.min.js"></script>
+<script>
+    var $container = $('#product-holder');
+    // initialize
+    $container.masonry({
+        itemSelector: '.product'
+    });
+</script>

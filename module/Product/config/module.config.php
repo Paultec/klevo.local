@@ -47,7 +47,7 @@ return array(
             'editproduct' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/edit-product[/][/:action]',
+                    'route'    => '/edit-product[/][:action]',
                     'constraints' => array(
                         'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),
