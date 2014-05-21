@@ -93,6 +93,12 @@ class RegisterController extends AbstractActionController
      */
     public function indexAction()
     {
+        $filter = array();
+        $request = $this->getRequest();
+        if ($request->getPost()) {
+            $filter['beginDate'] = $request->getPost('beginDate');
+        }
+
         if (null) {
             $dql = null;
         } else {
@@ -114,6 +120,7 @@ class RegisterController extends AbstractActionController
 
         return new ViewModel(array(
             'paginator' => $paginator,
+            'filter'    => $filter,
         ));
     }
 
