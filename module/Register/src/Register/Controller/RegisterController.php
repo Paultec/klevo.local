@@ -8,11 +8,14 @@ use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Authentication\AuthenticationService;
 use Zend\Session\Container;
+use Zend\Paginator\Paginator;
 
 use Register\Model\Register;
 use Register\Entity\Register as RegisterEntity;
 
 use Doctrine\ORM\EntityManager;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
 use GoSession;
 
@@ -23,6 +26,7 @@ class RegisterController extends AbstractActionController
     const STATUS_ENTITY       = 'Data\Entity\Status';
     const STORE_ENTITY        = 'Data\Entity\Store';
     const USER_ENTITY         = 'User\Entity\User';
+    const REGISTER_ENTITY     = 'Register\Entity\Register';
 
     /**
      * @var
@@ -89,7 +93,28 @@ class RegisterController extends AbstractActionController
      */
     public function indexAction()
     {
-        return new ViewModel();
+        if (null) {
+            $dql = null;
+        } else {
+            $dql = $this->getEntityManager()->createQuery('SELECT p FROM Register\Entity\Register p');
+        }
+
+        // Pagination
+        $matches = $this->getEvent()->getRouteMatch();
+        $page    = $matches->getParam('page', 1);
+
+        $adapter   = new DoctrineAdapter(new ORMPaginator($dql));
+        $paginator = new Paginator($adapter);
+
+        $paginator
+            ->setCurrentPageNumber($page)
+            ->setItemCountPerPage(12);
+
+        //$register = $this->getEntityManager()->getRepository(self::REGISTER_ENTITY)->findAll();
+
+        return new ViewModel(array(
+            'paginator' => $paginator,
+        ));
     }
 
     /**

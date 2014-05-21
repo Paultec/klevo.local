@@ -1,2 +1,48 @@
 Action "index", controller "Register", module "Register".
 <div><a href="/register/add" id="modal" class="hover-shadow">Добавить запись </a></div>
+<!--<table class="table">-->
+<!--    <tbody>-->
+<?php
+//foreach ($this->register as $register) {
+//    $id = $register->getId();
+//    $date = $register->getDate();
+//    $storeFrom = $register->getIdStoreFrom()->getName();
+//    $storeTo = $register->getIdStoreTo()->getName();
+//    $user = $register->getIdUser()->getEmail();
+//    ?>
+<!--        <tr>-->
+<!--            <td>--><?php //echo $id; ?><!--</td>-->
+<!--            <td>--><?php //var_dump($date); ?><!--</td>-->
+<!--            <td>--><?php //echo $storeFrom; ?><!--</td>-->
+<!--            <td>--><?php //echo $storeTo; ?><!--</td>-->
+<!--            <td>--><?php //echo $user; ?><!--</td>-->
+<!--        </tr>-->
+<?php //}
+//?>
+<!--</tbody>-->
+<!--</table>-->
+    <?php if ($this->paginator->count() > 0): ?>
+        <table class="table">
+            <tbody>
+            <?php foreach($this->paginator as $item): ?>
+                <tr>
+                    <td><?php echo $item->getId(); ?></td>
+                    <td><?php var_dump($item->getDate()); ?></td>
+                    <td><?php echo $item->getIdStoreFrom()->getName(); ?></td>
+                    <td><?php echo $item->getIdStoreTo()->getName(); ?></td>
+                    <td><?php echo $item->getIdOperation()->getName(); ?></td>
+                    <td><?php echo $item->getIdUser()->getEmail(); ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <h3>Извините, записей с заданными условиями нет. <br>
+            Измените критерии выбора.</h3>
+    <?php endif ?>
+<div class="clearfix"></div>
+<section class="col col-lg-9 col-lg-offset-3 text-center">
+    <?php
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'register/paginator/pagination.phtml') : "";
+    ?>
+</section>

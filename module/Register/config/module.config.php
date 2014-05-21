@@ -13,15 +13,43 @@ return array(
 //                ),
 //            ),
             'register' => array(
-                'type'    => 'Segment',
+                'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/register[/:action]',
-                    'constraints' => array(
-                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ),
+                    'route'    => '/register',
                     'defaults' => array(
                         'controller' => 'Register\Controller\Register',
                         'action'     => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller'    => 'Register',
+                                'action'        => 'index',
+                            ),
+                        ),
+                    ),
+                    'pager' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '[/:page]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller'    => 'Register',
+                                'action'        => 'index',
+                            ),
+                        ),
                     ),
                 ),
             ),

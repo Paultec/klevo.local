@@ -179,7 +179,7 @@ class RegisterTableController extends AbstractActionController
 
 
     /**
-     * Get full name with parent category
+     * Get full category name with parent category
      * @param $id
      *
      * @return mixed
