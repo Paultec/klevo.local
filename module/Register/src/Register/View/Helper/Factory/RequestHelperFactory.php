@@ -11,7 +11,7 @@ class RequestHelperFactory implements FactoryInterface
     {
         $service = $serviceLocator->getServiceLocator();
 
-        $helper = new \Product\View\Helper\Requesthelper;
+        $helper = new \Register\View\Helper\Requesthelper;
 
         $request = $service->get('Request');
         $helper->setRequest($request);

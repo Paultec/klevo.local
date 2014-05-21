@@ -430,7 +430,15 @@ login & register wrap div style
  *******************************************************************************/
 .product {
     padding: 0;
-    margin-right: 10px;
+    margin: 0;
+    width: 275px;
+}
+
+@media (max-width: 768px) {
+    .product {
+        width: 100%;
+        padding-right: 30px;
+    }
 }
 
 /******************************************************************************
@@ -444,4 +452,11 @@ login & register wrap div style
 .product-list:hover {
     cursor: pointer;
     text-decoration: none;
+}
+
+/******************************************************************************
+pointer
+ *******************************************************************************/
+.pointer {
+    cursor: pointer;
 }

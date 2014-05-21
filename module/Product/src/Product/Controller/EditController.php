@@ -140,6 +140,57 @@ class EditController extends AbstractActionController
         ));
     }
 
+    public function editAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('editproduct');
+        }
+
+        $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id);
+
+        $brandState   = $product->getIdBrand()->getId();
+        $catalogState = $product->getIdCatalog()->getId();
+
+        // Перевод в грн.
+        $product->setPrice($product->getPrice() / 100);
+
+        $form = $this->getForm();
+        $form->setData($product->getArrayCopy());
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $postData = $form->getData();
+
+                $postData['idBrand'] = $this->getEntityManager()->
+                    find(self::BRAND_ENTITY, $postData['idBrand']);
+                $postData['idCatalog'] = $this->getEntityManager()->
+                    find(self::CATEGORY_ENTITY, $postData['idCatalog']);
+                // Обратно в коп.
+                $postData['price'] = (int)($postData['price'] * 100);
+
+                $product->populate($postData);
+
+                $this->getEntityManager()->persist($product);
+                $this->getEntityManager()->flush();
+
+                $this->redirect()->toRoute('editproduct');
+            }
+        }
+
+        return new ViewModel(array(
+            'form'         => $form,
+            'catalog'      => $this->setOptionItems('catalog'),
+            'brand'        => $this->setOptionItems('brand'),
+            'brandState'   => $brandState,
+            'catalogState' => $catalogState,
+            'id'           => $id
+        ));
+    }
 
     /**
      * Set options for select

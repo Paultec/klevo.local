@@ -47,9 +47,10 @@ return array(
             'editproduct' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/edit-product[/][:action]',
+                    'route'    => '/edit-product[/][:action][/:id]',
                     'constraints' => array(
-                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller'    => 'Product\Controller\Edit',

@@ -1,12 +1,15 @@
 <link rel="stylesheet" href="/css/jquery.dataTables.css">
 <link rel="stylesheet" href="/css/shCore.css">
+<style>
+    .same-width a { width: 144px; }
+</style>
 
 <section class="col col-lg-3">
     <form id="redirect-form" action="<?php $this->url('product', array('controller' => 'edit'));?>" method="post">
         <input type="hidden" name="redirect" value="yes">
         <p>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        <input type="submit" class="btn btn-link" value="К добавлению товара">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            <input type="submit" class="btn btn-link" value="К добавлению товара">
         </p>
     </form>
     <aside class="filter">
@@ -54,10 +57,15 @@
         <?php foreach($this->result as $item): ?>
             <tr>
                 <td><?php echo $item->getName(); ?></td>
-                <td><?php echo $item->getDescription(); ?></td>
+                <td><?php echo $item->getDescription() ?: 'Нет'; ?></td>
                 <td><?php echo $item->getPrice() / 100; ?></td>
-                <td><?php echo $item->getImg(); ?></td>
-                <td>&nbsp;</td>
+                <td><?php echo $item->getImg() ?: 'Нет'; ?></td>
+                <td class="same-width">
+                    <a class="btn btn-primary" href="<?php echo $this->url('editproduct',
+                        array('action'=>'edit', 'id' => $item->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
+                    <a class="btn btn-warning show-hide" href="<?php echo $this->url('editproduct',
+                        array('action'=>'hide', 'id' => $item->getId()));?>"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>

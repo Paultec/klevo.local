@@ -19,7 +19,7 @@
 
         <!-- Scripts -->
         <?php echo $this->headScript()->setAllowArbitraryAttributes(true)
-            ->prependFile($this->basePath() . '/js/holder.min.js', 'text/javascript', array('async' => 'async',)) // НЕ забыть удалить!!!
+            ->prependFile($this->basePath() . '/js/holder.min.js') // НЕ забыть удалить!!!
             ->prependFile($this->basePath() . '/js/script.min.js', 'text/javascript', array('async' => 'async',))
             ->prependFile($this->basePath() . '/js/mosaic.min.js')
             ->prependFile($this->basePath() . '/js/bootstrap.min.js', 'text/javascript', array('async' => 'async',))

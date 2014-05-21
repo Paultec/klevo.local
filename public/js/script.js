@@ -213,7 +213,7 @@ $(function(){
      category select default option
      *******************************************************************************/
     var state      = $('[name="parent_state"]').val(),
-        options    = $('.category_select').find('option'),
+        options    = $('.category_select, .brand_select').find('option'),
         name_input = $('.name_input').val();
 
     options.each(function(index){
