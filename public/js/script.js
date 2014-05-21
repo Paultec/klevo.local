@@ -213,7 +213,7 @@ $(function(){
      category select default option
      *******************************************************************************/
     var state      = $('[name="parent_state"]').val(),
-        options    = $('.category_select, .brand_select').find('option'),
+        options    = $('.category_select').find('option'),
         name_input = $('.name_input').val();
 
     options.each(function(index){
@@ -223,6 +223,26 @@ $(function(){
 
         if (name_input == $(this).text()) {
             $(this).attr('disabled', true);
+        }
+    });
+
+    /******************************************************************************
+     edit product select default options
+     *******************************************************************************/
+    var brand_state   = $('[name="brand_state"]').val(),
+        catalog_state = $('[name="catalog_state"]').val(),
+        brand_options = $('.brand_select').find('option'),
+        category_options = options;
+
+    brand_options.each(function(){
+        if (brand_state == $(this).val()) {
+            $(this).css('color', '#428BCA').attr('selected', true);
+        }
+    });
+
+    category_options.each(function(){
+        if (catalog_state == $(this).val()) {
+            $(this).css('color', '#428BCA').attr('selected', true);
         }
     });
 

@@ -3,19 +3,31 @@ return array(
     'router' => array(
         'routes' => array(
             'register' => array(
-                'type'    => 'segment',
+                'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/register[/:action]',
-                    'constraints' => array(
-                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ),
+                    'route'    => '/register',
                     'defaults' => array(
-                        'controller' => 'Register\Controller\Register',
-                        'action'     => 'index',
+                        '__NAMESPACE__' => 'Register\Controller',
+                        'controller'    => 'register',
+                        'action'        => 'index',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller'    => 'register',
+                                'action'        => 'index',
+                            ),
+                        ),
+                    ),
                     'pager' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -25,59 +37,30 @@ return array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller'    => 'Register\Controller\Register',
+                                'controller'    => 'Register',
                                 'action'        => 'index',
                             ),
                         ),
                     ),
                 ),
+            ),
 
-
+//            'register-add' => array(
 //                'type'    => 'Literal',
 //                'options' => array(
-//                    'route'    => '/register',
+//                    'route'    => '/register-add',
 //                    'defaults' => array(
-//                        'controller' => 'Register\Controller\Register',
-//                        'action'     => 'index',
+//                        '__NAMESPACE__' => 'Register\Controller',
+//                        'controller'    => 'register',
+//                        'action'        => 'add',
 //                    ),
 //                ),
-//                'may_terminate' => true,
-//                'child_routes' => array(
-//                    'default' => array(
-//                        'type'    => 'Segment',
-//                        'options' => array(
-//                            'route'    => '/[:controller[/:action]]',
-//                            'constraints' => array(
-//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                            ),
-//                            'defaults' => array(
-//                                'controller'    => 'Register\Controller\Register',
-//                                'action'        => 'index',
-//                            ),
-//                        ),
-//                    ),
-//
-//                    'pager' => array(
-//                        'type'    => 'Segment',
-//                        'options' => array(
-//                            'route'    => '[/:page]',
-//                            'constraints' => array(
-//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                            ),
-//                            'defaults' => array(
-//                                'controller'    => 'Register\Controller\Register',
-//                                'action'        => 'index',
-//                            ),
-//                        ),
-//                    ),
-//                ),
-            ),
+//            ),
+
             'register-table' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/register-table[/][/:action][/]',
+                    'route'    => '/register-table[/:action][/]',
                     'constraints' => array(
                         'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),

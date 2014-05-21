@@ -102,7 +102,7 @@ class RegisterController extends AbstractActionController
         if (null) {
             $dql = null;
         } else {
-            $dql = $this->getEntityManager()->createQuery('SELECT p FROM Register\Entity\Register p');
+            $dql = $this->getEntityManager()->createQuery('SELECT r FROM Register\Entity\Register r');
         }
 
         // Pagination

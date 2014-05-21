@@ -208,8 +208,10 @@ class EditController extends AbstractActionController
                 ->getRepository(self::CATEGORY_ENTITY)->findAll();
 
             for ($i = 0, $category = count($categories); $i < $category; $i++) {
-                $option_arr[$i]['id']   = $categories[$i]->getId();
-                $option_arr[$i]['name'] = $categories[$i]->getName();
+                if (!is_null($categories[$i]->getIdParent())) {
+                    $option_arr[$i]['id']   = $categories[$i]->getId();
+                    $option_arr[$i]['name'] = $categories[$i]->getName();
+                }
             }
         } else {
             $brands = $this->getEntityManager()

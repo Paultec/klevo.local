@@ -107,9 +107,9 @@
             <tbody>
             <?php foreach($data['result'] as $item): ?>
                 <tr>
-                    <td style="max-width: 500px"><?php echo $item->getName(); ?></td>
+                    <td style="max-width: 450px"><?php echo $item->getName(); ?></td>
                     <td>
-                        <form method="post" action="index" class="form-inline" role="form">
+                        <form method="post" action="<?php echo $this->url('register-table');?>" class="form-inline" role="form">
                             <input type="hidden" name="idProduct" value="<?php echo $item->getId(); ?>">
 
                             <div class="form-group">
@@ -122,7 +122,7 @@
                                 <input type="number" min="0" step="0.1" id="price" class="form-control" name="price" value="<?php echo $item->getPrice() / 100; ?>">
                             </div>
 
-                            <label class="add">
+                            <label style="max-width: 15px" class="add">
                                 <input class="btn btn-default hide" type="submit" value="Добавить">
                                 <span class="glyphicon glyphicon-circle-arrow-up" data-toggle="tooltip" data-placement="top" title="Добавить"></span>
                             </label>

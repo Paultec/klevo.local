@@ -59,7 +59,7 @@
                 <td><?php echo $item->getName(); ?></td>
                 <td><?php echo $item->getDescription() ?: 'Нет'; ?></td>
                 <td><?php echo $item->getPrice() / 100; ?></td>
-                <td><?php echo $item->getImg() ?: 'Нет'; ?></td>
+                <td><?php echo $item->getImg() ? 'Да' : 'Нет'; ?></td>
                 <td class="same-width">
                     <a class="btn btn-primary" href="<?php echo $this->url('editproduct',
                         array('action'=>'edit', 'id' => $item->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
