@@ -114,7 +114,6 @@ $(function(){
                           .next().attr({'id': 'passwordVerify',
                                         'placeholder': 'Повторите Пароль'});
 
-
     var reg_btn = reg_form.find('button');
     reg_btn.attr('disabled', true);
 

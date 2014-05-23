@@ -3,7 +3,6 @@ namespace Catalog\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Serializer\Adapter\PhpSerialize as Serializer;
 
 class IndexController extends AbstractActionController
 {
@@ -20,58 +19,20 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        if (!$this->hasCacheItem('brands')) {
-            $this->getLoop(self::BRAND_ENTITY, 'brands');
-        }
-
-        if (!$this->hasCacheItem('categories')) {
-            $this->getLoop(self::CATEGORY_ENTITY, 'categories');
-        }
-
         return new ViewModel(array(
-            'brandList'    => $this->getFromCache('brands'),
-            'categoryList' => $this->getFromCache('categories'),
+            'brandList'    => $this->getLoop(self::BRAND_ENTITY, 'brands'),
+            'categoryList' => $this->getLoop(self::CATEGORY_ENTITY, 'categories'),
         ));
-    }
-
-    /**
-     * @param $item
-     * @return mixed|string
-     */
-    protected function getFromCache($item)
-    {
-        $serializer = new Serializer();
-
-        if ($this->hasCacheItem($item)) {
-            $result = $this->getServiceLocator()->get('filesystem')->getItem($item);
-
-            return $serializer->unserialize($result);
-        }
-
-        return 'There is no such key!';
-    }
-
-    /**
-     * @param $item
-     * @return bool
-     */
-    protected function hasCacheItem($item)
-    {
-        if ($this->getServiceLocator()->get('filesystem')->hasItem($item)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
      * @param $repository
      * @param $cacheKey
+     *
+     * @return array
      */
     protected function getLoop($repository, $cacheKey)
     {
-        $serializer = new Serializer();
-
         $items = $this->getEntityManager()
             ->getRepository($repository)
             ->findAll();
@@ -85,10 +46,7 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $this->getServiceLocator()->get('filesystem')
-            ->setItem($cacheKey, $serializer->serialize($tmpArray));
-
-        return;
+        return $tmpArray;
     }
 
     /**

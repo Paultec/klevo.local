@@ -56,8 +56,6 @@ class CatalogController extends AbstractActionController
                 $this->getEntityManager()->persist($catalog);
                 $this->getEntityManager()->flush();
 
-                $this->clearCache();
-
                 // Redirect to list of categories
                 return $this->redirect()->toRoute('category');
             }
@@ -103,8 +101,6 @@ class CatalogController extends AbstractActionController
 
                 $this->getEntityManager()->persist($catalog);
                 $this->getEntityManager()->flush();
-
-                $this->clearCache();
 
                 // Redirect to list of categories
                 return $this->redirect()->toRoute('category');
@@ -153,8 +149,6 @@ class CatalogController extends AbstractActionController
                 }
             }
 
-            $this->clearCache();
-
             // Redirect to list of category
             return $this->redirect()->toRoute('category');
         }
@@ -191,8 +185,6 @@ class CatalogController extends AbstractActionController
 //                }
 //            }
 //
-//            $this->clearCache();
-//
 //            // Redirect to list of category
 //            return $this->redirect()->toRoute('category');
 //        }
@@ -225,21 +217,6 @@ class CatalogController extends AbstractActionController
         ));
 
         return $option_arr;
-    }
-
-    /**
-     * @param string $cacheKey
-     * @return ViewModel
-     */
-    public function clearCache($cacheKey = 'categories')
-    {
-        if ($this->getServiceLocator()->get('filesystem')->hasItem($cacheKey)) {
-            $this->getServiceLocator()->get('filesystem')->removeItem($cacheKey);
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
