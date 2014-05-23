@@ -44,19 +44,6 @@ return array(
                     ),
                 ),
             ),
-
-//            'register-add' => array(
-//                'type'    => 'Literal',
-//                'options' => array(
-//                    'route'    => '/register-add',
-//                    'defaults' => array(
-//                        '__NAMESPACE__' => 'Register\Controller',
-//                        'controller'    => 'register',
-//                        'action'        => 'add',
-//                    ),
-//                ),
-//            ),
-
             'register-table' => array(
                 'type'    => 'Segment',
                 'options' => array(

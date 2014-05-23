@@ -10,6 +10,10 @@
     <?php if (count($this->breadcrumbs) > 0) : ?>
         <ol class="breadcrumb">
             <?php
+            /*
+             * @todo change breadcrumbs
+             */
+
             /*foreach ($this->breadcrumbs as $key => $value) {
                 if (is_object($value)) {
                     echo '<li><a href="?' . $key . '=' . $value->getId() . '">' . $value->getName() . '</a></li>';
@@ -26,7 +30,11 @@
                 foreach ($this->breadcrumbs as $key => $value) {
                     if (is_null($value[0])) {
                         if (is_array($value)) {
-                            echo '<li>' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+                            if (!is_null($value[1])) {
+                                echo '<li>' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+                            } else {
+                                echo '<li><a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+                            }
                         }
                     } else {
                         if (is_array($value)) {
@@ -41,7 +49,11 @@
                         echo $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a>';
                     } else {
                         if (is_null($value[0])) {
-                            echo $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
+                            if (!is_null($value[1])) {
+                                echo $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
+                            } else {
+                                echo '<a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
+                            }
                         } else{
                             echo $value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
                         }
@@ -59,7 +71,11 @@
         <?php foreach($this->paginator as $item): ?>
             <section class="col col-sm-6 col-md-4 product">
                 <div class="thumbnail">
-                    <img data-src="holder.js/270x200" alt="270x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MzAweDIwMDwvdGV4dD48L3N2Zz4=" style="width: 270px; height: 200px;">
+                    <?php if ($item->getImg()): ?>
+                        <img src="/img/product/<?php echo $item->getImg()?>" alt="">
+                    <?php else:?>
+                        <img data-src="holder.js/270x200" alt="270x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MzAweDIwMDwvdGV4dD48L3N2Zz4=" style="width: 270px; height: 200px;">
+                    <?php endif; ?>
                     <div class="caption">
                         <h5><a href=""><?php echo $item->getName(); ?></a></h5>
                         <p><?php echo $item->getDescription(); ?></p>

@@ -1,0 +1,28 @@
+<?php
+$title = 'Добавить/изменить изображение';
+$this->headTitle($title);
+?>
+
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+    <p>
+        Загрузите необходимую фотографию для данного продукта. (.png, .jpeg)<br>
+        <span class="text-info">Если фотография уже есть - она будет заменена.</span>
+    </p>
+    <?php
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('editproduct',
+            array('action' => 'img', 'id' => $this->id)));
+    $form->prepare();
+
+    echo $this->form()->openTag($form)           . "\n";
+
+    echo $this->formRow($form->get('file'))      . "\n";
+    echo $this->formSubmit($form->get('submit')) . "\n";
+
+    echo $this->form()->closeTag()               . "\n";
+    ?>
+</section>

@@ -107,7 +107,7 @@ class CatalogController extends AbstractActionController
                 $this->clearCache();
 
                 // Redirect to list of categories
-                $this->redirect()->toRoute('category');
+                return $this->redirect()->toRoute('category');
             }
         }
 

@@ -10,6 +10,8 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use Product\Entity\Product as ProductEntity;
 use Product\Model\Product;
 
+use Product\Form;
+
 use GoSession;
 
 class EditController extends AbstractActionController
@@ -23,6 +25,9 @@ class EditController extends AbstractActionController
      */
     protected $em;
 
+    /**
+     * @return array|\Zend\Http\Response|ViewModel
+     */
     public function indexAction()
     {
         $currentSession = new Container();
@@ -105,6 +110,9 @@ class EditController extends AbstractActionController
         return $res;
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function addAction()
     {
         $form = $this->getForm();
@@ -140,6 +148,9 @@ class EditController extends AbstractActionController
         ));
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function editAction()
     {
         $id = (int)$this->params()->fromRoute('id', 0);
@@ -178,7 +189,7 @@ class EditController extends AbstractActionController
                 $this->getEntityManager()->persist($product);
                 $this->getEntityManager()->flush();
 
-                $this->redirect()->toRoute('editproduct');
+                return $this->redirect()->toRoute('editproduct');
             }
         }
 
@@ -190,6 +201,83 @@ class EditController extends AbstractActionController
             'catalogState' => $catalogState,
             'id'           => $id
         ));
+    }
+
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
+    public function imgAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('editproduct');
+        }
+
+        $form = new Form\ImgUploadForm('img-file-form');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
+
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                $formData = $form->getData();
+
+                $explode  = explode('/', $formData['file']['tmp_name']);
+                $fileName = $explode[count($explode) - 1];
+
+                $qb = $this->getEntityManager()->createQueryBuilder();
+
+                // Название изображения | null
+                $qs = $qb->select('p.img')
+                    ->from(self::PRODUCT_ENTITY, 'p')
+                    ->where('p.id = ?1')
+                    ->setParameter(1, $id)
+                    ->getQuery();
+                $qs->execute();
+
+                $qr = $qs->getResult();
+
+                // Удалить старое изображение, если есть
+                if (!is_null($qr[0]['img'])) {
+                    $this->removeOldImg($qr[0]['img']);
+                }
+
+                $qu = $qb->update(self::PRODUCT_ENTITY, 'p')
+                    ->set('p.img', '?1')
+                    ->where('p.id = ?2')
+                    ->setParameter(1, $fileName)
+                    ->setParameter(2, $id)
+                    ->getQuery();
+                $qu->execute();
+
+                return $this->redirect()->toRoute('editproduct');
+            }
+        }
+
+        return new ViewModel(array(
+            'form' => $form,
+            'id'   => $id
+        ));
+    }
+
+    /**
+     * Removing old image
+     *
+     * @param $imageName
+     *
+     * @return bool
+     */
+    protected function removeOldImg($imageName)
+    {
+        $result = unlink('./public/img/product/' . $imageName);
+
+        return $result;
     }
 
     /**

@@ -59,7 +59,10 @@
                 <td><?php echo $item->getName(); ?></td>
                 <td><?php echo $item->getDescription() ?: 'Нет'; ?></td>
                 <td><?php echo $item->getPrice() / 100; ?></td>
-                <td><?php echo $item->getImg() ? 'Да' : 'Нет'; ?></td>
+                <td><?php echo $item->getImg() ?
+                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $item->getId())) . '">Да</a>' :
+                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $item->getId())) . '">Нет</a>'; ?>
+                </td>
                 <td class="same-width">
                     <a class="btn btn-primary" href="<?php echo $this->url('editproduct',
                         array('action'=>'edit', 'id' => $item->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
@@ -72,7 +75,7 @@
         </table>
     <?php else: ?>
         <h2>Выберите категорию для редактирования.</h2>
-        <h2>Или добавьте <a href="/edit-product/add">новый</a> продукт.</h2>
+        <h2>Или добавьте <a href="<?php echo $this->url('editproduct', array('action' => 'add'));?>">новый</a> продукт.</h2>
     <?php endif ?>
 </section>
 

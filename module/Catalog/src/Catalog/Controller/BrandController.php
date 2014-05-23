@@ -92,7 +92,7 @@ class BrandController extends AbstractActionController
                 $this->clearCache();
 
                 // Redirect to list of brands
-                $this->redirect()->toRoute('brand');
+                return $this->redirect()->toRoute('brand');
             }
         }
 

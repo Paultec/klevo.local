@@ -36,9 +36,6 @@ class IndexController extends AbstractActionController
                 ' AND p.idCatalog = ' . $param['catalog']
             );
 
-//            $brand    = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
-//            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
-
             $brand    = $this->getBreadcrumbs($param, 'brand');
             $category = $this->getBreadcrumbs($param, 'catalog');
         } elseif (isset($param['brand'])) {
@@ -47,15 +44,12 @@ class IndexController extends AbstractActionController
                 WHERE p.idBrand = ' . $param['brand']
             );
 
-//            $brand    = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
             $brand = $this->getBreadcrumbs($param, 'brand');
         } elseif (isset($param['catalog'])) {
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
                 WHERE p.idCatalog = ' . $param['catalog']
             );
-
-//            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
 
             $category = $this->getBreadcrumbs($param, 'catalog');
         } else {
@@ -87,6 +81,11 @@ class IndexController extends AbstractActionController
         return $res;
     }
 
+    public function viewAction()
+    {
+        return new ViewModel();
+    }
+
     /**
      * @param $param
      * @param $type
@@ -108,7 +107,7 @@ class IndexController extends AbstractActionController
 
             $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
 
-            if (!is_null($catalog->getIdParent()->getId())) {
+            if (!is_null($catalog->getIdParent()) && !is_null($catalog->getIdParent()->getId())) {
                 $parent = $this->getEntityManager()
                     ->getRepository(self::CATEGORY_ENTITY)->findBy(array('id' => $catalog->getIdParent()->getId()));
 
