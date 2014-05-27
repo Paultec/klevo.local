@@ -20,7 +20,7 @@
     </aside>
 </section>
 
-<section class="col col-lg-9">
+<section class="col col-lg-9 edit-table">
     <?php if (count($this->breadcrumbs) > 0) : ?>
         <ol class="breadcrumb">
             <?php
@@ -60,7 +60,7 @@
                 <td><?php echo $item->getDescription() ?: 'Нет'; ?></td>
                 <td><?php echo $item->getPrice() / 100; ?></td>
                 <td><?php echo $item->getImg() ?
-                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $item->getId())) . '">Да</a>' :
+                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $item->getId())) . '" class="text-img" data-img="/img/product/'. $item->getImg() .'">Да</a>' :
                         '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $item->getId())) . '">Нет</a>'; ?>
                 </td>
                 <td class="same-width">
@@ -87,4 +87,26 @@
             "url": "/resources/ru_RU.lg"
         }
     });
+
+    // image overlay
+    $('body').append($('<div id="showImgDiv"><img src="/" alt="" ></div>'));
+
+    var showImgDiv = $('#showImgDiv');
+
+    function showImg() {
+        var dataImg = $(this).data('img');
+
+        showImgDiv.find('img').attr('src', dataImg).css('background-color', '#fff');
+
+        var top  = $(this).offset().top - 150;
+        var left = $(this).offset().left - 30;
+
+        showImgDiv.css({"top":top,"left":left}).stop(true,true).fadeIn();
+    }
+
+    function showImgOff() {
+        showImgDiv.stop(true,true).fadeOut();
+    }
+
+    $('.text-img').hover(showImg, showImgOff);
 </script>

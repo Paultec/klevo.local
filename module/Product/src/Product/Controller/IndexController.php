@@ -81,9 +81,28 @@ class IndexController extends AbstractActionController
         return $res;
     }
 
+    /**
+     * @return ViewModel
+     */
     public function viewAction()
     {
-        return new ViewModel();
+        $id = (int)$this->params()->fromRoute('id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('product');
+        }
+
+        $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id);
+
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+
+        $res = new ViewModel(array(
+            'product' => $product
+        ));
+
+        $res->addChild($catalog, 'catalog');
+
+        return $res;
     }
 
     /**

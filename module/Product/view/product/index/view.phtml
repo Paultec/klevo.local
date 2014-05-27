@@ -1,1 +1,24 @@
-ok!
+<section class="col col-lg-3">
+    <aside class="filter">
+        <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <!-- Accordion -->
+        <?php echo $this->catalog ;?><!-- /Accordion -->
+    </aside>
+</section>
+
+<section class="col col-lg-6">
+    <?php if (!is_null($this->product->getImg())) : ?>
+    <p class="product-image">
+        <img src="/img/product/<?php echo $this->product->getImg(); ?>" alt="">
+    </p>
+    <?php endif ?>
+    <h2 class="product-name">
+        <?php echo $this->product->getName(); ?>
+    </h2>
+    <p class="product-description">
+        <?php echo $this->product->getDescription(); ?>
+    </p>
+    <p class="product-price">
+        <?php echo $this->product->getPrice() / 100; ?>
+    </p>
+</section>

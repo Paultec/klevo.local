@@ -253,10 +253,10 @@ $(function(){
     /******************************************************************************
      file upload
      *******************************************************************************/
-    var excel_file_input  = $('.form_wrap').find('[type="file"]').val(''),
+    var file_input  = $('.form_wrap').find('[type="file"]').val(''),
         excel_btn         = $('.excel-file-button').attr('disabled', true);
 
-    excel_file_input.on('change', function(){
+    file_input.on('change', function(){
         if($(this).val().indexOf('.xls') > 0 || $(this).val().indexOf('.xlsx') > 0) {
             setExcelUploadActive();
         } else {
@@ -266,6 +266,25 @@ $(function(){
 
     function setExcelUploadActive() {
         excel_btn.attr('disabled', false);
+    }
+
+    /******************************************************************************
+     product img upload
+     *******************************************************************************/
+    var img_btn = $('.img-file-button').attr('disabled', true);
+
+    file_input.on('change', function(){
+        if ($(this).val().indexOf('.png') > 0  ||
+            $(this).val().indexOf('.jpeg') > 0 ||
+            $(this).val().indexOf('.jpg') > 0) {
+            setImgUploadActive();
+        } else {
+            img_btn.attr('disabled', true);
+        }
+    });
+
+    function setImgUploadActive() {
+        img_btn.attr('disabled', false);
     }
 
     /******************************************************************************
@@ -407,10 +426,57 @@ $(function(){
     /******************************************************************************
      set number input
      *******************************************************************************/
-    $('.number').attr({'type': 'number', 'min': 0, 'step': 0.1});
+    $('.number').attr({'type': 'number', 'min': 0, 'step': 0.01});
 
     /******************************************************************************
      wrap form element
      *******************************************************************************/
     $('#product').find('label').wrap('<div class="form-group"></div>');
+
+    /******************************************************************************
+     image lazy load
+     *******************************************************************************/
+    $("img.lazy").lazyload({
+        effect : "fadeIn"
+    });
+
+    /******************************************************************************
+     back to top
+     *******************************************************************************/
+    var back_to_top = $('#back-to-top');
+
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 350) {
+            back_to_top.fadeIn();
+        } else {
+            back_to_top.fadeOut();
+        }
+    });
+
+    // scroll body to 0px on click
+    back_to_top.on('click', function() {
+        $('#back-to-top').tooltip('hide');
+
+        $('body, html').animate({
+            scrollTop: 0
+        }, 800);
+
+        return false;
+    });
+
+    back_to_top.tooltip('show');
+
+    /******************************************************************************
+     price format
+     *******************************************************************************/
+    var price = $('.product-price'),
+        part = price.text().split('.');
+
+    var first_price_part  = parseInt(part[0]), second_price_part = parseInt(part[1]);
+
+    if (first_price_part) {
+        price.text(first_price_part + ' грн. ' + second_price_part + ' коп.');
+    } else {
+        price.text(second_price_part + ' коп.');
+    }
 });

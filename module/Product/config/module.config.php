@@ -8,7 +8,7 @@ return array(
                     'route'    => '/product',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Product\Controller',
-                        'controller'    => 'Index',
+                        'controller'    => 'index',
                         'action'        => 'index',
                     ),
                 ),
@@ -23,7 +23,7 @@ return array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller'    => 'Index',
+                                'controller'    => 'index',
                                 'action'        => 'index',
                             ),
                         ),
@@ -37,7 +37,21 @@ return array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller'    => 'Index',
+                                'controller'    => 'index',
+                                'action'        => 'index',
+                            ),
+                        ),
+                    ),
+                    'view' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '[/:action[/:id[/]]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller'    => 'index',
                                 'action'        => 'index',
                             ),
                         ),
