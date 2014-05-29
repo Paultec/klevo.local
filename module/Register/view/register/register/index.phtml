@@ -2,33 +2,108 @@
         'action'=>'add'));?>" class="btn btn-primary">Добавить запись</a>
 
 <div>Установленные фильтры: &nbsp;
+    <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
     <?php
-        var_dump($this->filter);
-    ?>
+    var_dump($this->filter);
+        foreach ($this->filter as $key => $value) {
+            switch ($key) {
+                case 'beginDate':
+                    echo 'начало периода ';
+                    break;
+                case 'endDate':
+                    echo ' конец периода ';
+                    break;
+                case 'storeFrom';
+                    echo ' от кого ';
+                    break;
+                case 'storeTo';
+                    echo ' кому ';
+                    break;
+                case 'operation';
+                    echo ' операция ';
+                    break;
+                case 'paymentType';
+                    echo ' форма оплаты ';
+                    break;
+                case 'status';
+                    echo ' статус ';
+                    break;
+                case 'user';
+                    echo ' пользователь ';
+                    break;
+            }
+            echo $value; ?>
+            <input type="submit" class="btn-danger" name="<?php echo $key . 'Reset'; ?>" value="X">
+    <?php } ?>
+    </form>
 </div>
 
 <div>
     <div>Выбрать: &nbsp;
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab0" data-toggle="tab"></a></li>
-            <li><a href="#tab1" data-toggle="tab">Период</a></li>
-            <li><a href="#tab2" data-toggle="tab">От кого</a></li>
-            <li><a href="#tab3" data-toggle="tab">Кому</a></li>
+            <li><a href="#tab1" data-toggle="tab">период</a></li>
+            <li><a href="#tab2" data-toggle="tab">от кого</a></li>
+            <li><a href="#tab3" data-toggle="tab">кому</a></li>
+            <li><a href="#tab4" data-toggle="tab">тип операции</a></li>
+            <li><a href="#tab5" data-toggle="tab">форму оплаты</a></li>
+            <li><a href="#tab6" data-toggle="tab">статус</a></li>
+            <li><a href="#tab7" data-toggle="tab">пользователя</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab0"></div>
             <div class="tab-pane" id="tab1">
                 <form method="post" action="<?php echo $this->url('register',
                     array('action' => 'index')); ?>">
-                    Начало периода &nbsp;<input type="date" name="beginDate">
+                    начало периода &nbsp;<input type="date" name="beginDate">
+                    &nbsp; конец периода &nbsp;<input type="date" name="endDate">
                     <input type="submit" class="btn btn-info" value="Готово">
                 </form>
             </div>
             <div class="tab-pane" id="tab2">
-                <p>Привет, я 2-я секция.</p>
+                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                    <?php foreach ($this->data['storeFrom'] as $store) { ?>
+                    <input type="submit" class="btn-link" name="storeFrom" value="<?php echo $store->getName().'#'.$store->getId(); ?>">
+                    <?php } ?>
+                </form>
             </div>
             <div class="tab-pane" id="tab3">
-                <p>Привет, я 3-я секция.</p>
+
+                    <?php foreach ($this->data['storeTo'] as $store) { ?>
+                    <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn-link" name="storeTo" value="<?php echo $store->getName(); ?>">
+                        <input type="hidden" name="idStoreTo" value="<?php echo $store->getId(); ?>">
+                    </form>
+                    <?php } ?>
+
+            </div>
+            <div class="tab-pane" id="tab4">
+                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                    <?php foreach ($this->data['operation'] as $operation) { ?>
+                        <input type="submit" class="btn-link" name="operation" value="<?php echo $operation->getName(); ?>">
+                    <?php } ?>
+                </form>
+            </div>
+            <div class="tab-pane" id="tab5">
+                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                    <?php foreach ($this->data['paymentType'] as $paymentType) { ?>
+                        <input type="submit" class="btn-link" name="paymentType" value="<?php echo $paymentType->getName(); ?>">
+                    <?php } ?>
+                </form>
+            </div>
+            <div class="tab-pane" id="tab6">
+                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                    <?php foreach ($this->data['status'] as $status) { ?>
+                        <input type="submit" class="btn-link" name="status" value="<?php echo $status->getName(); ?>">
+                    <?php } ?>
+                </form>
+            </div>
+            <div class="tab-pane" id="tab7">
+                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                    <?php foreach ($this->data['user'] as $user) { ?>
+                        <input type="submit" class="btn-link" name="user" value="<?php echo $user->getEmail(); ?>">
+                    <?php } ?>
+                </form>
             </div>
         </div>
     </div>
