@@ -7,40 +7,43 @@
         foreach ($this->filter as $key => $value) {
             switch ($key) {
                 case 'beginDate':
-                    echo 'начало периода ';
+                    echo '<strong>начало периода:</strong> ';
                     break;
                 case 'endDate':
-                    echo ' конец периода ';
+                    echo '<strong> конец периода:</strong> ';
                     break;
                 case 'storeFrom';
-                    echo ' от кого ';
+                    echo '<strong> от кого:</strong> ';
                     break;
                 case 'storeTo';
-                    echo ' кому ';
+                    echo '<strong> кому:</strong> ';
                     break;
                 case 'operation';
-                    echo ' операция ';
+                    echo '<strong> операция:</strong> ';
                     break;
                 case 'paymentType';
-                    echo ' форма оплаты ';
+                    echo '<strong> форма оплаты:</strong> ';
                     break;
                 case 'status';
-                    echo ' статус ';
+                    echo '<strong> статус:</strong> ';
                     break;
                 case 'user';
-                    echo ' пользователь ';
+                    echo '<strong> пользователь:</strong> ';
                     break;
             }
             echo $value; ?>
-            <input type="submit" class="btn-danger" name="<?php echo $key . 'Reset'; ?>" value="X">
+            <label class="btn-remove">
+                <input type="submit" class="btn btn-danger hide" name="<?php echo $key . 'Reset'; ?>">
+                <span class="glyphicon glyphicon-remove cross" data-toggle="tooltip" data-placement="top" title="Удалить фильтр"></span>
+            </label>
     <?php } ?>
     </form>
 </div>
 
 <div>
-    <div>Выбрать: &nbsp;
+    <div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab0" data-toggle="tab"></a></li>
+            <li class="active"><a href="#tab0" data-toggle="tab">Выбрать:</a></li>
             <li><a href="#tab1" data-toggle="tab">период</a></li>
             <li><a href="#tab2" data-toggle="tab">от кого</a></li>
             <li><a href="#tab3" data-toggle="tab">кому</a></li>
@@ -62,7 +65,7 @@
             <div class="tab-pane" id="tab2">
                 <?php foreach ($this->data['storeFrom'] as $store) { ?>
                     <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                        <input type="submit" class="btn-link" name="storeFrom" value="<?php echo $store->getName(); ?>">
+                        <input type="submit" class="btn btn-link" name="storeFrom" value="<?php echo $store->getName(); ?>">
                         <input type="hidden" name="idStoreFrom" value="<?php echo $store->getId(); ?>">
                     </form>
                 <?php } ?>
@@ -70,7 +73,7 @@
             <div class="tab-pane" id="tab3">
                 <?php foreach ($this->data['storeTo'] as $store) { ?>
                     <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                        <input type="submit" class="btn-link" name="storeTo" value="<?php echo $store->getName(); ?>">
+                        <input type="submit" class="btn btn-link" name="storeTo" value="<?php echo $store->getName(); ?>">
                         <input type="hidden" name="idStoreTo" value="<?php echo $store->getId(); ?>">
                     </form>
                 <?php } ?>
@@ -78,7 +81,7 @@
             <div class="tab-pane" id="tab4">
                 <?php foreach ($this->data['operation'] as $operation) { ?>
                     <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                        <input type="submit" class="btn-link" name="operation" value="<?php echo $operation->getName(); ?>">
+                        <input type="submit" class="btn btn-link" name="operation" value="<?php echo $operation->getName(); ?>">
                         <input type="hidden" name="idOperation" value="<?php echo $operation->getId(); ?>">
                     </form>
                 <?php } ?>
@@ -86,7 +89,7 @@
             <div class="tab-pane" id="tab5">
                 <?php foreach ($this->data['paymentType'] as $paymentType) { ?>
                     <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                        <input type="submit" class="btn-link" name="paymentType" value="<?php echo $paymentType->getName(); ?>">
+                        <input type="submit" class="btn btn-link" name="paymentType" value="<?php echo $paymentType->getName(); ?>">
                         <input type="hidden" name="idPaymentType" value="<?php echo $paymentType->getId(); ?>">
                     </form>
                 <?php } ?>
@@ -94,7 +97,7 @@
             <div class="tab-pane" id="tab6">
                 <?php foreach ($this->data['status'] as $status) { ?>
                     <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                        <input type="submit" class="btn-link" name="status" value="<?php echo $status->getName(); ?>">
+                        <input type="submit" class="btn btn-link" name="status" value="<?php echo $status->getName(); ?>">
                         <input type="hidden" name="idStatus" value="<?php echo $status->getId(); ?>">
                     </form>
                 <?php } ?>
@@ -102,7 +105,7 @@
             <div class="tab-pane" id="tab7">
                 <?php foreach ($this->data['user'] as $user) { ?>
                     <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                        <input type="submit" class="btn-link" name="user" value="<?php echo $user->getEmail(); ?>">
+                        <input type="submit" class="btn btn-link" name="user" value="<?php echo $user->getEmail(); ?>">
                         <input type="hidden" name="idUser" value="<?php echo $user->getId(); ?>">
                     </form>
                 <?php } ?>
@@ -111,7 +114,7 @@
     </div>
 </div>
     <?php if ($this->paginator->count() > 0): ?>
-        <table class="table">
+        <table class="table table-striped">
             <tbody>
             <?php foreach($this->paginator as $item): ?>
                 <tr>

@@ -21,6 +21,7 @@
         <?php echo $this->headScript()->setAllowArbitraryAttributes(true)
             ->prependFile($this->basePath() . '/js/holder.min.js') // НЕ забыть удалить!!!
             ->prependFile($this->basePath() . '/js/script.js')
+            ->prependFile($this->basePath() . '/js/masonry.pkgd.min.js')
             ->prependFile($this->basePath() . '/js/mosaic.min.js')
             ->prependFile($this->basePath() . '/js/jquery.lazyload.min.js')
             ->prependFile($this->basePath() . '/js/bootstrap.min.js')
