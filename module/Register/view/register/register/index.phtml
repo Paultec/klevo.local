@@ -70,7 +70,7 @@
             <div class="tab-pane" id="tab3">
 
                     <?php foreach ($this->data['storeTo'] as $store) { ?>
-                    <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                    <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
                         <input type="submit" class="btn-link" name="storeTo" value="<?php echo $store->getName(); ?>">
                         <input type="hidden" name="idStoreTo" value="<?php echo $store->getId(); ?>">
                     </form>

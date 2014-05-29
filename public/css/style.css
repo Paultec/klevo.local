@@ -475,11 +475,18 @@ login & register wrap div style
     cursor: pointer;
     position: fixed;
     bottom: -10px;
-    right: 30px;
+    right: 15px;
     display: none;
     transition: bottom 1s;
 }
 
 .back-to-top:hover {
     bottom: -5px;
+}
+
+/******************************************************************************
+float form
+ *******************************************************************************/
+.float-form {
+    float: left;
 }
