@@ -4,7 +4,6 @@
 <div>Установленные фильтры: &nbsp;
     <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
     <?php
-    var_dump($this->filter);
         foreach ($this->filter as $key => $value) {
             switch ($key) {
                 case 'beginDate':
@@ -61,49 +60,52 @@
                 </form>
             </div>
             <div class="tab-pane" id="tab2">
-                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                    <?php foreach ($this->data['storeFrom'] as $store) { ?>
-                    <input type="submit" class="btn-link" name="storeFrom" value="<?php echo $store->getName().'#'.$store->getId(); ?>">
-                    <?php } ?>
-                </form>
+                <?php foreach ($this->data['storeFrom'] as $store) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn-link" name="storeFrom" value="<?php echo $store->getName(); ?>">
+                        <input type="hidden" name="idStoreFrom" value="<?php echo $store->getId(); ?>">
+                    </form>
+                <?php } ?>
             </div>
             <div class="tab-pane" id="tab3">
-
-                    <?php foreach ($this->data['storeTo'] as $store) { ?>
+                <?php foreach ($this->data['storeTo'] as $store) { ?>
                     <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
                         <input type="submit" class="btn-link" name="storeTo" value="<?php echo $store->getName(); ?>">
                         <input type="hidden" name="idStoreTo" value="<?php echo $store->getId(); ?>">
                     </form>
-                    <?php } ?>
-
+                <?php } ?>
             </div>
             <div class="tab-pane" id="tab4">
-                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                    <?php foreach ($this->data['operation'] as $operation) { ?>
+                <?php foreach ($this->data['operation'] as $operation) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
                         <input type="submit" class="btn-link" name="operation" value="<?php echo $operation->getName(); ?>">
-                    <?php } ?>
-                </form>
+                        <input type="hidden" name="idOperation" value="<?php echo $operation->getId(); ?>">
+                    </form>
+                <?php } ?>
             </div>
             <div class="tab-pane" id="tab5">
-                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                    <?php foreach ($this->data['paymentType'] as $paymentType) { ?>
+                <?php foreach ($this->data['paymentType'] as $paymentType) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
                         <input type="submit" class="btn-link" name="paymentType" value="<?php echo $paymentType->getName(); ?>">
-                    <?php } ?>
-                </form>
+                        <input type="hidden" name="idPaymentType" value="<?php echo $paymentType->getId(); ?>">
+                    </form>
+                <?php } ?>
             </div>
             <div class="tab-pane" id="tab6">
-                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                    <?php foreach ($this->data['status'] as $status) { ?>
+                <?php foreach ($this->data['status'] as $status) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
                         <input type="submit" class="btn-link" name="status" value="<?php echo $status->getName(); ?>">
-                    <?php } ?>
-                </form>
+                        <input type="hidden" name="idStatus" value="<?php echo $status->getId(); ?>">
+                    </form>
+                <?php } ?>
             </div>
             <div class="tab-pane" id="tab7">
-                <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
-                    <?php foreach ($this->data['user'] as $user) { ?>
+                <?php foreach ($this->data['user'] as $user) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
                         <input type="submit" class="btn-link" name="user" value="<?php echo $user->getEmail(); ?>">
-                    <?php } ?>
-                </form>
+                        <input type="hidden" name="idUser" value="<?php echo $user->getId(); ?>">
+                    </form>
+                <?php } ?>
             </div>
         </div>
     </div>

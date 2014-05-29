@@ -94,7 +94,14 @@ class RegisterController extends AbstractActionController
     public function indexAction()
     {
         $filter = array();
-        $data = array();
+        $data = array(
+            'storeFrom'   => array(),
+            'storeTo'     => array(),
+            'operation'   => array(),
+            'paymentType' => array(),
+            'status'      => array(),
+            'user'        => array(),
+        );
 
         $request = $this->getRequest();
 
@@ -126,8 +133,9 @@ class RegisterController extends AbstractActionController
                 unset($currentSession->idStoreFrom);
             }
             if ($request->getPost('storeFrom')) {
-                list($filter['storeFrom'], $idStoreFrom) = explode('#', $request->getPost('storeFrom'));
+                $filter['storeFrom'] = $request->getPost('storeFrom');
                 $currentSession->storeFrom = $filter['storeFrom'];
+                $idStoreFrom = $request->getPost('idStoreFrom');
                 $currentSession->idStoreFrom = $idStoreFrom;
             } elseif ($currentSession->storeFrom) {
                 $filter['storeFrom'] = $currentSession->storeFrom;
@@ -141,73 +149,73 @@ class RegisterController extends AbstractActionController
             if ($request->getPost('storeTo')) {
                 $filter['storeTo'] = $request->getPost('storeTo');
                 $currentSession->storeTo = $filter['storeTo'];
-                $filter['idStoreTo'] = $request->getPost('idStoreTo');
-                $currentSession->idStoreTo = $filter['idStoreTo'];
+                $idStoreTo = $request->getPost('idStoreTo');
+                $currentSession->idStoreTo = $idStoreTo;
             } elseif ($currentSession->storeTo) {
                 $filter['storeTo'] = $currentSession->storeTo;
-                $filter['idStoreTo'] = $currentSession->idStoreTo;
+                $idStoreTo = $currentSession->idStoreTo;
             }
 
             if ($request->getPost('operationReset')) {
                 unset($currentSession->operation);
+                unset($currentSession->idOperation);
             }
             if ($request->getPost('operation')) {
                 $filter['operation'] = $request->getPost('operation');
                 $currentSession->operation = $filter['operation'];
+                $idOperation = $request->getPost('idOperation');
+                $currentSession->idOperation = $idOperation;
             } elseif ($currentSession->operation) {
                 $filter['operation'] = $currentSession->operation;
+                $idOperation = $currentSession->idOperation;
             }
 
             if ($request->getPost('paymentTypeReset')) {
                 unset($currentSession->paymentType);
+                unset($currentSession->idPaymentType);
             }
             if ($request->getPost('paymentType')) {
                 $filter['paymentType'] = $request->getPost('paymentType');
                 $currentSession->paymentType = $filter['paymentType'];
+                $idPaymentType = $request->getPost('idPaymentType');
+                $currentSession->idPaymentType = $idPaymentType;
             } elseif ($currentSession->paymentType) {
                 $filter['paymentType'] = $currentSession->paymentType;
+                $idPaymentType = $currentSession->idPaymentType;
             }
 
             if ($request->getPost('statusReset')) {
                 unset($currentSession->status);
+                unset($currentSession->idStatus);
             }
             if ($request->getPost('status')) {
                 $filter['status'] = $request->getPost('status');
                 $currentSession->status = $filter['status'];
+                $idStatus = $request->getPost('idStatus');
+                $currentSession->idStatus = $idStatus;
             } elseif ($currentSession->status) {
                 $filter['status'] = $currentSession->status;
+                $idStatus = $currentSession->idStatus;
             }
 
             if ($request->getPost('userReset')) {
                 unset($currentSession->user);
+                unset($currentSession->idUser);
             }
             if ($request->getPost('user')) {
                 $filter['user'] = $request->getPost('user');
                 $currentSession->user = $filter['user'];
+                $idUser = $request->getPost('idUser');
+                $currentSession->idUser = $idUser;
             } elseif ($currentSession->user) {
                 $filter['user'] = $currentSession->user;
+                $idUser = $currentSession->idUser;
             }
         }
 
-        $storeList = $this->getEntityManager()->getRepository(self::STORE_ENTITY)->findAll();
-        $data['storeFrom'] = $storeList;
-        $data['storeTo'] = $storeList;
-
-        $operationList = $this->getEntityManager()->getRepository(self::OPERATION_ENTITY)->findAll();
-        $data['operation'] = $operationList;
-
-        $paymentTypeList = $this->getEntityManager()->getRepository(self::PAYMENT_TYPE_ENTITY)->findAll();
-        $data['paymentType'] = $paymentTypeList;
-
-        $statusList = $this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findAll();
-        $data['status'] = $statusList;
-
-        $userList = $this->getEntityManager()->getRepository(self::USER_ENTITY)->findAll();
-        $data['user'] = $userList;
-
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->add('select', 'r')
-            ->add('from', 'Register\Entity\Register r');
+           ->add('from', 'Register\Entity\Register r');
 
         if (isset($filter['beginDate'])) {
             $qb->andWhere('r.date >= :beginDate')
@@ -219,10 +227,35 @@ class RegisterController extends AbstractActionController
                ->setParameter('endDate', $filter['endDate']);
         }
 
-//        if (isset($filter['storeFrom'])) {
-//            $qb->andWhere('r.idStoreFrom = :idStoreFrom')
-//                ->setParameter('idStoreFrom', $request->getPost('idStoreFrom'));
-//        }
+        if (isset($filter['storeFrom'])) {
+            $qb->andWhere('r.idStoreFrom = :idStoreFrom')
+               ->setParameter('idStoreFrom', $idStoreFrom);
+        }
+
+        if (isset($filter['storeTo'])) {
+            $qb->andWhere('r.idStoreTo = :idStoreTo')
+               ->setParameter('idStoreTo', $idStoreTo);
+        }
+
+        if (isset($filter['operation'])) {
+            $qb->andWhere('r.idOperation = :idOperation')
+               ->setParameter('idOperation', $idOperation);
+        }
+
+        if (isset($filter['paymentType'])) {
+            $qb->andWhere('r.idPaymentType = :idPaymentType')
+               ->setParameter('idPaymentType', $idPaymentType);
+        }
+
+        if (isset($filter['status'])) {
+            $qb->andWhere('r.idStatus = :idStatus')
+               ->setParameter('idStatus', $idStatus);
+        }
+
+        if (isset($filter['user'])) {
+            $qb->andWhere('r.idUser = :idUser')
+               ->setParameter('idUser', $idUser);
+        }
 
         // Pagination
         $matches = $this->getEvent()->getRouteMatch();
@@ -234,8 +267,48 @@ class RegisterController extends AbstractActionController
         $paginator
             ->setCurrentPageNumber($page)
             ->setItemCountPerPage(20);
+        // End pagination
 
-        //$register = $this->getEntityManager()->getRepository(self::REGISTER_ENTITY)->findAll();
+        $query = $qb->getQuery();
+        $register = $query->getResult();
+        if (count($register) > 0) {
+            foreach ($register as $item) {
+                if (!in_array($item->getIdStoreFrom(), $data['storeFrom'])) {
+                    $data['storeFrom'][] = $item->getIdStoreFrom();
+                }
+                if (!in_array($item->getIdStoreTo(), $data['storeTo'])) {
+                    $data['storeTo'][] = $item->getIdStoreTo();
+                }
+                if (!in_array($item->getIdOperation(), $data['operation'])) {
+                    $data['operation'][] = $item->getIdOperation();
+                }
+                if (!in_array($item->getIdPaymentType(), $data['paymentType'])) {
+                    $data['paymentType'][] = $item->getIdPaymentType();
+                }
+                if (!in_array($item->getIdStatus(), $data['status'])) {
+                    $data['status'][] = $item->getIdStatus();
+                }
+                if (!in_array($item->getIdUser(), $data['user'])) {
+                    $data['user'][] = $item->getIdUser();
+                }
+            }
+        }
+
+        //$storeList = $this->getEntityManager()->getRepository(self::STORE_ENTITY)->findAll();
+        //$data['storeFrom'] = $storeList;
+        //$data['storeTo'] = $storeList;
+
+        //$operationList = $this->getEntityManager()->getRepository(self::OPERATION_ENTITY)->findAll();
+        //$data['operation'] = $operationList;
+
+        //$paymentTypeList = $this->getEntityManager()->getRepository(self::PAYMENT_TYPE_ENTITY)->findAll();
+        //$data['paymentType'] = $paymentTypeList;
+
+        //$statusList = $this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findAll();
+        //$data['status'] = $statusList;
+
+        //$userList = $this->getEntityManager()->getRepository(self::USER_ENTITY)->findAll();
+        //$data['user'] = $userList;
 
         return new ViewModel(array(
             'paginator' => $paginator,
