@@ -198,6 +198,7 @@ class EditController extends AbstractActionController
 
         for ($i = 0, $count = count($catalog); $i < $count; $i++) {
             $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
+            $this->fullName = null;
         }
 
         return new ViewModel(array(
@@ -333,11 +334,11 @@ class EditController extends AbstractActionController
         $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
         $fullName = $category->getName();
 
+
         if (null == $category->getIdParent()) {
             if (!$this->fullName) {
                 $this->fullName = $fullName;
             }
-
             return $this->fullName;
         } else {
             $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
@@ -348,7 +349,6 @@ class EditController extends AbstractActionController
             } else {
                 $this->fullName = $parentName . " :: " . $fullName;
             }
-
             return $this->getFullNameCategory($parent->getId());
         }
     }
