@@ -504,3 +504,27 @@ cross
     color: #cc0000;
     font-size: 12px;
 }
+
+/******************************************************************************
+filter criteria
+ *******************************************************************************/
+.filter-criteria {
+    -moz-box-shadow: 0 0 10px #000000;
+    -webkit-box-shadow: 0 0 10px #000000;
+    box-shadow: 0 0 10px #000000;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/******************************************************************************
+tabs
+ *******************************************************************************/
+.nav-tabs > li > a {
+    background-color: rgba(66, 139, 202, 0.4);
+    color: #000000;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li:hover > a {
+    background-color: #563D7C;
+    color: #ffffff;
+}

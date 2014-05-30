@@ -24,6 +24,7 @@ class EditController extends AbstractActionController
      * @var
      */
     protected $em;
+    protected $fullName;
 
     /**
      * @return array|\Zend\Http\Response|ViewModel
@@ -193,9 +194,15 @@ class EditController extends AbstractActionController
             }
         }
 
+        $catalog = $this->setOptionItems('catalog');
+
+        for ($i = 0, $count = count($catalog); $i < $count; $i++) {
+            $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
+        }
+
         return new ViewModel(array(
             'form'         => $form,
-            'catalog'      => $this->setOptionItems('catalog'),
+            'catalog'      => $catalog,
             'brand'        => $this->setOptionItems('brand'),
             'brandState'   => $brandState,
             'catalogState' => $catalogState,
@@ -296,10 +303,10 @@ class EditController extends AbstractActionController
                 ->getRepository(self::CATEGORY_ENTITY)->findAll();
 
             for ($i = 0, $category = count($categories); $i < $category; $i++) {
-                if (!is_null($categories[$i]->getIdParent())) {
+//                if (!is_null($categories[$i]->getIdParent())) {
                     $option_arr[$i]['id']   = $categories[$i]->getId();
                     $option_arr[$i]['name'] = $categories[$i]->getName();
-                }
+//                }
             }
         } else {
             $brands = $this->getEntityManager()
@@ -312,6 +319,38 @@ class EditController extends AbstractActionController
         }
 
         return $option_arr;
+    }
+
+    /**
+     * Get full category name with parent category
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function getFullNameCategory($id)
+    {
+        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
+        $fullName = $category->getName();
+
+        if (null == $category->getIdParent()) {
+            if (!$this->fullName) {
+                $this->fullName = $fullName;
+            }
+
+            return $this->fullName;
+        } else {
+            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
+            $parentName = $parent->getName();
+
+            if ($this->fullName) {
+                $this->fullName = $parentName . " :: " . $this->fullName;
+            } else {
+                $this->fullName = $parentName . " :: " . $fullName;
+            }
+
+            return $this->getFullNameCategory($parent->getId());
+        }
     }
 
     /**

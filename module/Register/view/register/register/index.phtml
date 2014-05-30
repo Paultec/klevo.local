@@ -1,7 +1,8 @@
 <a href="<?php echo $this->url('register/add', array(
         'action'=>'add'));?>" class="btn btn-primary">Добавить запись</a>
 
-<div>Установленные фильтры: &nbsp;
+<div class="delim"></div>
+<div class="filter-criteria">Установленные фильтры: &nbsp;
     <form method="post" action="<?php echo $this->url('register', array('action' => 'index')); ?>">
     <?php
         foreach ($this->filter as $key => $value) {
@@ -132,8 +133,8 @@
         <h3>Извините, записей с заданными условиями нет. <br>
             Измените критерии выбора.</h3>
     <?php endif ?>
-<div class="clearfix"></div>
-<section class="col col-lg-9 col-lg-offset-3 text-center">
+<div class="delim"></div>
+<section class="col col-lg-12 text-center">
     <?php
     echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'register/paginator/pagination.phtml') : "";
     ?>
