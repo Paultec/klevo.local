@@ -40,11 +40,11 @@ class Product {
 
     /**
      * @Annotation\Type("Zend\Form\Element\Textarea")
-     * @Annotation\Filter({"name":"StripTags"})
-     * @Annotation\Validator({"name":"StringLength", "options":{"min":"1", "max":"255"}})
      * @Annotation\Options({"label":"Описание: "})
-     * @Annotation\Attributes({"class":"form-control name_input","placeholder":"Описание"})
+     * @Annotation\Attributes({"class":"form-control","placeholder":"Описание"})
+     * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Filter({"name":"StringTrim"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"max":"255"}})
      */
     public $description;
 

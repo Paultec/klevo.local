@@ -50,6 +50,16 @@ class Product
     private $img;
 
     /**
+     * @var \Data\Entity\Status
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Status")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idStatus", referencedColumnName="id")
+     * })
+     */
+    private $idStatus;
+
+    /**
      * @var \Catalog\Entity\Catalog
      *
      * @ORM\ManyToOne(targetEntity="Catalog\Entity\Catalog")
@@ -172,6 +182,29 @@ class Product
     }
 
     /**
+     * Set idStatus
+     *
+     * @param \Data\Entity\Status $idStatus
+     * @return Product
+     */
+    public function setIdStatus(\Data\Entity\Status $idStatus = null)
+    {
+        $this->idstatus = $idStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatus
+     *
+     * @return \Data\Entity\Status
+     */
+    public function getIdStatus()
+    {
+        return $this->idStatus;
+    }
+
+    /**
      * Set idCatalog
      *
      * @param \Catalog\Entity\Catalog $idCatalog
@@ -237,6 +270,7 @@ class Product
         $this->description = $data['description'];
         $this->price       = $data['price'];
         $this->img         = $data['img'];
+        $this->idStatus    = $data['idStatus'];
         $this->idCatalog   = $data['idCatalog'];
         $this->idBrand     = $data['idBrand'];
     }

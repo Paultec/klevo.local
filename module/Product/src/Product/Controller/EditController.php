@@ -133,6 +133,11 @@ class EditController extends AbstractActionController
                 $postData['idBrand'] = $this->getEntityManager()->
                     find(self::BRAND_ENTITY, $postData['idBrand']);
 
+                // empty description fix
+                if ($postData['description'] === 'empty') {
+                    $postData['description'] = null;
+                }
+
                 $product->populate($postData);
 
                 $this->getEntityManager()->persist($product);
@@ -142,9 +147,11 @@ class EditController extends AbstractActionController
             }
         }
 
+        $catalog = $this->modifyCatalogOptions();
+
         return new ViewModel(array(
             'form'    => $form,
-            'catalog' => $this->setOptionItems('catalog'),
+            'catalog' => $catalog,
             'brand'   => $this->setOptionItems('brand')
         ));
     }
@@ -182,6 +189,12 @@ class EditController extends AbstractActionController
                     find(self::BRAND_ENTITY, $postData['idBrand']);
                 $postData['idCatalog'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idCatalog']);
+
+                // empty description fix
+                if ($postData['description'] === 'empty') {
+                    $postData['description'] = null;
+                }
+
                 // Обратно в коп.
                 $postData['price'] = (int)($postData['price'] * 100);
 
@@ -194,12 +207,7 @@ class EditController extends AbstractActionController
             }
         }
 
-        $catalog = $this->setOptionItems('catalog');
-
-        for ($i = 0, $count = count($catalog); $i < $count; $i++) {
-            $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
-            $this->fullName = null;
-        }
+        $catalog = $this->modifyCatalogOptions();
 
         return new ViewModel(array(
             'form'         => $form,
@@ -289,6 +297,29 @@ class EditController extends AbstractActionController
     }
 
     /**
+     * Add full name
+     *
+     * @require @function getFullNameCategory
+     * @return array
+     */
+    protected function modifyCatalogOptions()
+    {
+        $catalog = $this->setOptionItems('catalog');
+
+        for ($i = 0, $count = count($catalog); $i < $count; $i++) {
+            $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
+
+            if (is_null($catalog[$i]['name'])) {
+                unset($catalog[$i]);
+            }
+
+            $this->fullName = null;
+        }
+
+        return $catalog;
+    }
+
+    /**
      * Set options for select
      *
      * @param $type
@@ -304,10 +335,8 @@ class EditController extends AbstractActionController
                 ->getRepository(self::CATEGORY_ENTITY)->findAll();
 
             for ($i = 0, $category = count($categories); $i < $category; $i++) {
-//                if (!is_null($categories[$i]->getIdParent())) {
-                    $option_arr[$i]['id']   = $categories[$i]->getId();
-                    $option_arr[$i]['name'] = $categories[$i]->getName();
-//                }
+                $option_arr[$i]['id']   = $categories[$i]->getId();
+                $option_arr[$i]['name'] = $categories[$i]->getName();
             }
         } else {
             $brands = $this->getEntityManager()
@@ -334,11 +363,8 @@ class EditController extends AbstractActionController
         $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
         $fullName = $category->getName();
 
-
         if (null == $category->getIdParent()) {
-            if (!$this->fullName) {
-                $this->fullName = $fullName;
-            }
+
             return $this->fullName;
         } else {
             $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
@@ -349,6 +375,7 @@ class EditController extends AbstractActionController
             } else {
                 $this->fullName = $parentName . " :: " . $fullName;
             }
+
             return $this->getFullNameCategory($parent->getId());
         }
     }

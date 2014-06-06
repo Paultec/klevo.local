@@ -29,6 +29,13 @@ class Register
     private $date;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="totalSum", type="integer", nullable=true)
+     */
+    private $totalSum;
+
+    /**
      * @var \Data\Entity\Store
      *
      * @ORM\ManyToOne(targetEntity="Data\Entity\Store")
@@ -119,6 +126,29 @@ class Register
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set totalSum
+     *
+     * @param integer $totalSum
+     * @return Register
+     */
+    public function setTotalSum($totalSum)
+    {
+        $this->totalsum = $totalSum;
+
+        return $this;
+    }
+
+    /**
+     * Get totalSum
+     *
+     * @return integer
+     */
+    public function getTotalSum()
+    {
+        return $this->totalSum;
     }
 
     /**
@@ -276,6 +306,7 @@ class Register
     {
         $this->id   	     = $data['id'];
         $this->date 	     = $data['date'];
+        $this->totalSum      = $data['totalSum'];
         $this->idStoreFrom   = $data['idStoreFrom'];
         $this->idStoreTo     = $data['idStoreTo'];
         $this->idStatus      = $data['idStatus'];

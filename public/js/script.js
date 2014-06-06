@@ -431,7 +431,8 @@ $(function(){
     /******************************************************************************
      wrap form element
      *******************************************************************************/
-    $('#product').find('label').wrap('<div class="form-group"></div>');
+    var product_form = $('#product');
+    product_form.find('label').wrap('<div class="form-group"></div>');
 
     /******************************************************************************
      back to top
@@ -487,5 +488,17 @@ $(function(){
         itemSelector: '.product',
         singleMode: true
     });
+
+    /******************************************************************************
+     fix description in product form
+     *******************************************************************************/
+    product_form.on('submit', function(){
+        var testarea = product_form.find('textarea');
+
+        if (testarea.val() == '') {
+            testarea.val('empty');
+        }
+    });
+
 
 });
