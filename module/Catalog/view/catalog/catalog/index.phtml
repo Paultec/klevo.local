@@ -17,27 +17,25 @@ $this->headTitle($title);
             <th>Название</th>
             <th>Действия</th>
         </tr>
-        <?php foreach ($this->categories as $category) : ?>
+        <?php for ($i = 0, $count = count($this->categories); $i < $count; $i++) : ?>
             <?php
-            if (is_object($category->getIdStatus())) {
-                if ($category->getIdStatus()->getId() != 4) {
+                if ($this->categories[$i]['status'] != 4) {
                     $class = '';
                 } else {
                     $class = 'hide_row';
                 }
-            }
             ?>
             <tr class="<?php echo $class;?>">
-                <td><?php echo $this->escapeHtml($category->getName());?></td>
+                <td><?php echo $this->escapeHtml($this->categories[$i]['name']);?></td>
                 <td>
                     <a class="btn btn-primary" href="<?php echo $this->url('category',
-                        array('action'=>'edit', 'id' => $category->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
+                        array('action'=>'edit', 'id' => $this->categories[$i]['id']));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
                     <a class="btn btn-warning show-hide" href="<?php echo $this->url('category',
-                        array('action'=>'hide', 'id' => $category->getId()));?>"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>
+                        array('action'=>'hide', 'id' => $this->categories[$i]['id']));?>"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>
 <!--                    <a class="btn btn-danger" href="--><?php //echo $this->url('category',
 //                        array('action'=>'delete', 'id' => $category->getId()));?><!--"><span class="glyphicon glyphicon-remove"></span> Удалить</a>-->
                 </td>
             </tr>
-        <?php endforeach; ?>
+        <?php endfor; ?>
     </table>
 </section>

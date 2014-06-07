@@ -426,22 +426,6 @@ login & register wrap div style
 }
 
 /******************************************************************************
- product
- *******************************************************************************/
-.product {
-    padding: 0;
-    margin: 0;
-    width: 275px;
-}
-
-@media (max-width: 768px) {
-    .product {
-        width: 100%;
-        padding-right: 30px;
-    }
-}
-
-/******************************************************************************
  product filter
  *******************************************************************************/
 .product-list {
@@ -527,4 +511,33 @@ tabs
 .nav-tabs > li.active > a, .nav-tabs > li:hover > a {
     background-color: #563D7C;
     color: #ffffff;
+}
+
+/******************************************************************************
+product
+ *******************************************************************************/
+.product {
+    background: #ffffff;
+    border-bottom: 1px solid #F5F5F5;
+    border-left: 1px solid #F5F5F5;
+    border-right: 1px solid #F5F5F5;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    transition: background 1s;
+}
+
+.product:hover {
+    background: #F5F5F5;
+}
+
+.product:first-child {
+    border-top: 1px solid #F5F5F5;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.product:last-child {
+    border-bottom: 1px solid #F5F5F5;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }

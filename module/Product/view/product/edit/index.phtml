@@ -54,23 +54,35 @@
         </tr>
         </tfoot>
         <tbody>
-        <?php foreach($this->result as $item): ?>
-            <tr>
-                <td><?php echo $item->getName(); ?></td>
-                <td><?php echo $item->getDescription() ?: 'Нет'; ?></td>
-                <td><?php echo $item->getPrice() / 100; ?></td>
-                <td><?php echo $item->getImg() ?
-                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $item->getId())) . '" class="text-img" data-img="/img/product/'. $item->getImg() .'">Да</a>' :
-                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $item->getId())) . '">Нет</a>'; ?>
+        <?php for($i = 0, $count = count($this->result); $i < $count; $i++): ?>
+            <?php
+            if (is_object($this->result[$i]->getIdStatus())) {
+                if ($this->result[$i]->getIdStatus()->getId() != 4) {
+
+                    $class = '';
+                } else {
+                    $class = 'hide_row';
+                }
+            } else {
+                $class = '';
+            }
+            ?>
+            <tr class="<?php echo $class;?>">
+                <td><?php echo $this->result[$i]->getName(); ?></td>
+                <td><?php echo $this->result[$i]->getDescription() ?: 'Нет'; ?></td>
+                <td><?php echo $this->result[$i]->getPrice() / 100; ?></td>
+                <td><?php echo $this->result[$i]->getImg() ?
+                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '" class="text-img" data-img="/img/product/'. $this->result[$i]->getImg() .'">Да</a>' :
+                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '">Нет</a>'; ?>
                 </td>
                 <td class="same-width">
                     <a class="btn btn-primary" href="<?php echo $this->url('editproduct',
-                        array('action'=>'edit', 'id' => $item->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
+                        array('action'=>'edit', 'id' => $this->result[$i]->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
                     <a class="btn btn-warning show-hide" href="<?php echo $this->url('editproduct',
-                        array('action'=>'hide', 'id' => $item->getId()));?>"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>
+                        array('action'=>'hide', 'id' => $this->result[$i]->getId()));?>"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>
                 </td>
             </tr>
-        <?php endforeach; ?>
+        <?php endfor; ?>
         </tbody>
         </table>
     <?php else: ?>

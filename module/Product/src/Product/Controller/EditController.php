@@ -19,6 +19,7 @@ class EditController extends AbstractActionController
     const PRODUCT_ENTITY  = 'Product\Entity\Product';
     const BRAND_ENTITY    = 'Catalog\Entity\Brand';
     const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
+    const STATUS_ENTITY   = 'Data\Entity\Status';
 
     /**
      * @var
@@ -216,6 +217,44 @@ class EditController extends AbstractActionController
             'brandState'   => $brandState,
             'catalogState' => $catalogState,
             'id'           => $id
+        ));
+    }
+
+    public function hideAction()
+    {
+        $id = (int) $this->params()->fromRoute('id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('editproduct');
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $hide = $request->getPost('hide', 'Нет');
+
+            if ($hide == 'Да') {
+                $id = (int)$request->getPost('id');
+                $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id);
+
+                if (is_null($product->getIdStatus()) || ($product->getIdStatus()->getId() === 3)) {
+                    $product->setIdStatus($this->getEntityManager()->
+                            find(self::STATUS_ENTITY, $id = 4));
+                } else {
+                    $product->setIdStatus($this->getEntityManager()->
+                            find(self::STATUS_ENTITY, $id = 3));
+                }
+
+                $this->getEntityManager()->persist($product);
+                $this->getEntityManager()->flush();
+            }
+
+            return $this->redirect()->toRoute('editproduct');
+        }
+
+        return new ViewModel(array(
+            'id'       => $id,
+            'product'  => $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id)
         ));
     }
 

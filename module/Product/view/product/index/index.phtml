@@ -67,26 +67,29 @@
     <div class="delim"></div>
 </section>
 
-<section id="product-holder" class="col col-lg-9">
+<section class="col col-lg-9 product-holder">
     <?php if ($this->paginator->count() > 0): ?>
         <?php foreach($this->paginator as $item): ?>
-            <section class="col col-sm-6 col-md-4 product">
-                <div class="thumbnail">
+            <section class="product row">
+                <div class="col col-md-4">
                     <?php if ($item->getImg()): ?>
                         <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
-                            <img class="_lazy_" src="/img/product/<?php echo $item->getImg()?>" data-original="/img/product/<?php echo $item->getImg()?>" width="270" alt="">
+                            <img class="lazy" data-original="/img/product/<?php echo $item->getImg()?>" width="270" alt="">
                         </a>
                     <?php else:?>
                         <img data-src="holder.js/270x200" alt="270x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MzAweDIwMDwvdGV4dD48L3N2Zz4=" style="width: 270px; height: 200px;">
                     <?php endif; ?>
-                    <div class="caption">
-                        <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>"><?php echo $item->getName(); ?></a></h5>
-                        <p><?php echo $item->getDescription(); ?></p>
-                        <p>
-                            <a href="#" class="btn btn-primary" role="button">Button</a>
-                            <a href="#" class="btn btn-default" role="button">Button</a>
-                        </p>
-                    </div>
+                </div>
+                <div class="col col-md-6">
+                    <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>"><?php echo $item->getName(); ?></a></h5>
+                    <p><?php echo $item->getDescription(); ?></p>
+                    <?php if ($item->getPrice() !== 0):?>
+                        <p class="product-price"><?php echo $item->getPrice() / 100; ?></p>
+                    <?php endif ?>
+                </div>
+                <div class="col col-md-2">
+                    <a href="#" class="btn btn-primary" role="button">Button</a>
+                    <a href="#" class="btn btn-default" role="button">Button</a>
                 </div>
             </section>
         <?php endforeach; ?>

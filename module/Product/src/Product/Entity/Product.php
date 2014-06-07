@@ -50,6 +50,13 @@ class Product
     private $img;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="qty", type="integer", nullable=true)
+     */
+    private $qty;
+
+    /**
      * @var \Data\Entity\Status
      *
      * @ORM\ManyToOne(targetEntity="Data\Entity\Status")
@@ -182,6 +189,29 @@ class Product
     }
 
     /**
+     * Set qty
+     *
+     * @param integer $qty
+     * @return Product
+     */
+    public function setQty($qty)
+    {
+        $this->qty = $qty;
+
+        return $this;
+    }
+
+    /**
+     * Get qty
+     *
+     * @return integer
+     */
+    public function getQty()
+    {
+        return $this->qty;
+    }
+
+    /**
      * Set idStatus
      *
      * @param \Data\Entity\Status $idStatus
@@ -189,7 +219,7 @@ class Product
      */
     public function setIdStatus(\Data\Entity\Status $idStatus = null)
     {
-        $this->idstatus = $idStatus;
+        $this->idStatus = $idStatus;
 
         return $this;
     }
@@ -270,6 +300,7 @@ class Product
         $this->description = $data['description'];
         $this->price       = $data['price'];
         $this->img         = $data['img'];
+        $this->qty         = $data['qty'];
         $this->idStatus    = $data['idStatus'];
         $this->idCatalog   = $data['idCatalog'];
         $this->idBrand     = $data['idBrand'];

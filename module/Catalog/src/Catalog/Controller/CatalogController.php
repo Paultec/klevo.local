@@ -19,17 +19,16 @@ class CatalogController extends AbstractActionController
      * @var
      */
     protected $em;
+    protected $fullName;
 
     /**
      * @return ViewModel
      */
     public function indexAction()
     {
-        $re = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY);
-        $categories = $re->findAll();
-
+        // С категорией "Главная" (param::index)
         return new ViewModel(array(
-            'categories' => $categories
+            'categories' => $this->modifyCatalogOptions('index')
         ));
     }
 
@@ -63,7 +62,7 @@ class CatalogController extends AbstractActionController
 
         return new ViewModel(array(
             'form'       => $form,
-            'categories' => $this->setOptionItems()
+            'categories' => $this->modifyCatalogOptions()
         ));
     }
 
@@ -111,7 +110,7 @@ class CatalogController extends AbstractActionController
             'form'       => $form,
             'id'         => $id,
             'parentState'=> $parentState,
-            'categories' => $this->setOptionItems()
+            'categories' => $this->modifyCatalogOptions()
         ));
     }
 
@@ -146,6 +145,9 @@ class CatalogController extends AbstractActionController
                 if ($category) {
                     $this->getEntityManager()->persist($category);
                     $this->getEntityManager()->flush();
+
+                    // скрыть подкатегории
+                    $this->childHide($category);
                 }
             }
 
@@ -196,6 +198,36 @@ class CatalogController extends AbstractActionController
 //        ));
 //    }
 
+
+    /**
+     * Add full name
+     *
+     * @require @function getFullNameCategory
+     *
+     * @param null $param
+     *
+     * @return \Zend\Http\Response|ViewModel
+     */
+    protected function modifyCatalogOptions($param = null)
+    {
+        $catalog = $this->setOptionItems();
+
+        for ($i = 0, $count = count($catalog); $i < $count; $i++) {
+            $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
+
+            $this->fullName = null;
+        }
+
+        if (is_null($param)) {
+            array_unshift($catalog, array(
+                'id'   => null,
+                'name' => 'Главная'
+            ));
+        }
+
+        return $catalog;
+    }
+
     /**
      * @return array
      */
@@ -207,16 +239,74 @@ class CatalogController extends AbstractActionController
         $option_arr = array();
 
         for ($i = 0, $category = count($categories); $i < $category; $i++) {
-            $option_arr[$i]['id']   = $categories[$i]->getId();
-            $option_arr[$i]['name'] = $categories[$i]->getName();
+            $option_arr[$i]['id']     = $categories[$i]->getId();
+            $option_arr[$i]['name']   = $categories[$i]->getName();
+
+            if (!is_null($categories[$i]->getIdStatus())) {
+                $option_arr[$i]['status'] = $categories[$i]->getIdStatus()->getId();
+            } else {
+                $option_arr[$i]['status'] = null;
+            }
         }
 
-        array_unshift($option_arr, array(
-            'id'   => null,
-            'name' => 'Главная'
-        ));
-
         return $option_arr;
+    }
+
+    /**
+     * Get full category name with parent category
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function getFullNameCategory($id)
+    {
+        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
+        $fullName = $category->getName();
+
+        if (null == $category->getIdParent()) {
+            if (!$this->fullName) {
+                $this->fullName = $fullName;
+            }
+
+            return $this->fullName;
+        } else {
+            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
+            $parentName = $parent->getName();
+
+            if ($this->fullName) {
+                $this->fullName = $parentName . " :: " . $this->fullName;
+            } else {
+                $this->fullName = $parentName . " :: " . $fullName;
+            }
+
+            return $this->getFullNameCategory($parent->getId());
+        }
+    }
+
+    /**
+     * @param $category
+     */
+    protected function childHide($category)
+    {
+        $childCategory = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->
+            findBy(array('idParent' => $category->getId()));
+
+        if (!empty($childCategory)) {
+            foreach ($childCategory as $child) {
+                if ($category->getIdStatus()->getId() === 3) {
+                    $child->setIdStatus($this->getEntityManager()->
+                            find(self::STATUS_ENTITY, $id = 3));
+                } else {
+                    $child->setIdStatus($this->getEntityManager()->
+                            find(self::STATUS_ENTITY, $id = 4));
+                }
+
+                $this->getEntityManager()->persist($child);
+            }
+
+            $this->getEntityManager()->flush();
+        }
     }
 
     /**
