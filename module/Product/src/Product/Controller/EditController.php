@@ -199,6 +199,10 @@ class EditController extends AbstractActionController
                 // Обратно в коп.
                 $postData['price'] = (int)($postData['price'] * 100);
 
+                $postData['idStatus'] = $product->getIdStatus();
+                $postData['img']      = $product->getImg();
+                $postData['qty']      = $product->getQty();
+
                 $product->populate($postData);
 
                 $this->getEntityManager()->persist($product);

@@ -70,6 +70,7 @@
 <section class="col col-lg-9 product-holder">
     <?php if ($this->paginator->count() > 0): ?>
         <?php foreach($this->paginator as $item): ?>
+            <?php if (is_null($item->getIdStatus()) || ($item->getIdStatus()->getId() == 3)): ?>
             <section class="product row">
                 <div class="col col-md-4">
                     <?php if ($item->getImg()): ?>
@@ -92,6 +93,7 @@
                     <a href="#" class="btn btn-default" role="button">Button</a>
                 </div>
             </section>
+            <?php endif; ?>
         <?php endforeach; ?>
     <?php else: ?>
         <h3>Извините, такого товара нет в магазине. <br>
