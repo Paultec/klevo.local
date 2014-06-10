@@ -1,0 +1,24 @@
+<?php
+    echo 'ID: ' . $this->register->getId();
+    echo '<br/>Дата: ' . $this->register->getDate()->format('d.m.Y');
+    echo '<br/>От кого: ' . $this->register->getIdStoreFrom()->getName();
+    echo '<br/>Куда: ' . $this->register->getIdStoreTo()->getName();
+    echo '<br/>Операция: ' . $this->register->getIdOperation()->getName();
+    echo '<br/>Статус: ' . $this->register->getIdStatus()->getName();
+    echo '<br/>Форма оплаты: ' . $this->register->getIdPaymentType()->getName();
+    echo '<br/>Пользователь: ' . $this->register->getIdUser()->getEmail();
+?>
+<table>
+    <tbody>
+<?php
+    foreach($this->registerTable as $item) { ?>
+<tr>
+    <td><?php echo $item->getIdProduct()->getName(); ?></td>
+    <td><?php echo $item->getIdProduct()->getIdCatalog()->getName(); ?></td>
+    <td><?php echo $item->getIdProduct()->getIdBrand()->getName(); ?></td>
+    <td><?php echo $item->getQty(); ?></td>
+    <td><?php echo $item->getPrice(); ?></td>
+</tr>
+<?php } ?>
+    </tbody>
+</table>

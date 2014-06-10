@@ -22,7 +22,8 @@ return array(
         'Cart',
         'Product',
         'GoSession',
-        'Register'
+        'Register',
+        'Data',
         ),
     'module_listener_options' => array(
         'module_paths' => array(

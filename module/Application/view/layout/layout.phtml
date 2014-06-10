@@ -71,9 +71,9 @@
                     <?php else: ?>
                         <li><a href="<?php echo $this->url('zfcuser/logout'); ?>" class="float-shadow logout">Выйти <span class="glyphicon glyphicon-user"></a></li>
                     <?php endif ?>
-                    <!--Не забыть-->
-                    <li><a href="<?php echo $this->url('register');?>" id="modal" class="float-shadow">REG </a></li>
-                    <!--убрать-->
+                    <!--Сделать невидимым для пользователей с ролью GUEST & USER-->
+                    <li><a href="<?php echo $this->url('admin');?>" id="modal" class="float-shadow">Admin</a></li>
+                    <!--Сделать невидимым для пользователей с ролью GUEST & USER-->
                 </ul>
             </div><!-- /Horizontal menu  -->
             <!-- Search and Cart -->
