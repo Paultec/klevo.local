@@ -463,22 +463,28 @@ $(function(){
     /******************************************************************************
      price format
      *******************************************************************************/
-    var price = $('.product-price'),
-        part = price.text().split('.');
+    $('.product-price').each(function() {
+        var part = $(this).text().split('.');
 
-    var first_price_part  = parseInt(part[0]), second_price_part = parseInt(part[1]);
+        var first_price_part  = !isNaN(part[0]) ? parseInt(part[0]) : '',
+            second_price_part = !isNaN(part[1]) ? parseInt(part[1]) : '';
 
-    if (first_price_part) {
-        price.text(first_price_part + ' грн. ' + second_price_part + ' коп.');
-    } else {
-        price.text(second_price_part + ' коп.');
-    }
+        if (first_price_part && second_price_part) {
+            $(this).text(first_price_part + ' грн. ' + second_price_part + ' коп.');
+        } else if (first_price_part) {
+            $(this).text(first_price_part + '  грн.');
+        } else if (second_price_part) {
+            $(this).text(second_price_part + ' коп.');
+        } else {
+            $(this).text('');
+        }
+    });
 
     /******************************************************************************
      image lazy load
      *******************************************************************************/
-    $("img.lazy").lazyload({
-        effect : "fadeIn"
+    $('img.lazy').lazyload({
+        effect : 'fadeIn'
     });
 
     /******************************************************************************

@@ -3,8 +3,8 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab0" data-toggle="tab">Разделы:</a></li>
         <li><a href="#tab1" data-toggle="tab">Отчеты и аналитика</a></li>
-        <li><a href="#tab2" data-toggle="tab">раздел 2</a></li>
-        <li><a href="#tab3" data-toggle="tab">раздел 3</a></li>
+        <li><a href="#tab2" data-toggle="tab">Справочник товаров</a></li>
+        <li><a href="#tab3" data-toggle="tab">Справочники</a></li>
         <li><a href="#tab4" data-toggle="tab">раздел 4</a></li>
         <li><a href="#tab5" data-toggle="tab">раздел 5</a></li>
         <li><a href="#tab6" data-toggle="tab">раздел 6</a></li>
@@ -19,8 +19,14 @@
             <a class="" href="<?php echo $this->url('payment');?>">Платежи</a>
             <a class="" href="<?php echo $this->url('user');?>">Пользователи</a>
         </div>
-        <div class="tab-pane" id="tab2"></div>
-        <div class="tab-pane" id="tab3"></div>
+        <div class="tab-pane" id="tab2">
+            <a class="" href="<?php echo $this->url('fileupload');?>">Загрузить продукт из Excel-документа</a>
+            <a class="" href="<?php echo $this->url('editproduct');?>">Работа с продуктом</a>
+        </div>
+        <div class="tab-pane" id="tab3">
+            <a class="" href="<?php echo $this->url('brand');?>">Производители</a>
+            <a class="" href="<?php echo $this->url('category');?>">Категории</a>
+        </div>
         <div class="tab-pane" id="tab4"></div>
         <div class="tab-pane" id="tab5"></div>
         <div class="tab-pane" id="tab6"></div>

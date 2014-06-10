@@ -541,3 +541,14 @@ product
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
 }
+
+/******************************************************************************
+product price & name style
+ *******************************************************************************/
+.product-name {
+    color: #428BCA;
+}
+
+.product-price {
+    color: #563D7C;
+}

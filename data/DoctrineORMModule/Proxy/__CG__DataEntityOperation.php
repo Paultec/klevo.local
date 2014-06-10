@@ -64,10 +64,10 @@ class Operation extends \Data\Entity\Operation implements \Doctrine\ORM\Proxy\Pr
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'name');
+            return array('__isInitialized__', '' . "\0" . 'Data\\Entity\\Operation' . "\0" . 'id', '' . "\0" . 'Data\\Entity\\Operation' . "\0" . 'name');
         }
 
-        return array('__isInitialized__', 'id', 'name');
+        return array('__isInitialized__', '' . "\0" . 'Data\\Entity\\Operation' . "\0" . 'id', '' . "\0" . 'Data\\Entity\\Operation' . "\0" . 'name');
     }
 
     /**
