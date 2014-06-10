@@ -166,112 +166,39 @@ class RemainsController extends AbstractActionController
 //        }
 
         $remainsTemp = array();
-        $remains = array();
-        foreach ($remainsByStore as $store => $productOnStore) {
+
+        foreach ($remainsByStore as $productOnStore) {
             foreach ($productOnStore as $product) {
                 foreach ($product as $item) {
-                    $qty = $item->getQty();
-                    $price = $item->getPrice();
-                    $remains[$item->getIdProduct()->getId()][] = array('qty' => $qty,'price' => $price);
-//                    if (!array_key_exists($item->getIdProduct()->getId(), $remains)) {
-                        $remainsTemp[$item->getIdProduct()->getId()][] = $item;
-//                    } else {
-//                        $checkPrice = null;
-//                        $checkItem = 0;
-//                        foreach ($remains[$item->getIdProduct()->getId()] as $currentRemains) {
-//                            if ($currentRemains->getPrice() == $item->getPrice()) {
-//                                $checkPrice = true;
-//                                ++$checkItem;
-//                                var_dump($checkItem);
-//                                var_dump($currentRemains);
-//                            }
-//                        }
-//                        if ($checkPrice) {
-////                            var_dump($remains[$item->getIdProduct()->getId()]);
-//
-////                            var_dump($item);
-//                            $oldQty = $remains[$item->getIdProduct()->getId()][$checkItem - 1]->getQty();
-//                            $remains[$item->getIdProduct()->getId()][$checkItem - 1]->setQty($oldQty + $item->getQty());
-//                        } else {
-//                            $remains[$item->getIdProduct()->getId()][] = $item;
-//                        }
-//                    }
+                    $remainsTemp[] = array(
+                        'idProduct' => $item->getIdProduct()->getId(),
+                        'qty'     => $item->getQty(),
+                        'price'   => $item->getPrice()
+                    );
                 }
             }
         }
 
-        //var_dump($remainsTemp);
+        unset($remainsByStore);
 
-        while ($remainsTemp) {
-            $registerTable = array_shift($remainsTemp);
-            //var_dump($registerTable);
-            foreach ($registerTable as $item) {
-//                $currentProduct = $item->getIdProduct();
-//                $currentIdProduct = $currentProduct->getId();
-//                $currentProduct->setQty($item->getQty());
-//                $currentProduct->setPrice($item->getPrice());
-//                var_dump($currentIdProduct);
-//                var_dump($item->getQty());
-//                var_dump($item->getPrice());
-//                if (!isset($remains[$currentIdProduct])) {
-//                    $remains[$currentIdProduct][] = $currentProduct;
-//                } else {
-//                    $checkPrice = false;
-//                    while ($remains[$currentIdProduct]) {
-//                        $remainsThisProduct = array_shift($remains[$currentIdProduct]);
-//                        if ($remainsThisProduct->getPrice() == $currentProduct->getPrice()) {
-//                            $qtyThisProduct = $remainsThisProduct->getQty();
-//                            $remainsThisProduct->setQty($qtyThisProduct + $currentProduct->getQty());
-//                            $checkPrice = true;
-//                            array_unshift($remains[$currentIdProduct], $remainsThisProduct);
-//                            break;
-//                        } else {
-//                            $tempRemains[] = $remainsThisProduct;
-//                        }
-//                    }
-//                }
-                //var_dump($remains[$currentIdProduct]);
-                //var_dump($remains);
+        $remains = array();
+
+        foreach ($remainsTemp as $item) {
+            //var_dump($item);
+            if (!isset($remains[$item['idProduct']])) {
+                $remains[$item['idProduct']] = array();
+                $remains[$item['idProduct']]['product'] = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $item['idProduct']);
             }
-//            var_dump($registerTable);
-//            while ($registerTable) {
-//                $item = array_shift($registerTable );
-//                $currentProduct = $item->getIdProduct();
-//                //var_dump($item);
-//                if (!isset($remains[$currentProduct->getId()])) {
-//                    $currentProduct->setQty($item->getQty());
-//                    $currentProduct->setPrice($item->getPrice());
-//                    $remains[$currentProduct->getId()][] = $currentProduct;
-//                } else {
-////                    $tempRemains = array();
-////                    while ($remains[$currentProduct->getId()]) {
-////                        $checkRemains = array_shift($remains[$currentProduct->getId()]);
-////                        //var_dump($checkRemains);
-////                        if ($checkRemains->getPrice() == $item->getPrice()) {
-////                            $currentQty = $checkRemains->getQty();
-////                            $checkRemains->setQty($currentQty + $item->getQty());
-////                            array_unshift($remains[$currentProduct->getId()], $checkRemains);
-////                            var_dump($remains);
-////                            break;
-////                        } else {
-////                            $tempRemains[] = $checkRemains;
-////                        }
-////                    }
-////                    $remains[$currentProduct->getId()] = $tempRemains;
-////                    $currentProduct->setQty($item->getQty());
-////                    $currentProduct->setPrice($item->getPrice());
-////                    $remains[$currentProduct->getId()][] = $currentProduct;
-//                    $count = count($remains[$currentProduct->getId()]);
-//                    for ($i = 0; $i < $count; ++$i) {
-//                        if ($currentProduct->getId() == $item->getIdProduct()-getId() && $remains[$currentProduct->getId()][$i]->getPrice() == $item->getPrice()) {
-//                            $currentQty = $remains[$currentProduct->getId()][$i]->getQty();
-//                            $remains[$currentProduct->getId()][$i]->getQty($currentQty + $item->getQty());
-//                        } else {
-//
-//                        }
-//                    }
-//                }
-//            }
+            if (!isset($remains[$item['idProduct']][$item['price']])) {
+                $remains[$item['idProduct']][$item['price']] = $item['qty'];
+            } else {
+                $qty = $remains[$item['idProduct']][$item['price']];
+                $remains[$item['idProduct']][$item['price']] = $qty + $item['qty'];
+            }
+//            $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $item['idProduct']);
+//            $product->setQty($item['qty']);
+//            $product->setPrice($item['price']);
+//            $remains[] = $product;
         }
 
         return new ViewModel(array(

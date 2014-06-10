@@ -64,10 +64,10 @@ class Catalog extends \Catalog\Entity\Catalog implements \Doctrine\ORM\Proxy\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'name', 'idParent', 'idStatus');
+            return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idParent', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idStatus');
         }
 
-        return array('__isInitialized__', 'id', 'name', 'idParent', 'idStatus');
+        return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idParent', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idStatus');
     }
 
     /**

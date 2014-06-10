@@ -83,7 +83,7 @@ class RegisterTableController extends AbstractActionController
                         $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
 
                         $qtyProduct = $entityQtyProduct->getQty();
-                        $product->result[$i]->qty = $qtyProduct;
+                        $product->result[$i]->setQty($qtyProduct);
                     }
                 }
 
@@ -131,7 +131,7 @@ class RegisterTableController extends AbstractActionController
                     $operation = $this->getEntityManager()->find(self::OPERATION_ENTITY, $idOperation);
                     //unset($productList[$i]->currentIdOperation);
                     unset($productList[$i]->brand);
-                    unset($productList[$i]->qty);
+                    //unset($productList[$i]->qty);
                     unset($productList[$i]->category);
                     //var_dump($productList[$i]);
                     $noteRegisterTable = array(

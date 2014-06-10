@@ -64,10 +64,10 @@ class Brand extends \Catalog\Entity\Brand implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'name', 'idStatus');
+            return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Brand' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Brand' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Brand' . "\0" . 'idStatus');
         }
 
-        return array('__isInitialized__', 'id', 'name', 'idStatus');
+        return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Brand' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Brand' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Brand' . "\0" . 'idStatus');
     }
 
     /**

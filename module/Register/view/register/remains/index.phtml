@@ -1,5 +1,30 @@
 <h3>Остатки товара</h3>
 <?php
     $remains = $this->remains;
-var_dump($remains);
 ?>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Производитель</th>
+        <th>Категория</th>
+        <th>Наименование</th>
+        <th>К-во</th>
+        <th>Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    foreach ($remains as $product) {
+        foreach ($product as $price => $qty) {
+            if (is_numeric($price)) {
+    ?>
+    <tr>
+        <td><?php echo $product['product']->getIdBrand()->getName(); ?></td>
+        <td><?php echo $product['product']->getIdCatalog()->getName(); ?></td>
+        <td><?php echo $product['product']->getName(); ?></td>
+        <td><?php echo $qty; ?></td>
+        <td><?php echo $price; ?></td>
+    </tr>
+    <?php } } } ?>
+    </tbody>
+</table>
