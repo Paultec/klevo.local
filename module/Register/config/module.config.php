@@ -71,6 +71,71 @@ return array(
                     ),
                 ),
             ),
+            'balance' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/balance[/:action][/]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\Balance',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'order' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/order[/:action][/]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\Order',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'payment' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/payment[/:action][/]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\Payment',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'remains' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/remains[/:action][/]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\Remains',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'user' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/user[/:action][/]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\User',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     'view_helpers' => array(

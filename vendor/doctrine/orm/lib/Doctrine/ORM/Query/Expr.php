@@ -344,7 +344,7 @@ class Expr
     }
 
     /**
-     * Creates a product mathematical expression with the given arguments.
+     * Creates a goods mathematical expression with the given arguments.
      *
      * First argument is considered the left expression and the second is the right expression.
      * When converted to string, it will generated a <left expr> * <right expr>. Example:

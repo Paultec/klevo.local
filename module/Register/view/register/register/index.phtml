@@ -125,6 +125,13 @@
                     <td><?php echo $item->getIdStoreTo()->getName(); ?></td>
                     <td><?php echo $item->getIdOperation()->getName(); ?></td>
                     <td><?php echo $item->getIdUser()->getEmail(); ?></td>
+                    <td><?php //echo $item->getIdUser()->getTotalSum(); ?></td>
+                    <td>
+                        <form class="float-form" method="post" action="<?php echo $this->url('register-table', array('action' => 'get-detail')); ?>">
+                            <input type="submit" class="btn btn-info" name="detailRegister" value="Детали">
+                            <input type="hidden" name="idRegister" value="<?php echo $item->getId(); ?>">
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

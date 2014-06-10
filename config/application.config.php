@@ -23,7 +23,8 @@ return array(
         'Product',
         'GoSession',
         'Register',
-        'Data'
+        'Data',
+        'Admin'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

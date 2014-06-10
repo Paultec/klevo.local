@@ -64,10 +64,10 @@ class Attribute extends \Data\Entity\Attribute implements \Doctrine\ORM\Proxy\Pr
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'name');
+            return array('__isInitialized__', '' . "\0" . 'Data\\Entity\\Attribute' . "\0" . 'id', '' . "\0" . 'Data\\Entity\\Attribute' . "\0" . 'name');
         }
 
-        return array('__isInitialized__', 'id', 'name');
+        return array('__isInitialized__', '' . "\0" . 'Data\\Entity\\Attribute' . "\0" . 'id', '' . "\0" . 'Data\\Entity\\Attribute' . "\0" . 'name');
     }
 
     /**
