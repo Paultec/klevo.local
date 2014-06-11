@@ -78,7 +78,9 @@
                             <img class="lazy" data-original="/img/product/<?php echo $item->getImg()?>" width="270" alt="">
                         </a>
                     <?php else:?>
-                        <img data-src="holder.js/270x200" alt="270x200" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSI+PC9yZWN0Pjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1MCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MzAweDIwMDwvdGV4dD48L3N2Zz4=" style="width: 270px; height: 200px;">
+                    <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
+                        <img class="lazy" data-original="/img/product/noimage.png" width="270" alt="">
+                    </a>
                     <?php endif; ?>
                 </div>
                 <div class="col col-md-6">
