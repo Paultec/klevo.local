@@ -1,6 +1,6 @@
 <h3>Управление сайтом</h3>
 <div>
-    <ul class="nav nav-tabs">
+<!--    <ul class="nav nav-tabs">
         <li class="active"><a href="#tab0" data-toggle="tab">Разделы:</a></li>
         <li><a href="#tab1" data-toggle="tab">Отчеты и аналитика</a></li>
         <li><a href="#tab2" data-toggle="tab">Справочник товаров</a></li>
@@ -12,28 +12,57 @@
     <div class="tab-content">
         <div class="tab-pane active" id="tab0"></div>
         <div class="tab-pane" id="tab1">
-            <a class="" href="<?php echo $this->url('register');?>">Журнал операций</a>
-            <a class="" href="<?php echo $this->url('remains');?>">Остатки товара</a>
-            <a class="" href="<?php echo $this->url('balance');?>">Баланс</a>
-            <a class="" href="<?php echo $this->url('order');?>">Заказы</a>
-            <a class="" href="<?php echo $this->url('payment');?>">Платежи</a>
-            <a class="" href="<?php echo $this->url('user');?>">Пользователи</a>
+            <a class="" href="<?php /*echo $this->url('register');*/?>">Журнал операций</a>
+            <a class="" href="<?php /*echo $this->url('remains');*/?>">Остатки товара</a>
+            <a class="" href="<?php /*echo $this->url('balance');*/?>">Баланс</a>
+            <a class="" href="<?php /*echo $this->url('order');*/?>">Заказы</a>
+            <a class="" href="<?php /*echo $this->url('payment');*/?>">Платежи</a>
+            <a class="" href="<?php /*echo $this->url('user');*/?>">Пользователи</a>
         </div>
         <div class="tab-pane" id="tab2">
-            <a class="" href="<?php echo $this->url('fileupload');?>">Загрузить продукт из Excel-документа</a>
-            <a class="" href="<?php echo $this->url('editproduct');?>">Работа с продуктом</a>
+            <a class="" href="<?php /*echo $this->url('fileupload');*/?>">Загрузить продукт из Excel-документа</a>
+            <a class="" href="<?php /*echo $this->url('editproduct');*/?>">Работа с продуктом</a>
         </div>
         <div class="tab-pane" id="tab3">
-            <a class="" href="<?php echo $this->url('brand');?>">Производители</a>
-            <a class="" href="<?php echo $this->url('category');?>">Категории</a>
+            <a class="" href="<?php /*echo $this->url('brand');*/?>">Производители</a>
+            <a class="" href="<?php /*echo $this->url('category');*/?>">Категории</a>
         </div>
         <div class="tab-pane" id="tab4"></div>
         <div class="tab-pane" id="tab5"></div>
         <div class="tab-pane" id="tab6"></div>
-    </div>
+    </div>-->
+
+    <ul class="nav nav-pills">
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Отчеты и аналитика <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="<?php echo $this->url('register');?>">Журнал операций</a></li>
+                <li><a href="<?php echo $this->url('remains');?>">Остатки товара</a></li>
+                <li><a href="<?php echo $this->url('balance');?>">Баланс</a></li>
+                <li><a href="<?php echo $this->url('order');?>">Заказы</a></li>
+                <li><a href="<?php echo $this->url('payment');?>">Платежи</a></li>
+                <li><a href="<?php echo $this->url('user');?>">Пользователи</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Справочник товаров <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="<?php echo $this->url('fileupload');?>">Загрузить продукт из Excel-документа</a></li>
+                <li><a href="<?php echo $this->url('editproduct');?>">Работа с продуктом</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Справочники <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="<?php echo $this->url('brand');?>">Производители</a></li>
+                <li><a href="<?php echo $this->url('category');?>">Категории</a></li>
+            </ul>
+        </li>
+    </ul>
 </div>
-
-
-
-
-
