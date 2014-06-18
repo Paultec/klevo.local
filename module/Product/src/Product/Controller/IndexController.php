@@ -33,7 +33,8 @@ class IndexController extends AbstractActionController
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
                 WHERE p.idBrand = ' . $param['brand'] .
-                ' AND p.idCatalog = ' . $param['catalog']
+                ' AND p.idCatalog = ' . $param['catalog'] .
+                ' AND p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
             );
 
             $brand    = $this->getBreadcrumbs($param, 'brand');
@@ -41,20 +42,23 @@ class IndexController extends AbstractActionController
         } elseif (isset($param['brand'])) {
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
-                WHERE p.idBrand = ' . $param['brand']
+                WHERE p.idBrand = ' . $param['brand'] .
+                ' AND p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
             );
 
             $brand = $this->getBreadcrumbs($param, 'brand');
         } elseif (isset($param['catalog'])) {
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
-                WHERE p.idCatalog = ' . $param['catalog']
+                WHERE p.idCatalog = ' . $param['catalog'] .
+                ' AND p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
             );
 
             $category = $this->getBreadcrumbs($param, 'catalog');
         } else {
             $dql = $this->getEntityManager()->createQuery(
-                'SELECT p FROM Product\Entity\Product p'
+                'SELECT p FROM Product\Entity\Product p
+                WHERE p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
             );
         }
 

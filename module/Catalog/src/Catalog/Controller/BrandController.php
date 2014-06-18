@@ -13,8 +13,9 @@ use Catalog\Model\Brand;
 
 class BrandController extends AbstractActionController
 {
-    const BRAND_ENTITY  = 'Catalog\Entity\Brand';
-    const STATUS_ENTITY = 'Data\Entity\Status';
+    const BRAND_ENTITY   = 'Catalog\Entity\Brand';
+    const PRODUCT_ENTITY = 'Product\Entity\Product';
+    const STATUS_ENTITY  = 'Data\Entity\Status';
 
     /**
      * @var
@@ -116,20 +117,43 @@ class BrandController extends AbstractActionController
 
             if ($hide == 'Да') {
                 $id = (int)$request->getPost('id');
+
                 $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $id);
 
-                if (is_null($brand->getIdStatus()) || ($brand->getIdStatus()->getId() === 3)) {
-                    $brand->setIdStatus($this->getEntityManager()->
-                        find(self::STATUS_ENTITY, $id = 4));
+                // set status (null or 3 for show, 4 for hidden)
+                if (!is_null($brand->getIdStatus())) {
+                    $idStatus = $brand->getIdStatus()->getId();
+
+                    if (is_null($idStatus) || $idStatus == 3) {
+                        $idStatus = 4;
+                    } else {
+                        $idStatus = 3;
+                    }
                 } else {
-                    $brand->setIdStatus($this->getEntityManager()->
-                        find(self::STATUS_ENTITY, $id = 3));
+                    $idStatus = 4;
                 }
 
-                if ($brand) {
-                    $this->getEntityManager()->persist($brand);
-                    $this->getEntityManager()->flush();
-                }
+                 //UPDATE Brand
+                $qb = $this->getEntityManager()->createQueryBuilder();
+
+                $qu = $qb->update(self::BRAND_ENTITY, 'b')
+                    ->set('b.idStatus', '?1')
+                    ->where('b.id = ?2')
+                    ->setParameter(1, $idStatus)
+                    ->setParameter(2, $id)
+                    ->getQuery();
+                $qu->execute();
+
+                // UPDATE Product
+                $qb = $this->getEntityManager()->createQueryBuilder();
+
+                $qu = $qb->update(self::PRODUCT_ENTITY, 'p')
+                    ->set('p.idStatus', '?1')
+                    ->where('p.idBrand = ?2')
+                    ->setParameter(1, $idStatus)
+                    ->setParameter(2, $id)
+                    ->getQuery();
+                $qu->execute();
             }
 
             // Redirect to list of brand
@@ -141,41 +165,6 @@ class BrandController extends AbstractActionController
             'brand' => $this->getEntityManager()->find(self::BRAND_ENTITY, $id)
         ));
     }
-
-    /**
-     * @return ViewModel
-     */
-//    public function deleteAction()
-//    {
-//        $id = (int) $this->params()->fromRoute('id', 0);
-//
-//        if (!$id) {
-//            return $this->redirect()->toRoute('brand');
-//        }
-//
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//
-//            $del = $request->getPost('del', 'Нет');
-//
-//            if ($del == 'Да') {
-//                $id = (int)$request->getPost('id');
-//                $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $id);
-//                if ($brand) {
-//                    $this->getEntityManager()->remove($brand);
-//                    $this->getEntityManager()->flush();
-//                }
-//            }
-//
-//            // Redirect to list of brand
-//            return $this->redirect()->toRoute('brand');
-//        }
-//
-//        return new ViewModel(array(
-//            'id'    => $id,
-//            'brand' => $this->getEntityManager()->find(self::BRAND_ENTITY, $id)
-//        ));
-//    }
 
     /**
      * @return \Zend\Form\ElementInterface|\Zend\Form\FieldsetInterface|\Zend\Form\Form|\Zend\Form\FormInterface
