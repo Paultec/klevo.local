@@ -269,6 +269,7 @@ class RegisterController extends AbstractActionController
             ->setItemCountPerPage(20);
         // End pagination
 
+        // оставляю в $data для отображения только те данные, которые присутствуют в записях Register
         $query = $qb->getQuery();
         $register = $query->getResult();
         if (count($register) > 0) {

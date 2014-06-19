@@ -1,4 +1,139 @@
 <h3>Остатки товара</h3>
+
+<div class="delim"></div>
+<div class="filter-criteria">Установленные фильтры: &nbsp;
+    <form method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+        <?php
+        foreach ($this->filter as $key => $value) {
+            switch ($key) {
+                case 'date':
+                    echo '<strong>начало периода:</strong> ';
+                    break;
+                case 'storeTo';
+                    echo '<strong> склад:</strong> ';
+                    break;
+                case 'storeFrom';
+                    echo '<strong> поставщик:</strong> ';
+                    break;
+                case 'catalog';
+                    echo '<strong> категория:</strong> ';
+                    break;
+                case 'brand';
+                    echo '<strong> производитель:</strong> ';
+                    break;
+                case 'operation';
+                    echo '<strong> операция:</strong> ';
+                    break;
+                case 'paymentType';
+                    echo '<strong> форма оплаты:</strong> ';
+                    break;
+                case 'status';
+                    echo '<strong> статус:</strong> ';
+                    break;
+                case 'user';
+                    echo '<strong> пользователь:</strong> ';
+                    break;
+            }
+            echo $value; ?>
+            <label class="btn-remove">
+                <input type="submit" class="btn btn-danger hide" name="<?php echo $key . 'Reset'; ?>">
+                <span class="glyphicon glyphicon-remove cross" data-toggle="tooltip" data-placement="top" title="Удалить фильтр"></span>
+            </label>
+        <?php } ?>
+    </form>
+</div>
+
+<div>
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab0" data-toggle="tab">Выбрать:</a></li>
+            <li><a href="#tab1" data-toggle="tab">дату</a></li>
+            <li><a href="#tab2" data-toggle="tab">склад</a></li>
+            <li><a href="#tab3" data-toggle="tab">поставщика</a></li>
+            <li><a href="#tab4" data-toggle="tab">категорию</a></li>
+            <li><a href="#tab5" data-toggle="tab">производителя</a></li>
+            <li><a href="#tab6" data-toggle="tab">тип операции</a></li>
+            <li><a href="#tab7" data-toggle="tab">форму оплаты</a></li>
+            <li><a href="#tab8" data-toggle="tab">статус</a></li>
+            <li><a href="#tab9" data-toggle="tab">пользователя</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab0"></div>
+            <div class="tab-pane" id="tab1">
+                <form method="post" action="<?php echo $this->url('remains',
+                    array('action' => 'index')); ?>">
+                    остатки на дату &nbsp;<input type="date" name="date">
+                    <input type="submit" class="btn btn-info" value="Готово">
+                </form>
+            </div>
+            <div class="tab-pane" id="tab2">
+                <?php foreach ($this->data['storeTo'] as $store) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="storeTo" value="<?php echo $store->getName(); ?>">
+                        <input type="hidden" name="idStoreTo" value="<?php echo $store->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+            <div class="tab-pane" id="tab3">
+                <?php foreach ($this->data['storeFrom'] as $store) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="storeFrom" value="<?php echo $store->getName(); ?>">
+                        <input type="hidden" name="idStoreFrom" value="<?php echo $store->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+            <div class="tab-pane" id="tab4">
+                <?php foreach ($this->data['catalog'] as $catalog) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="catalog" value="<?php echo $catalog->getName(); ?>">
+                        <input type="hidden" name="idCatalog" value="<?php echo $catalog->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+            <div class="tab-pane" id="tab5">
+                <?php foreach ($this->data['brand'] as $brand) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="brand" value="<?php echo $brand->getName(); ?>">
+                        <input type="hidden" name="idBrand" value="<?php echo $brand->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+            <div class="tab-pane" id="tab6">
+                <?php foreach ($this->data['operation'] as $operation) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="operation" value="<?php echo $operation->getName(); ?>">
+                        <input type="hidden" name="idOperation" value="<?php echo $operation->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+            <div class="tab-pane" id="tab7">
+                <?php foreach ($this->data['paymentType'] as $paymentType) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="paymentType" value="<?php echo $paymentType->getName(); ?>">
+                        <input type="hidden" name="idPaymentType" value="<?php echo $paymentType->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+            <div class="tab-pane" id="tab8">
+                <?php foreach ($this->data['status'] as $status) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="status" value="<?php echo $status->getName(); ?>">
+                        <input type="hidden" name="idStatus" value="<?php echo $status->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+            <div class="tab-pane" id="tab9">
+                <?php foreach ($this->data['user'] as $user) { ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('remains', array('action' => 'index')); ?>">
+                        <input type="submit" class="btn btn-link" name="user" value="<?php echo $user->getEmail(); ?>">
+                        <input type="hidden" name="idUser" value="<?php echo $user->getId(); ?>">
+                    </form>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php
     $remains = $this->remains;
 ?>
