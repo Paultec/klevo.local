@@ -185,26 +185,26 @@ class RegisterTableController extends AbstractActionController
     public function getFullNameCategory($id)
     {
         $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
-                $fullName = $category->getName();
+            $fullName = $category->getName();
 
-                if (null == $category->getIdParent()) {
-                    if (!$this->fullName) {
-                        $this->fullName = $fullName;
-                    }
-
-                    return $this->fullName;
-                } else {
-                    $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
-                    $parentName = $parent->getName();
-
-                    if ($this->fullName) {
-                        $this->fullName = $parentName . " :: " . $this->fullName;
-                    } else {
-                        $this->fullName = $parentName . " :: " . $fullName;
-                    }
+            if (null == $category->getIdParent()) {
+                if (!$this->fullName) {
+                    $this->fullName = $fullName;
                 }
 
-                return $this->getFullNameCategory($parent->getId());
+                return $this->fullName;
+            } else {
+                $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
+                $parentName = $parent->getName();
+
+                if ($this->fullName) {
+                    $this->fullName = $parentName . " :: " . $this->fullName;
+                } else {
+                    $this->fullName = $parentName . " :: " . $fullName;
+                }
+            }
+
+            return $this->getFullNameCategory($parent->getId());
     }
 
     public function getDetailAction()

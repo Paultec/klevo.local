@@ -352,9 +352,9 @@ class EditController extends AbstractActionController
         for ($i = 0, $count = count($catalog); $i < $count; $i++) {
             $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
 
-            if (is_null($catalog[$i]['name'])) {
-                unset($catalog[$i]);
-            }
+//            if (is_null($catalog[$i]['name'])) {
+//                unset($catalog[$i]);
+//            }
 
             $this->fullName = null;
         }
@@ -407,6 +407,9 @@ class EditController extends AbstractActionController
         $fullName = $category->getName();
 
         if (null == $category->getIdParent()) {
+            if (!$this->fullName) {
+                $this->fullName = $fullName;
+            }
 
             return $this->fullName;
         } else {

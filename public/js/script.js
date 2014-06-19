@@ -51,7 +51,7 @@ $(function(){
      validate auth data
      *******************************************************************************/
     var auth_btn = $('#auth_btn');
-    auth_btn.attr('disabled', true);
+//    auth_btn.attr('disabled', true);
 
     var email_reg    = /^[\w\.=-]+@[\w\.-]+\.[\w]{2,6}$/i,
         password_reg = /^[a-zA-z]{1}[a-zA-Z1-9]{7,20}$/i;
@@ -61,7 +61,8 @@ $(function(){
     var identity    = $('#identity'),
         credential  = $('#credential');
 
-    identity.on('keyup', function() {
+    // keyup -> change
+    identity.on('change', function() {
         var val = $(this).val();
         identity_flag = email_reg.test(val);
 
@@ -71,10 +72,11 @@ $(function(){
             $(this).css('border', '1px solid red');
         }
 
-        setAuthActive();
+//        setAuthActive();
     });
 
-    credential.on('keyup', function() {
+    // keyup -> change
+    credential.on('change', function() {
         var val = $(this).val();
         credential_flag = password_reg.test(val);
 
@@ -84,16 +86,16 @@ $(function(){
             $(this).css('border', '1px solid red');
         }
 
-        setAuthActive();
+//        setAuthActive();
     });
 
-    function setAuthActive() {
-        if (identity_flag == true && credential_flag == true) {
-            auth_btn.attr('disabled', false);
-        } else {
-            auth_btn.attr('disabled', true);
-        }
-    }
+//    function setAuthActive() {
+//        if (identity_flag == true && credential_flag == true) {
+//            auth_btn.attr('disabled', false);
+//        } else {
+//            auth_btn.attr('disabled', true);
+//        }
+//    }
 
     /******************************************************************************
      validate register data
@@ -183,7 +185,7 @@ $(function(){
      *******************************************************************************/
     $('.logout').on('click', function(){
         // TODO change standard confirm
-        confirm('Вы действительно хотите выйти из системы?');
+        return confirm('Вы действительно хотите выйти из системы?');
     });
 
     /******************************************************************************
@@ -419,8 +421,6 @@ $(function(){
 
     if ($('#productList-table').length > 0) {
         breadcrumb.css('visibility', 'visible');
-    } else {
-        $('#redirect-form').css('display', 'none');
     }
 
     /******************************************************************************

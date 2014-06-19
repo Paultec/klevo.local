@@ -13,6 +13,7 @@ use Catalog\Model\Catalog;
 class CatalogController extends AbstractActionController
 {
     const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
+    const PRODUCT_ENTITY  = 'Product\Entity\Product';
     const STATUS_ENTITY   = 'Data\Entity\Status';
 
     /**
@@ -20,6 +21,7 @@ class CatalogController extends AbstractActionController
      */
     protected $em;
     protected $fullName;
+    protected $child = array();
 
     /**
      * @return ViewModel
@@ -132,23 +134,42 @@ class CatalogController extends AbstractActionController
 
             if ($hide == 'Да') {
                 $id = (int)$request->getPost('id');
+
                 $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
 
-                if (is_null($category->getIdStatus()) || ($category->getIdStatus()->getId() === 3)) {
-                    $category->setIdStatus($this->getEntityManager()->
-                        find(self::STATUS_ENTITY, $id = 4));
+                // set status (null or 3 for show, 4 for hidden)
+                if (!is_null($category->getIdStatus())) {
+                    $idStatus = $category->getIdStatus()->getId();
+
+                    if (is_null($idStatus) || $idStatus == 3) {
+                        $idStatus = 4;
+                    } else {
+                        $idStatus = 3;
+                    }
                 } else {
-                    $category->setIdStatus($this->getEntityManager()->
-                        find(self::STATUS_ENTITY, $id = 3));
+                    $idStatus = 4;
                 }
 
-                if ($category) {
-                    $this->getEntityManager()->persist($category);
-                    $this->getEntityManager()->flush();
+                $catalogChild = $this->getCatalogChild($id);
+                array_unshift($catalogChild, $id);
 
-                    // скрыть подкатегории
-                    $this->childHide($category);
-                }
+                $qb = $this->getEntityManager()->createQueryBuilder();
+
+                $qu = $qb->update(self::CATEGORY_ENTITY, 'c')
+                    ->set('c.idStatus', '?1')
+                    ->where($qb->expr()->in('c.id', $catalogChild))
+                    ->setParameter(1, $idStatus)
+                    ->getQuery();
+                $qu->execute();
+
+                $qb = $this->getEntityManager()->createQueryBuilder();
+
+                $qu = $qb->update(self::PRODUCT_ENTITY, 'p')
+                    ->set('p.idStatus', '?1')
+                    ->where($qb->expr()->in('p.idCatalog', $catalogChild))
+                    ->setParameter(1, $idStatus)
+                    ->getQuery();
+                $qu->execute();
             }
 
             // Redirect to list of category
@@ -162,42 +183,36 @@ class CatalogController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @param $id
+     *
+     * @return array
      */
-//    public function deleteAction()
-//    {
-//        $id = (int) $this->params()->fromRoute('id', 0);
-//
-//        if (!$id) {
-//            return $this->redirect()->toRoute('category');
-//        }
-//
-//        $request = $this->getRequest();
-//        if ($request->isPost()) {
-//
-//            $del = $request->getPost('del', 'Нет');
-//
-//            if ($del == 'Да') {
-//                $id = (int)$request->getPost('id');
-//                $category = $this->getEntityManager()
-//                    ->find(self::CATEGORY_ENTITY, $id);
-//                if ($category) {
-//                    $this->getEntityManager()->remove($category);
-//                    $this->getEntityManager()->flush();
-//                }
-//            }
-//
-//            // Redirect to list of category
-//            return $this->redirect()->toRoute('category');
-//        }
-//
-//        return new ViewModel(array(
-//            'id'       => $id,
-//            'category' => $this->getEntityManager()
-//                    ->find(self::CATEGORY_ENTITY, $id)
-//        ));
-//    }
+    protected function getCatalogChild($id)
+    {
+        $tmpArr = array();
 
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qs = $qb->select('c.id')
+            ->from(self::CATEGORY_ENTITY, 'c')
+            ->where($qb->expr()->in('c.idParent', $id))
+            ->getQuery();
+        $qs->execute();
+
+        $qr = $qs->getResult();
+
+        foreach ($qr as $result) {
+            $this->child[] = $result['id'];
+
+            $tmpArr[] = $result['id'];
+        }
+
+        if (!empty($qr)) {
+            $this->getCatalogChild($tmpArr);
+        }
+
+        return $this->child;
+    }
 
     /**
      * Add full name
@@ -239,8 +254,8 @@ class CatalogController extends AbstractActionController
         $option_arr = array();
 
         for ($i = 0, $category = count($categories); $i < $category; $i++) {
-            $option_arr[$i]['id']     = $categories[$i]->getId();
-            $option_arr[$i]['name']   = $categories[$i]->getName();
+            $option_arr[$i]['id']   = $categories[$i]->getId();
+            $option_arr[$i]['name'] = $categories[$i]->getName();
 
             if (!is_null($categories[$i]->getIdStatus())) {
                 $option_arr[$i]['status'] = $categories[$i]->getIdStatus()->getId();
@@ -281,31 +296,6 @@ class CatalogController extends AbstractActionController
             }
 
             return $this->getFullNameCategory($parent->getId());
-        }
-    }
-
-    /**
-     * @param $category
-     */
-    protected function childHide($category)
-    {
-        $childCategory = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->
-            findBy(array('idParent' => $category->getId()));
-
-        if (!empty($childCategory)) {
-            foreach ($childCategory as $child) {
-                if ($category->getIdStatus()->getId() === 3) {
-                    $child->setIdStatus($this->getEntityManager()->
-                            find(self::STATUS_ENTITY, $id = 3));
-                } else {
-                    $child->setIdStatus($this->getEntityManager()->
-                            find(self::STATUS_ENTITY, $id = 4));
-                }
-
-                $this->getEntityManager()->persist($child);
-            }
-
-            $this->getEntityManager()->flush();
         }
     }
 

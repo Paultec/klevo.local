@@ -16,7 +16,7 @@ $form->setAttribute('name', 'auth_form');
 
     <div class="form-group">
         <label for="identity">Введите Email</label>
-        <input id="identity" name="identity" class="form-control" type="email" value="" placeholder="Введите Email"  pattern="^[\w\.=-]+@[\w\.-]+\.[\w]{2,6}$" required autocomplete="off">
+        <input id="identity" name="identity" class="form-control" type="email" value="" placeholder="Введите Email"  pattern="^[\w\.=-]+@[\w\.-]+\.[\w]{2,6}$" required autofocus>
     </div>
     <div class="form-group">
         <label for="credential">Введите Пароль</label>
@@ -27,7 +27,7 @@ $form->setAttribute('name', 'auth_form');
         <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
     <?php endif ?>
 
-    <input type="submit" id="auth_btn" class="btn btn btn-primary" name="submit" value="Войти"/>
+    <input type="submit" id="auth_btn" class="btn btn-primary" name="submit" value="Войти"/>
 
 <?php echo $this->form()->closeTag() ?>
         <?php if ($this->enableRegistration) : ?>
