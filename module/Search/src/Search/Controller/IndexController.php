@@ -23,6 +23,9 @@ class IndexController extends AbstractActionController
     protected $em;
     protected $idIndexed = array();
 
+    /**
+     * @return ViewModel
+     */
     public function indexAction()
     {
         // если нет строки запроса, редирект на главную
@@ -80,14 +83,12 @@ class IndexController extends AbstractActionController
                     $temp[] = $item->getId();
                 }
 
-//                var_dump($tmpArr);
-
                 // вывод в порядке весов релевантности
                 foreach ($tmpArr as $value) {
-                    $result[] = $qr[array_search($value, $temp)];
+                    if (array_search($value, $temp) !== false) {
+                        $result[] = $qr[array_search($value, $temp)];
+                    }
                 }
-
-//                exit;
 
                 // Pagination
                 $matches = $this->getEvent()->getRouteMatch();
@@ -117,6 +118,9 @@ class IndexController extends AbstractActionController
         return $res;
     }
 
+    /**
+     * @return ViewModel
+     */
     public function createAction()
     {
         \ZendSearch\Lucene\Analysis\Analyzer\Analyzer::setDefault(
@@ -167,6 +171,9 @@ class IndexController extends AbstractActionController
         return new ViewModel();
     }
 
+    /**
+     * @return ViewModel
+     */
     public function optimizeAction()
     {
         \ZendSearch\Lucene\Analysis\Analyzer\Analyzer::setDefault(
@@ -183,6 +190,9 @@ class IndexController extends AbstractActionController
         return new ViewModel();
     }
 
+    /**
+     * @return bool
+     */
     protected function getResultSet()
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -207,6 +217,9 @@ class IndexController extends AbstractActionController
         return false;
     }
 
+    /**
+     * @return bool
+     */
     protected function getIndexLocation()
     {
         // выборка конфигурации из конфигурационных данных модуля
@@ -219,6 +232,9 @@ class IndexController extends AbstractActionController
         }
     }
 
+    /**
+     * @return array|object
+     */
     public function getEntityManager()
     {
         if (null === $this->em) {
