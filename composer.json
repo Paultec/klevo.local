@@ -6,12 +6,19 @@
         "framework",
         "zf2"
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/zendframework/ZendSearch"
+        }
+    ],
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.2.*",
         "zendframework/zend-developer-tools": "0.0.2",
         "zendframework/zftool": "dev-master",
+        "zendframework/zendsearch": "dev-master",
         "doctrine/doctrine-module": "0.*",
         "doctrine/common": ">=2.1",
         "doctrine/doctrine-orm-module": "0.7.*",

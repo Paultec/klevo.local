@@ -1,0 +1,51 @@
+<section class="col col-lg-3">
+    <aside class="filter">
+        <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <!-- Accordion -->
+        <?php echo $this->catalog ;?><!-- /Accordion -->
+    </aside>
+</section>
+
+<section class="col col-lg-9 product-holder">
+    <?php if (is_object($this->paginator) && $this->paginator->count() > 0): ?>
+        <?php foreach($this->paginator as $item): ?>
+            <?php if (is_null($item->getIdStatus()) || ($item->getIdStatus()->getId() == 3)): ?>
+                <section class="product row">
+                    <div class="col col-md-4">
+                        <?php if ($item->getImg()): ?>
+                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
+                                <img class="lazy" data-original="/img/product/<?php echo $item->getImg()?>" width="270" alt="">
+                            </a>
+                        <?php else:?>
+                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
+                                <img class="lazy" data-original="/img/product/noimage.png" width="270" alt="">
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                    <div class="col col-md-6">
+                        <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>"><?php echo $item->getName(); ?></a></h5>
+                        <p><?php echo $item->getDescription(); ?></p>
+                        <?php if ($item->getPrice() !== 0):?>
+                            <p class="product-price"><?php echo $item->getPrice() / 100; ?></p>
+                        <?php endif ?>
+                    </div>
+                    <div class="col col-md-2">
+                        <a href="#" class="btn btn-primary" role="button">Button</a>
+                        <a href="#" class="btn btn-default" role="button">Button</a>
+                    </div>
+                </section>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <h3>Возможно вы ошиблись, проверьте правильность ввода запроса.<br>
+            Либо такого товара нет в базе.<br>
+            Вы можете воспользоваться меню выбора и найти нужный вам товар.</h3>
+    <?php endif ?>
+</section>
+
+<section class="col col-lg-9 col-lg-offset-3 text-center paginator-holder">
+    <div class="delim"></div>
+    <?php
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'search/paginator/pagination.phtml') : "";
+    ?>
+</section>

@@ -200,6 +200,7 @@ class EditController extends AbstractActionController
                 $postData['price'] = (int)($postData['price'] * 100);
 
                 $postData['idStatus'] = $product->getIdStatus();
+                $postData['indexed']  = $product->getIndexed();
                 $postData['img']      = $product->getImg();
                 $postData['qty']      = $product->getQty();
 

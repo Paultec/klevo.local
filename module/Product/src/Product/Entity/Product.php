@@ -52,6 +52,13 @@ class Product
     /**
      * @var integer
      *
+     * @ORM\Column(name="indexed", type="integer", nullable=true)
+     */
+    private $indexed;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="qty", type="integer", nullable=true)
      */
     private $qty;
@@ -189,6 +196,29 @@ class Product
     }
 
     /**
+     * Set indexed
+     *
+     * @param integer $indexed
+     * @return Product
+     */
+    public function setIndexed($indexed)
+    {
+        $this->indexed = $indexed;
+
+        return $this;
+    }
+
+    /**
+     * Get indexed
+     *
+     * @return integer
+     */
+    public function getIndexed()
+    {
+        return $this->indexed;
+    }
+
+    /**
      * Set qty
      *
      * @param integer $qty
@@ -304,5 +334,6 @@ class Product
         $this->idStatus    = $data['idStatus'];
         $this->idCatalog   = $data['idCatalog'];
         $this->idBrand     = $data['idBrand'];
+        $this->indexed     = $data['indexed'];
     }
 }

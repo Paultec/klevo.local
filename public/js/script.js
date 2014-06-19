@@ -381,7 +381,7 @@ $(function(){
      *******************************************************************************/
     var first_page = $('.first-page');
 
-    first_page.on('click', function(e){
+    first_page.on('click', function(e) {
         var href = window.location.href;
 
         if (location.indexOf('brand') > 0 || location.indexOf('catalog') > 0) {
@@ -393,6 +393,32 @@ $(function(){
             e.preventDefault();
         }
     });
+
+    var first_search_page = $('.first-search-page');
+
+    first_search_page.on('click', function(e) {
+        var href = window.location.href;
+
+        if (location.indexOf('q') > 0) {
+            var firstPart = href.slice(0, href.lastIndexOf('?') - 1);
+            var lastPart  = href.slice(href.indexOf('?'), href.length);
+
+            window.location = firstPart + lastPart;
+        }
+
+        e.preventDefault();
+    });
+
+    /******************************************************************************
+     insert search query into input
+     *******************************************************************************/
+    if (location.indexOf('q') > 0) {
+        var href = window.location.href;
+
+        var query = href.slice(href.indexOf('=') + 1, href.length);
+
+        $('.search-input').val(decodeURIComponent(query));
+    }
 
     /******************************************************************************
      breadcrumb

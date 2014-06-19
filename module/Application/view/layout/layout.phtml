@@ -79,9 +79,9 @@
             <!-- Search and Cart -->
             <div class="content row">
                 <div class="col col-lg-9">
-                    <form method="post" action="/" id="main-search" name="main-search" role="search">
+                    <form method="get" action="<?php echo $this->url('search');?>" id="main-search" name="main-search" role="search">
                         <div class="form-group">
-                            <input type="search" class="form-control search-input" placeholder="Искать...">
+                            <input type="search" class="form-control search-input" name="q" autocomplete="off" placeholder="Искать...">
                             <label>
                                 <input class="btn btn-default hide" type="submit">
                                 <span class="search glyphicon glyphicon-search" data-toggle="tooltip" data-placement="top" title="Искать"></span>

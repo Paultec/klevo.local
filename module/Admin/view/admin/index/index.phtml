@@ -19,8 +19,8 @@
                 Справочник товаров <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="<?php echo $this->url('fileupload');?>">Загрузить продукт из Excel-документа</a></li>
                 <li><a href="<?php echo $this->url('editproduct');?>">Работа с продуктом</a></li>
+                <li><a href="<?php echo $this->url('fileupload');?>">Загрузить продукт из Excel-документа</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -30,6 +30,15 @@
             <ul class="dropdown-menu" role="menu">
                 <li><a href="<?php echo $this->url('brand');?>">Производители</a></li>
                 <li><a href="<?php echo $this->url('category');?>">Категории</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Поиск <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="<?php echo $this->url('search/create', array('action' => 'create'));?>">Создать/Обновить индексы</a></li>
+                <li><a href="<?php echo $this->url('search/optimize', array('action' => 'optimize'));?>">Оптимизировать индексы</a></li>
             </ul>
         </li>
     </ul>
