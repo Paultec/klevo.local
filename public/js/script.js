@@ -417,7 +417,9 @@ $(function(){
 
         var query = href.slice(href.indexOf('=') + 1, href.length);
 
-        $('.search-input').val(decodeURIComponent(query));
+        var clear = decodeURIComponent(query).replace(/\+/g, ' ');
+
+        $('.search-input').val(clear);
     }
 
     /******************************************************************************

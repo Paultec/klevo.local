@@ -90,6 +90,7 @@ Logo
 
 .brand:hover {
     color: #563D7C;
+    text-decoration: none;
 }
 
 @-webkit-keyframes wobble-vertical {
@@ -430,12 +431,11 @@ login & register wrap div style
  *******************************************************************************/
 .product-list {
     color: #428BCA;
-    text-decoration: underline;
 }
 
 .product-list:hover {
     cursor: pointer;
-    text-decoration: none;
+    color: #563D7C;
 }
 
 /******************************************************************************
