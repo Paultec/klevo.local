@@ -32,7 +32,7 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute('home');
         }
 
-        // выбираем текст из строки запроса
+        // Выбираем текст из строки запроса
         $request  = $this->getRequest();
         $queryStr = $request->getQuery()->get('q');
 
