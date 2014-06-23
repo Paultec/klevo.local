@@ -61,14 +61,15 @@ class ParseController extends AbstractActionController
         $prepareData = array();
 
         foreach ($parse as $dataRow) {
-            if (!isset($currentData[strtolower($dataRow[6])])) {
+            if (!isset($currentData[strtolower($dataRow[0])])) {
                 $product = new Product();
 
                 try {
-                    $prepareData['name']      = (string)$dataRow[6];
-                    $prepareData['idCatalog'] = (object)$this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[5]);
-                    $prepareData['idBrand']   = (object)$this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[3]);
-                    $prepareData['price']     = (int)$dataRow[7] * 100;
+                    $prepareData['name']        = (string)$dataRow[0];
+                    $prepareData['description'] = (string)$dataRow[1];
+                    $prepareData['idBrand']     = (object)$this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[2]);
+                    $prepareData['idCatalog']   = (object)$this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[3]);
+                    $prepareData['price']       = (int)($dataRow[4] * 100);
 
                     $product->populate($prepareData);
 

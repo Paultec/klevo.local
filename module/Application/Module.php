@@ -1,16 +1,9 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
-
 namespace Application;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\Authentication\AuthenticationService;
 
 class Module
 {
@@ -19,6 +12,25 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, function(MvcEvent $e){
+                // роль пользователя в системе
+                $auth = new AuthenticationService();
+                $currentUser = $auth->getIdentity();
+
+                $userRole = 'guest';
+
+                if (!is_null($currentUser)) {
+                    $user = $e->getApplication()
+                        ->getServiceManager()->get('Doctrine\ORM\EntityManager')
+                        ->find('User\Entity\User', $currentUser)->getRoles();
+
+                    $userRole = $user[0]->getRoleId();
+                }
+
+                // установка роли в layout
+                $e->getViewModel()->setVariable('userRole', $userRole);
+            });
     }
 
     public function getConfig()

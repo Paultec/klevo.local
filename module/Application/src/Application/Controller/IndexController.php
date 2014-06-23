@@ -1,11 +1,4 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Application\Controller;
 
@@ -14,11 +7,14 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
     public function indexAction()
     {
-        $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
-
         $index = new ViewModel();
+
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
         $index->addChild($catalog, 'catalog');
 
         return $index;

@@ -34,71 +34,71 @@ class RegisterTableController extends AbstractActionController
     {
         $currentSession = new Container();
 
-                //Сохранение и получение текущего id записи из таблицы Register
-                if (isset($currentSession->idRegister)) {
-                    $idRegister = $currentSession->idRegister;
-                } else {
-                    $currentSession->idRegister = $this->params('content');
-                    $idRegister = $currentSession->idRegister;
+            //Сохранение и получение текущего id записи из таблицы Register
+            if (isset($currentSession->idRegister)) {
+                $idRegister = $currentSession->idRegister;
+            } else {
+                $currentSession->idRegister = $this->params('content');
+                $idRegister = $currentSession->idRegister;
+            }
+
+            $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
+
+            $idProduct = $this->getRequest()->getPost('idProduct');
+            if ($idProduct) {
+                $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+
+                // Добавление введенных к-ва и цены в свойства выбранного товара
+                $currentProduct->currentQty   = $this->getRequest()->getPost('qty');
+                $currentProduct->currentPrice = $this->getRequest()->getPost('price');
+
+                // Добавление idRegister, idOperation, idUser текущей операции к свойствам,
+                // чтобы не делать дополнительные запросы в addAction
+                //$currentProduct->currentIdRegister  = $register->getId();
+                //$currentProduct->currentIdUser      = $register->getIdUser();
+                //$currentProduct->currentIdOperation = $register->getIdOperation();
+
+                $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $currentProduct->getIdBrand());
+                $currentProduct->brand = $brand->getName();
+
+                $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $currentProduct->getIdCatalog());
+                $currentProduct->category = $this->getFullNameCategory($category->getId());
+            }
+
+            // Формирование массива с выбранными товарами
+            if (isset($currentSession->productList)) {
+                $currentSession->productList[] = $currentProduct;
+            } elseif ($currentProduct) {
+                $currentSession->productList = array();
+                $currentSession->productList[] = $currentProduct;
+            }
+
+            $product = $this->forward()->dispatch('Product\Controller\Edit',
+                array('action' => 'index', 'externalCall' => true));
+
+            //Добавление свойства с текущим количеством товара
+            if ($product->result) {
+                for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
+                    $idProduct = $product->result[$i]->getId();
+                    $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
+
+                    $qtyProduct = $entityQtyProduct->getQty();
+                    $product->result[$i]->setQty($qtyProduct);
                 }
+            }
 
-                $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
+            $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 
-                $idProduct = $this->getRequest()->getPost('idProduct');
-                if ($idProduct) {
-                    $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+            $res =  new ViewModel(array(
+                'register'    => $register,
+                'product'     => $product,
+                'type'        => 'register-table',
+                'productList' => $currentSession->productList,
+            ));
 
-                    // Добавление введенных к-ва и цены в свойства выбранного товара
-                    $currentProduct->currentQty   = $this->getRequest()->getPost('qty');
-                    $currentProduct->currentPrice = $this->getRequest()->getPost('price');
+            $res->addChild($catalog, 'catalog');
 
-                    // Добавление idRegister, idOperation, idUser текущей операции к свойствам,
-                    // чтобы не делать дополнительные запросы в addAction
-                    //$currentProduct->currentIdRegister  = $register->getId();
-                    //$currentProduct->currentIdUser      = $register->getIdUser();
-                    //$currentProduct->currentIdOperation = $register->getIdOperation();
-
-                    $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $currentProduct->getIdBrand());
-                    $currentProduct->brand = $brand->getName();
-
-                    $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $currentProduct->getIdCatalog());
-                    $currentProduct->category = $this->getFullNameCategory($category->getId());
-                }
-
-                // Формирование массива с выбранными товарами
-                if (isset($currentSession->productList)) {
-                    $currentSession->productList[] = $currentProduct;
-                } elseif ($currentProduct) {
-                    $currentSession->productList = array();
-                    $currentSession->productList[] = $currentProduct;
-                }
-
-                $product = $this->forward()->dispatch('Product\Controller\Edit',
-                    array('action' => 'index', 'externalCall' => true));
-
-                //Добавление свойства с текущим количеством товара
-                if ($product->result) {
-                    for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
-                        $idProduct = $product->result[$i]->getId();
-                        $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
-
-                        $qtyProduct = $entityQtyProduct->getQty();
-                        $product->result[$i]->setQty($qtyProduct);
-                    }
-                }
-
-                $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
-
-                $res =  new ViewModel(array(
-                    'register'    => $register,
-                    'product'     => $product,
-                    'type'        => 'register-table',
-                    'productList' => $currentSession->productList,
-                ));
-
-                $res->addChild($catalog, 'catalog');
-
-                return $res;
+            return $res;
     }
 
     public function addAction()
@@ -170,10 +170,10 @@ class RegisterTableController extends AbstractActionController
     public function getEntityManager()
     {
         if (null === $this->em) {
-                    $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-                }
+            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        }
 
-                return $this->em;
+        return $this->em;
     }
 
     /**

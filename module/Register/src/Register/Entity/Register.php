@@ -136,7 +136,7 @@ class Register
      */
     public function setTotalSum($totalSum)
     {
-        $this->totalsum = $totalSum;
+        $this->totalSum = $totalSum;
 
         return $this;
     }
