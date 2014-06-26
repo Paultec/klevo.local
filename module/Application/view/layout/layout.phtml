@@ -18,10 +18,11 @@
                         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
 
         <!-- Scripts -->
-        <?php echo $this->headScript()->setAllowArbitraryAttributes(true)
+        <?php echo $this->headScript()
             ->prependFile($this->basePath() . '/js/holder.min.js') // НЕ забыть удалить!!!
             ->prependFile($this->basePath() . '/js/script.js')
             ->prependFile($this->basePath() . '/js/mosaic.min.js')
+            ->prependFile($this->basePath() . '/js/jquery.smooth-scroll.min.js')
             ->prependFile($this->basePath() . '/js/jquery.lazyload.min.js')
             ->prependFile($this->basePath() . '/js/bootstrap.min.js')
             ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js')
@@ -62,18 +63,23 @@
                     </address>
                 </div>
             </div>
-            <?php //var_dump($this->userRole);?>
             <!-- Horizontal menu  -->
             <div class="navbar horizontal-nav center-block" role="navigation">
                 <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav'); ?>
                 <ul class="nav navbar-nav">
                     <?php if (!$this->zfcUserIdentity()): ?>
-                        <li><a href="<?php echo $this->url('zfcuser/login'); ?>" class="float-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
+                        <li><a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>" class="float-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
                     <?php else: ?>
-                        <li><a href="<?php echo $this->url('zfcuser/logout'); ?>" class="float-shadow logout">Выйти <span class="glyphicon glyphicon-user"></a></li>
+                        <li>
+                            <a href="<?php echo $this->url('zfcuser/logout'); ?>" class="logout">Выйти <span class="glyphicon glyphicon-user"><span class="caret"></span></a>
+                            <ul class="nav sub-nav">
+                                <li><a href="<?php echo $this->url('zfcuser/changeemail') . '#changem'; ?>">Изменить email</a></li>
+                                <li><a href="<?php echo $this->url('zfcuser/changepassword') . '#changep'; ?>">Изменить пароль</a></li>
+                            </ul>
+                        </li>
                     <?php endif ?>
                     <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
-                    <li><a href="<?php echo $this->url('admin');?>" class="float-shadow">Admin</a></li>
+                    <li><a href="<?php echo $this->url('admin');?>" class="float-shadow"><?php echo $this->userRole;?> <span class="glyphicon glyphicon-wrench"></a></li>
                     <?php endif ?>
                 </ul>
             </div><!-- /Horizontal menu  -->

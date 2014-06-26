@@ -65,20 +65,15 @@ class ParseController extends AbstractActionController
                 $product = new Product();
 
                 try {
-                    $prepareData['name']        = (string)$dataRow[0];
-                    $prepareData['description'] = (string)$dataRow[1];
-                    $prepareData['idBrand']     = (object)$this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[2]);
-                    $prepareData['idCatalog']   = (object)$this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[3]);
+                    $prepareData['name']        = $dataRow[0];
+                    $prepareData['description'] = $dataRow[1] ?: null;
+                    $prepareData['idBrand']     = $this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[2]);
+                    $prepareData['idCatalog']   = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[3]);
                     $prepareData['price']       = (int)($dataRow[4] * 100);
 
                     $product->populate($prepareData);
 
                     $this->getEntityManager()->persist($product);
-
-                    /**
-                     * @todo change the place of flush
-                     */
-                    $this->getEntityManager()->flush();
                 } catch(\Exception $e) {
                     $this->errorRow++;
 
@@ -90,6 +85,8 @@ class ParseController extends AbstractActionController
                 $this->skipRow++;
             }
         }
+
+        $this->getEntityManager()->flush();
     }
 
     /**

@@ -1,6 +1,6 @@
 <div class="col col-lg-7 col-lg-offset-2 form_wrap">
     <h1 class="text-center"><?php echo $this->translate('Sign In'); ?></h1>
-    <div>
+    <div id="log">
 <?php
 $form = $this->loginForm;
 $form->prepare();
@@ -27,11 +27,11 @@ $form->setAttribute('name', 'auth_form');
         <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
     <?php endif ?>
 
-    <input type="submit" id="auth_btn" class="btn btn-primary" name="submit" value="Войти"/>
+    <input type="submit" id="auth_btn" class="btn btn-primary" name="submit" value="Войти">
 
 <?php echo $this->form()->closeTag() ?>
         <?php if ($this->enableRegistration) : ?>
-            <p class="sing_in"><?php echo $this->translate('Not registered?'); ?> <a class="register-link" href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>"><?php echo $this->translate('Sign up!'); ?></a></p>
+            <p class="sing_in"><?php echo $this->translate('Not registered?'); ?> <a class="register-link" href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') . '#reg' ?>"><?php echo $this->translate('Sign up!'); ?></a></p>
         <?php endif; ?>
     </div>
 

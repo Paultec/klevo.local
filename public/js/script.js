@@ -28,6 +28,27 @@ $(function(){
         $(this).append(' <span class="glyphicon '+ menu_glyphicon[index] +'\"><span>');
     });
 
+    /* Sub-nav */
+    var sub_nav = $('.nav li'), logout = $('.logout');
+
+    sub_nav.hover(function() {
+        $('ul', this).slideDown();
+     }, function() {
+        $('ul', this).slideUp();
+     });
+
+    $('.sub-nav li').hover(function() {
+        logout.css('background-color', '#eee');
+    }, function() {
+        logout.css('background-color', 'transparent');
+    });
+
+    logout.hover(function() {
+        $(this).css('background-color', '#eee');
+    }, function() {
+        $(this).css('background-color', 'transparent');
+    });
+
     /******************************************************************************
      Info on carousel
      *******************************************************************************/
@@ -46,6 +67,22 @@ $(function(){
             heightStyle: 'content'
         });
     });
+
+    /******************************************************************************
+     scroll to box
+     *******************************************************************************/
+    $(window).on('hashchange', function(event) {
+        var tgt = window.location.hash.replace(/^#\/?/,'');
+
+        if (document.getElementById(tgt)) {
+            $.smoothScroll({
+                scrollTarget: '#' + tgt
+//                afterScroll: function() {}
+            });
+        }
+    });
+
+    $(window).trigger('hashchange');
 
     /******************************************************************************
      validate auth data
@@ -121,8 +158,8 @@ $(function(){
 
     var email_flag = false, pass_flag = false;
 
-    var password       = $('#password');
-    var passwordVerify = $('#passwordVerify');
+    var password       = $('#password'),
+        passwordVerify = $('#passwordVerify');
 
     $('#email').on('keyup', function(){
         var val = $(this).val();
@@ -173,6 +210,158 @@ $(function(){
     }
 
     /******************************************************************************
+     validate change email data
+     *******************************************************************************/
+    var mail_form = $('.change_mail_form');
+
+    // labels & inputs
+    mail_form.find('label').eq(0).attr('for', 'newEmail')
+        .next().attr({'id':  'newEmail',
+            'type': 'email',
+            'placeholder': 'Введите Email'});
+
+    mail_form.find('label').eq(1).attr('for', 'emailVerify')
+        .next().attr({'id': 'emailVerify',
+            'type': 'email',
+            'placeholder': 'Повторите Email'});
+
+    mail_form.find('label').eq(2).attr('for', 'password')
+        .next().attr({'id': 'password',
+            'placeholder': 'Введите Пароль'});
+
+    var changem_btn = $('#change_email');
+    changem_btn.attr('disabled', true);
+
+    var change_email_flag = false, change_email_pass_flag = false;
+
+    var newEmail    = $('#newEmail'),
+        emailVerify = $('#emailVerify');
+
+    newEmail.on('keyup', function(){
+        var val = $(this).val();
+        change_email_flag = email_reg.test(val);
+
+        if (change_email_flag) {
+            $(this).css('border', '1px solid green');
+        } else {
+            $(this).css('border', '1px solid red');
+        }
+
+        setChangeEmailActive();
+    });
+
+    emailVerify.on('keyup', function(){
+        if (change_email_flag && newEmail.val() == emailVerify.val()) {
+            $(this).css('border', '1px solid green');
+            newEmail.css('border', '1px solid green');
+        } else {
+            $(this).css('border', '1px solid red');
+            newEmail.css('border', '1px solid red');
+        }
+
+        setChangeEmailActive();
+    });
+
+    $('#password').on('keyup', function(){
+        var val = $(this).val();
+        change_email_pass_flag = password_reg.test(val);
+
+        if (change_email_pass_flag) {
+            $(this).css('border', '1px solid green');
+        } else {
+            $(this).css('border', '1px solid red');
+        }
+
+        setChangeEmailActive();
+    });
+
+    function setChangeEmailActive() {
+        if (change_email_flag == true && change_email_pass_flag == true &&
+            newEmail.val() == emailVerify.val()) {
+
+            changem_btn.attr('disabled', false);
+        } else {
+            changem_btn.attr('disabled', true);
+        }
+    }
+
+    /******************************************************************************
+     validate change password data
+     *******************************************************************************/
+    var pass_form = $('.change_pass_form');
+
+    // labels & inputs
+    pass_form.find('label').eq(0).attr('for', 'oldPass')
+        .next().attr({'id':  'oldPass',
+            'type': 'password',
+            'placeholder': 'Текущий пароль'});
+
+    pass_form.find('label').eq(1).attr('for', 'newPass')
+        .next().attr({'id': 'newPass',
+            'type': 'password',
+            'placeholder': 'Новый пароль'});
+
+    pass_form.find('label').eq(2).attr('for', 'passVerify')
+        .next().attr({'id': 'passVerify',
+            'placeholder': 'Повторите пароль'});
+
+    var changep_btn = $('#change_pass');
+    changep_btn.attr('disabled', true);
+
+    var change_new_pass_flag = false, change_old_pass_flag = false;
+
+    var newPass    = $('#newPass'),
+        passVerify = $('#passVerify');
+
+    newPass.on('keyup', function(){
+        var val = $(this).val();
+        change_new_pass_flag = password_reg.test(val);
+
+        if (change_new_pass_flag) {
+            $(this).css('border', '1px solid green');
+        } else {
+            $(this).css('border', '1px solid red');
+        }
+
+        setChangePasswordActive();
+    });
+
+    passVerify.on('keyup', function(){
+        if (change_new_pass_flag && newPass.val() == passVerify.val()) {
+            $(this).css('border', '1px solid green');
+            newPass.css('border', '1px solid green');
+        } else {
+            $(this).css('border', '1px solid red');
+            newPass.css('border', '1px solid red');
+        }
+
+        setChangePasswordActive();
+    });
+
+    $('#oldPass').on('keyup', function(){
+        var val = $(this).val();
+        change_old_pass_flag = password_reg.test(val);
+
+        if (change_old_pass_flag) {
+            $(this).css('border', '1px solid green');
+        } else {
+            $(this).css('border', '1px solid red');
+        }
+
+        setChangePasswordActive();
+    });
+
+    function setChangePasswordActive() {
+        if (change_new_pass_flag == true && change_old_pass_flag == true &&
+            newPass.val() == passVerify.val()) {
+
+            changep_btn.attr('disabled', false);
+        } else {
+            changep_btn.attr('disabled', true);
+        }
+    }
+
+    /******************************************************************************
      Errors in form
      *******************************************************************************/
     $('form')
@@ -183,7 +372,7 @@ $(function(){
     /******************************************************************************
      Logout confirm
      *******************************************************************************/
-    $('.logout').on('click', function(){
+    logout.on('click', function(){
         // TODO change standard confirm
         return confirm('Вы действительно хотите выйти из системы?');
     });

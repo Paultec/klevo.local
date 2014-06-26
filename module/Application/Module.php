@@ -13,7 +13,7 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, function(MvcEvent $e){
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, function(MvcEvent $e) {
                 // роль пользователя в системе
                 $auth = new AuthenticationService();
                 $currentUser = $auth->getIdentity();

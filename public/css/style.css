@@ -254,6 +254,19 @@ Horizontal menu
     transform: translateY(5px);
 }
 
+/* Sub-nav */
+.sub-nav {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background-color: #ffffff;
+}
+
+.sub-nav > li > a {
+    font-size: 14px;
+    padding: 2px 15px;
+}
+
 /******************************************************************************
 Main search
 *******************************************************************************/
