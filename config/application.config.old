@@ -24,7 +24,9 @@ return array(
         'GoSession',
         'Register',
         'Data',
-        'Admin'
+        'Admin',
+        'Search',
+        'Article'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

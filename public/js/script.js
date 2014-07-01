@@ -1,5 +1,22 @@
 $(function(){
     /******************************************************************************
+     Dummy
+     *******************************************************************************/
+    var dummy = window.localStorage.getItem('close');
+
+    if (dummy === null) {
+        $('body').prepend(
+            '<p id="dummy" class="text-center" style="background-color: #cc0000; color: #ffff00; font-weight: bold; padding: 5px 0;  position: relative">Сайт в разработке, спасибо за понимание. <span class="glyphicon glyphicon-remove" style="cursor: pointer; position: absolute; top: 8px; right: 10px"></span></p>'
+        );
+    }
+
+    $('#dummy').find('span').on('click', function() {
+        $('#dummy').slideUp();
+
+        window.localStorage.setItem('close', 'yes');
+    });
+
+    /******************************************************************************
      Horizontal menu
      *******************************************************************************/
 
@@ -48,6 +65,9 @@ $(function(){
     }, function() {
         $(this).css('background-color', 'transparent');
     });
+
+    /* Bottom-menu */
+    $('.bottom-nav').find('li').find('a').removeClass('float-shadow');
 
     /******************************************************************************
      Info on carousel

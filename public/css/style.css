@@ -254,6 +254,19 @@ Horizontal menu
     transform: translateY(5px);
 }
 
+/* Bottom nav */
+.bottom-nav {
+    padding: 0;
+}
+
+.bottom-nav li a {
+    padding: 5px 10px;
+}
+
+.bottom-nav li a:hover {
+    background-color: transparent;
+}
+
 /* Sub-nav */
 .sub-nav {
     display: none;

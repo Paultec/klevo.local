@@ -19,4 +19,20 @@ class IndexController extends AbstractActionController
 
         return $index;
     }
+
+    /**
+     * @return ViewModel
+     */
+    public function paymentDeliveryAction()
+    {
+        return new ViewModel();
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function contactsAction()
+    {
+        return new ViewModel();
+    }
 }

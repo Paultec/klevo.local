@@ -25,7 +25,9 @@ return array(
         'Register',
         'Data',
         'Admin',
-        'Search'
+        'Search',
+        'Article',
+        'Gallery'
         ),
     'module_listener_options' => array(
         'module_paths' => array(

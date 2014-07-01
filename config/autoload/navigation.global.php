@@ -8,12 +8,12 @@ return array(
         'default' => array(
             array(
                 'label' => 'Галерея',
-                'route' => 'home',
+                'route' => 'gallery',
                 'class' => 'float-shadow',
             ),
             array(
                 'label' => 'Статьи',
-                'route' => 'home',
+                'route' => 'article',
                 'class' => 'float-shadow',
             ),
             array(
@@ -23,12 +23,12 @@ return array(
             ),
             array(
                 'label' => 'Оплата и доставка',
-                'route' => 'home',
+                'route' => 'paymentdelivery',
                 'class' => 'float-shadow',
             ),
             array(
                 'label' => 'Контакты',
-                'route' => 'home',
+                'route' => 'contacts',
                 'class' => 'float-shadow',
             ),
         ),

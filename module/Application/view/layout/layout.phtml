@@ -3,7 +3,7 @@
 <html lang="ru">
     <head>
         <meta charset="utf-8">
-        <?php echo $this->headTitle('Klevo '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+        <?php echo $this->headTitle($this->translate('Klevo'))->setSeparator(' - ')->setAutoEscape(false) ?>
 
         <?php echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -11,7 +11,7 @@
         ?>
 
         <!-- Le styles -->
-        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/misc/favicon.ico'))
                         ->prependStylesheet($this->basePath() . '/css/style.min.css')
                         ->prependStylesheet($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css')
                         ->prependStylesheet($this->basePath() . '/css/font-awesome.css')
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <!-- Horizontal menu  -->
-            <div class="navbar horizontal-nav center-block" role="navigation">
+            <div class="navbar horizontal-nav" role="navigation">
                 <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav'); ?>
                 <ul class="nav navbar-nav">
                     <?php if (!$this->zfcUserIdentity()): ?>
@@ -102,10 +102,16 @@
             </div><!-- /Search and Cart -->
             <?php echo $this->content; ?>
             <footer id="footer" class="col col-lg-12 text-center">
-                <p class="text-muted">&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+                <!-- Horizontal menu  -->
+                <div class="bottom-nav col col-lg-8 col-lg-offset-4 hidden-sm hidden-xs">
+                    <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav center-block'); ?>
+                </div><!-- /Horizontal menu  -->
+                <p class="text-muted">&copy; <?php echo date('Y') ?> by <a href="http://versover.com" target="_blank">Versover</a> <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
         <a href="#" class="feedback hidden-sm hidden-xs">Обратная связь</a>
         <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button"><span class="glyphicon glyphicon-chevron-up"></span></a>
+        <div class="good-idea hidden-md hidden-sm hidden-xs"></div>
+        <script type="text/javascript" src="http://ie.cntrlmrktng.ru/1.0/help.js" charset="UTF-8" async="async"></script>
     </body>
 </html>
