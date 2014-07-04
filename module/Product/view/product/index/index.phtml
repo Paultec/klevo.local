@@ -75,7 +75,7 @@
                 <div class="col col-md-4">
                     <?php if ($item->getImg()): ?>
                         <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
-                            <img class="lazy" data-original="/img/product/<?php echo $item->getImg()?>" width="270" alt="">
+                            <img class="lazy img-responsive" data-original="/img/product/<?php echo $item->getImg()?>" alt="">
                         </a>
                     <?php else:?>
                     <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">

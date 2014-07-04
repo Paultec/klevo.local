@@ -45,14 +45,20 @@ $(function(){
         $(this).append(' <span class="glyphicon '+ menu_glyphicon[index] +'\"><span>');
     });
 
+    /* Grab navigation */
+    var grab = $('.grub-data');
+    grab.appendTo( $('.main-nav') );
+
+    grab.children().unwrap();
+
     /* Sub-nav */
     var sub_nav = $('.nav li'), logout = $('.logout');
 
     sub_nav.hover(function() {
         $('ul', this).slideDown();
-     }, function() {
+    }, function() {
         $('ul', this).slideUp();
-     });
+    });
 
     $('.sub-nav li').hover(function() {
         logout.css('background-color', '#eee');

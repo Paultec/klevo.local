@@ -209,6 +209,10 @@ Horizontal menu
     color: #563D7C;
 }
 
+.nav > li > a {
+    padding: 15px 10px;
+}
+
 .float-shadow {
     display: inline-block;
     position: relative;
@@ -252,6 +256,19 @@ Horizontal menu
     -webkit-transform: translateY(5px);
     -ms-transform: translateY(5px);
     transform: translateY(5px);
+}
+
+/* Collapse nav */
+.icon-bar {
+    background-color: #000000;
+}
+
+.navbar-toggle {
+    outline: none;
+}
+
+.navbar-toggle:hover {
+    border: 1px solid rgba(0,0,0, 0.3);
 }
 
 /* Bottom nav */
