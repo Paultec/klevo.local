@@ -18,7 +18,6 @@ class Module
         'Data\Controller\Status',
         'Data\Controller\Store',
         'Product\Controller\Edit',
-        'Product\Controller\Index',
         'Product\Controller\Parse',
         'Product\Controller\Upload',
         'Register\Controller\Index',
