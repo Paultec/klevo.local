@@ -33,6 +33,9 @@ return array(
         ),
     ),
     'view_manager' => array(
+        'template_map' => array(
+            'admin/layout' => __DIR__ . '/../view/layout/admin.phtml'
+        ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),

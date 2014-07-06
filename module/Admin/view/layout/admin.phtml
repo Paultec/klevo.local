@@ -1,0 +1,75 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle($this->translate('Klevo-Admin'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/misc/favicon.ico'))
+        ->prependStylesheet($this->basePath() . '/css/style.min.css')
+        ->prependStylesheet($this->basePath() . '/css/admin/shCore.min.css')
+        ->prependStylesheet($this->basePath() . '/css/admin/jquery.dataTables.min.css')
+        ->prependStylesheet($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css')
+        ->prependStylesheet($this->basePath() . '/css/font-awesome.css')
+        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
+
+    <!-- Scripts -->
+    <?php echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/admin/admin.js')
+        ->prependFile($this->basePath() . '/js/script.js')
+        ->prependFile($this->basePath() . '/js/admin/shCore.min.js')
+        ->prependFile($this->basePath() . '/js/admin/jquery.dataTables.min.js')
+        ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+        ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js')
+        ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js')
+        ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+        ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+    ; ?>
+</head>
+<body>
+<div class="container">
+    <!-- Horizontal menu  -->
+    <div class="navbar horizontal-nav" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navigation">
+                <span class="sr-only">Главная навигация</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="main-navigation" class="collapse navbar-collapse">
+            <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav main-nav'); ?>
+        </div>
+        <div class="grub-data">
+            <?php if (!$this->zfcUserIdentity()): ?>
+                <li><a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>" class="float-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
+            <?php else: ?>
+                <li>
+                    <a href="<?php echo $this->url('zfcuser/logout'); ?>" class="logout">Выйти <span class="glyphicon glyphicon-user"><span class="caret"></span></a>
+                    <ul class="nav sub-nav">
+                        <li><a href="<?php echo $this->url('zfcuser/changeemail') . '#changem'; ?>">Изменить email</a></li>
+                        <li><a href="<?php echo $this->url('zfcuser/changepassword') . '#changep'; ?>">Изменить пароль</a></li>
+                    </ul>
+                </li>
+            <?php endif ?>
+            <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
+                <li><a href="<?php echo $this->url('admin');?>" class="float-shadow"><?php echo $this->userRole;?> <span class="glyphicon glyphicon-wrench"></a></li>
+            <?php endif ?>
+        </div>
+    </div><!-- /Horizontal menu  -->
+    <?php echo $this->content; ?>
+    <footer id="footer" class="col col-lg-12 text-center">
+        <p class="text-muted">&copy; <?php echo date('Y') ?> by <a href="http://versover.com" target="_blank">Versover</a> <?php echo $this->translate('All rights reserved.') ?></p>
+    </footer>
+</div> <!-- /container -->
+<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button"><span class="glyphicon glyphicon-chevron-up"></span></a>
+<div class="good-idea hidden-md hidden-sm hidden-xs"></div>
+</body>
+</html>
