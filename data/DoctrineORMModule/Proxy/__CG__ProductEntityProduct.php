@@ -64,10 +64,10 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'id', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'name', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'description', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'price', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'img', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'qty', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idStatus', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idCatalog', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idBrand');
+            return array('__isInitialized__', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'id', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'name', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'description', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'price', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'img', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'indexed', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'qty', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idStatus', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idCatalog', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idBrand');
         }
 
-        return array('__isInitialized__', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'id', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'name', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'description', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'price', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'img', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'qty', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idStatus', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idCatalog', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idBrand');
+        return array('__isInitialized__', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'id', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'name', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'description', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'price', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'img', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'indexed', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'qty', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idStatus', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idCatalog', '' . "\0" . 'Product\\Entity\\Product' . "\0" . 'idBrand');
     }
 
     /**
@@ -274,6 +274,28 @@ class Product extends \Product\Entity\Product implements \Doctrine\ORM\Proxy\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getImg', array());
 
         return parent::getImg();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIndexed($indexed)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIndexed', array($indexed));
+
+        return parent::setIndexed($indexed);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIndexed()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getIndexed', array());
+
+        return parent::getIndexed();
     }
 
     /**

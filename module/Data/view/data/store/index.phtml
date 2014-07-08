@@ -1,1 +1,36 @@
-Action "index", controller "Store", module "Data".
+<?php
+$title = 'Поставщики';
+$this->headTitle($title);
+?>
+
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+
+    <p>
+        <a class="btn btn-success" href="<?php echo $this->url('data/store', array('action'=>'add'));?>"><span class="glyphicon glyphicon-plus"></span> Добавить поставщика</a>
+    </p>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Действия</th>
+        </tr>
+        <?php for ($i = 0, $count = count($this->suppliers); $i < $count; $i++) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($this->suppliers[$i]->getId());?></td>
+                <td><?php echo $this->escapeHtml($this->suppliers[$i]->getName());?></td>
+                <td>
+                    <a class="btn btn-primary" href="<?php echo $this->url('data/store',
+                        array('action'=>'edit', 'id' => $this->suppliers[$i]->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
+<!--                    <a class="btn btn-warning show-hide" href="--><?php //echo $this->url('brand',
+//                        array('action'=>'hide', 'id' => $this->brands[$i]->getId()));?><!--"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>-->
+                    <!--                    <a class="btn btn-danger" href="--><?php //echo $this->url('brand',
+                    //                        array('action'=>'delete', 'id' => $brand->getId()));?><!--"><span class="glyphicon glyphicon-remove"></span> Удалить</a>-->
+                </td>
+            </tr>
+        <?php endfor; ?>
+    </table>
+</section>

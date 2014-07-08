@@ -111,17 +111,19 @@ class RegisterTableController extends AbstractActionController
 
                 $productList = $currentSession->productList;
 
+                $totalSum = 0;
+
                 $count = count($productList);
                 for ($i=0; $i<$count; ++$i) {
                     //var_dump($productList[$i]);
                     $idProduct = $productList[$i]->getId();
                     $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
                     $qty = $productList[$i]->currentQty;
-                    unset($productList[$i]->currentQty);
                     $price = $productList[$i]->currentPrice;
+                    $totalSum += $qty * $price;
+                    unset($productList[$i]->currentQty);
                     unset($productList[$i]->currentPrice);
                     //$idUser = $productList[$i]->currentIdUser;
-                    //var_dump($idUser);
                     $idUser = $register->getIdUser();
                     $user = $this->getEntityManager()->find(self::USER_ENTITY, $idUser);
                     //unset($productList[$i]->currentIdUser);
@@ -155,6 +157,13 @@ class RegisterTableController extends AbstractActionController
                     $this->getEntityManager()->persist($registerTableNote);
                     $this->getEntityManager()->flush();
                 }
+
+                //var_dump($totalSum);
+                //var_dump($register);
+                $register->setTotalSum($totalSum);
+                //var_dump($register);
+        $this->getEntityManager()->persist($register);
+        $this->getEntityManager()->flush();
 
                 unset($currentSession->idBrand);
                 unset($currentSession->idCatalog);

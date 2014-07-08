@@ -116,6 +116,17 @@
 </div>
     <?php if ($this->paginator->count() > 0): ?>
         <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата</th>
+                <th>От кого</th>
+                <th>Кому</th>
+                <th>Тип операции</th>
+                <th>Пользователь</th>
+                <th>Сумма</th>
+            </tr>
+            </thead>
             <tbody>
             <?php foreach($this->paginator as $item): ?>
                 <tr>
@@ -125,7 +136,7 @@
                     <td><?php echo $item->getIdStoreTo()->getName(); ?></td>
                     <td><?php echo $item->getIdOperation()->getName(); ?></td>
                     <td><?php echo $item->getIdUser()->getEmail(); ?></td>
-                    <td><?php //echo $item->getIdUser()->getTotalSum(); ?></td>
+                    <td><?php echo $item->getTotalSum(); ?></td>
                     <td>
                         <form class="float-form" method="post" action="<?php echo $this->url('register-table', array('action' => 'get-detail')); ?>">
                             <input type="submit" class="btn btn-info" name="detailRegister" value="Детали">
