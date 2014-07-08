@@ -19,6 +19,12 @@ $this->headTitle($title);
     echo $this->formRow($form->get('price')) . "\n";
 //    echo $this->formRow($form->get('img')) . "\n";
 
+    echo '<label>Список поставщиков:' . "\n";
+    echo '<select class="form-control" name="idSupplier">' . "\n";
+    echo $this->partialLoop('product/partial/loops.phtml', $this->supplier);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
+
     echo '<label>Список категорий:' . "\n";
     echo '<select class="form-control" name="idCatalog">' . "\n";
     echo $this->partialLoop('product/partial/loops.phtml', $this->catalog);

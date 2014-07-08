@@ -20,6 +20,7 @@ class EditController extends AbstractActionController
     const BRAND_ENTITY    = 'Catalog\Entity\Brand';
     const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
     const STATUS_ENTITY   = 'Data\Entity\Status';
+    const STORE_ENTITY    = 'Data\Entity\Store';
 
     /**
      * @var
@@ -129,6 +130,8 @@ class EditController extends AbstractActionController
                 $postData = $form->getData();
 
                 $postData['price'] = (int)($postData['price'] * 100);
+                $postData['idSupplier'] = $this->getEntityManager()->
+                    find(self::STORE_ENTITY, $postData['idSupplier']);
                 $postData['idCatalog'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idCatalog']);
                 $postData['idBrand'] = $this->getEntityManager()->
@@ -151,9 +154,10 @@ class EditController extends AbstractActionController
         $catalog = $this->modifyCatalogOptions();
 
         return new ViewModel(array(
-            'form'    => $form,
-            'catalog' => $catalog,
-            'brand'   => $this->setOptionItems('brand')
+            'form'     => $form,
+            'catalog'  => $catalog,
+            'supplier' => $this->setOptionItems('supplier'),
+            'brand'    => $this->setOptionItems('brand')
         ));
     }
 
@@ -170,8 +174,9 @@ class EditController extends AbstractActionController
 
         $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id);
 
-        $brandState   = $product->getIdBrand()->getId();
-        $catalogState = $product->getIdCatalog()->getId();
+        $brandState    = $product->getIdBrand()->getId();
+        $catalogState  = $product->getIdCatalog()->getId();
+        $supplierState = $product->getIdSupplier()->getId();
 
         // Перевод в грн.
         $product->setPrice($product->getPrice() / 100);
@@ -186,6 +191,8 @@ class EditController extends AbstractActionController
             if ($form->isValid()) {
                 $postData = $form->getData();
 
+                $postData['idSupplier'] = $this->getEntityManager()->
+                    find(self::STORE_ENTITY, $postData['idSupplier']);
                 $postData['idBrand'] = $this->getEntityManager()->
                     find(self::BRAND_ENTITY, $postData['idBrand']);
                 $postData['idCatalog'] = $this->getEntityManager()->
@@ -216,15 +223,20 @@ class EditController extends AbstractActionController
         $catalog = $this->modifyCatalogOptions();
 
         return new ViewModel(array(
-            'form'         => $form,
-            'catalog'      => $catalog,
-            'brand'        => $this->setOptionItems('brand'),
-            'brandState'   => $brandState,
-            'catalogState' => $catalogState,
-            'id'           => $id
+            'form'          => $form,
+            'catalog'       => $catalog,
+            'supplier'      => $this->setOptionItems('supplier'),
+            'brand'         => $this->setOptionItems('brand'),
+            'supplierState' => $supplierState,
+            'brandState'    => $brandState,
+            'catalogState'  => $catalogState,
+            'id'            => $id
         ));
     }
 
+    /**
+     * @return ViewModel
+     */
     public function hideAction()
     {
         $id = (int) $this->params()->fromRoute('id', 0);
@@ -381,6 +393,14 @@ class EditController extends AbstractActionController
             for ($i = 0, $category = count($categories); $i < $category; $i++) {
                 $option_arr[$i]['id']   = $categories[$i]->getId();
                 $option_arr[$i]['name'] = $categories[$i]->getName();
+            }
+        } elseif ($type == 'supplier') {
+            $suppliers = $this->getEntityManager()
+                ->getRepository(self::STORE_ENTITY)->findBy(array('idAttrib' => 3));
+
+            for ($i = 0, $supplier = count($suppliers); $i < $supplier; $i++) {
+                $option_arr[$i]['id']   = $suppliers[$i]->getId();
+                $option_arr[$i]['name'] = $suppliers[$i]->getName();
             }
         } else {
             $brands = $this->getEntityManager()

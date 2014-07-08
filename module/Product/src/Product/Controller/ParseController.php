@@ -18,6 +18,7 @@ class ParseController extends AbstractActionController
     const PRODUCT_ENTITY  = 'Product\Entity\Product';
     const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
     const BRAND_ENTITY    = 'Catalog\Entity\Brand';
+    const STORE_ENTITY    = 'Data\Entity\Store';
 
     /**
      * @var
@@ -65,11 +66,20 @@ class ParseController extends AbstractActionController
                 $product = new Product();
 
                 try {
+                    // Выбросить исключение, если не числовой тип
+                    if (gettype($dataRow[2]) !== 'double' ||
+                        gettype($dataRow[3]) !== 'double' ||
+                        gettype($dataRow[4]) !== 'double') {
+                        throw new \Exception('Invalid data type');
+                    }
+
                     $prepareData['name']        = $dataRow[0];
                     $prepareData['description'] = $dataRow[1] ?: null;
-                    $prepareData['idBrand']     = $this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[2]);
-                    $prepareData['idCatalog']   = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[3]);
-                    $prepareData['price']       = (int)($dataRow[4] * 100);
+                    $prepareData['idSupplier']  = $this->getEntityManager()->find(self::STORE_ENTITY, $dataRow[2]);
+                    $prepareData['idBrand']     = $this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[3]);
+                    $prepareData['idCatalog']   = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[4]);
+                    $prepareData['price']       = (int)($dataRow[5] * 100);
+
 
                     $product->populate($prepareData);
 

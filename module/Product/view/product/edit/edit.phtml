@@ -22,10 +22,17 @@ $this->headTitle($title);
 
     echo '<input type="hidden" name="brand_state" value="'. $this->brandState .'">';
     echo '<input type="hidden" name="catalog_state" value="'. $this->catalogState .'">';
+    echo '<input type="hidden" name="supplier_state" value="'. $this->supplierState .'">';
 
     echo $this->formRow($form->get('name')) . "\n";
     echo $this->formRow($form->get('description')) . "\n";
     echo $this->formRow($form->get('price')) . "\n";
+
+    echo '<label>Список поставщиков:' . "\n";
+    echo '<select class="form-control supplier_select" name="idSupplier">' . "\n";
+    echo $this->partialLoop('product/partial/loops.phtml', $this->supplier);
+    echo '</select>' . "\n";
+    echo '</label>' . "\n";
 
     echo '<label>Список категорий:' . "\n";
     echo '<select class="form-control category_select" name="idCatalog">' . "\n";

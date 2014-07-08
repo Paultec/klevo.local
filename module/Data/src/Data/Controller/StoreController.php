@@ -87,7 +87,12 @@ class StoreController extends AbstractActionController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $supplier->populate($form->getData());
+                $postData = $form->getData();
+
+                $postData['idAttrib'] = $this->getEntityManager()->
+                    find(self::ATTRIBUTE_ENTITY, self::SUPPLIER_STORE_ATTRIBUTE);
+
+                $supplier->populate($postData);
 
                 $this->getEntityManager()->persist($supplier);
                 $this->getEntityManager()->flush();

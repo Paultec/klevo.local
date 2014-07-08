@@ -25,10 +25,6 @@ $this->headTitle($title);
                 <td>
                     <a class="btn btn-primary" href="<?php echo $this->url('data/store',
                         array('action'=>'edit', 'id' => $this->suppliers[$i]->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
-<!--                    <a class="btn btn-warning show-hide" href="--><?php //echo $this->url('brand',
-//                        array('action'=>'hide', 'id' => $this->brands[$i]->getId()));?><!--"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>-->
-                    <!--                    <a class="btn btn-danger" href="--><?php //echo $this->url('brand',
-                    //                        array('action'=>'delete', 'id' => $brand->getId()));?><!--"><span class="glyphicon glyphicon-remove"></span> Удалить</a>-->
                 </td>
             </tr>
         <?php endfor; ?>

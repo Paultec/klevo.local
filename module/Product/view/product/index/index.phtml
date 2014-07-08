@@ -91,8 +91,14 @@
                     <?php endif ?>
                 </div>
                 <div class="col col-md-2">
-                    <a href="#" class="btn btn-primary" role="button">Button</a>
-                    <a href="#" class="btn btn-default" role="button">Button</a>
+                    <form action="" method="post">
+                        <input type="hidden" value="<?php echo $item->getId(); ?>">
+                        <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary">
+                    </form>
+                    <form action="" method="post">
+                        <input type="hidden" value="<?php echo $item->getId(); ?>">
+                        <input type="submit" value="Купить" name="oneClickBuy" class="btn btn-default">
+                    </form>
                 </div>
             </section>
             <?php endif; ?>

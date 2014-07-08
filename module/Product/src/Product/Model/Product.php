@@ -30,6 +30,12 @@ class Product {
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Attributes({"class":"form-control"})
      */
+    public $idSupplier;
+
+    /**
+     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Attributes({"class":"form-control"})
+     */
     public $idCatalog;
 
     /**

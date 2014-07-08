@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Product
  *
- * @ORM\Table(name="product", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code"})}, indexes={@ORM\Index(name="id_ratio_category", columns={"idCatalog", "idBrand"}), @ORM\Index(name="idBrand", columns={"idBrand"}), @ORM\Index(name="IDX_D34A04ADB9559B5", columns={"idCatalog"})})
+ * @ORM\Table(name="product", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"description"})}, indexes={@ORM\Index(name="id_ratio_category", columns={"idCatalog", "idBrand"}), @ORM\Index(name="idBrand", columns={"idBrand"}), @ORM\Index(name="idStatus", columns={"idStatus"}), @ORM\Index(name="idSupplier", columns={"idSupplier"}), @ORM\Index(name="IDX_D34A04ADB9559B5", columns={"idCatalog"})})
  * @ORM\Entity
  */
 class Product
@@ -62,6 +62,16 @@ class Product
      * @ORM\Column(name="qty", type="integer", nullable=true)
      */
     private $qty;
+
+    /**
+     * @var \Data\Entity\Store
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Store")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idSupplier", referencedColumnName="id")
+     * })
+     */
+    private $idSupplier;
 
     /**
      * @var \Data\Entity\Status
@@ -242,6 +252,29 @@ class Product
     }
 
     /**
+     * Set idSupplier
+     *
+     * @param \Data\Entity\Store $idSupplier
+     * @return Product
+     */
+    public function setIdSupplier(\Data\Entity\Store $idSupplier = null)
+    {
+        $this->idSupplier = $idSupplier;
+
+        return $this;
+    }
+
+    /**
+     * Get idSupplier
+     *
+     * @return \Data\Entity\Store
+     */
+    public function getIdSupplier()
+    {
+        return $this->idSupplier;
+    }
+
+    /**
      * Set idStatus
      *
      * @param \Data\Entity\Status $idStatus
@@ -331,6 +364,7 @@ class Product
         $this->price       = $data['price'];
         $this->img         = $data['img'];
         $this->qty         = $data['qty'];
+        $this->idSupplier  = $data['idSupplier'];
         $this->idStatus    = $data['idStatus'];
         $this->idCatalog   = $data['idCatalog'];
         $this->idBrand     = $data['idBrand'];

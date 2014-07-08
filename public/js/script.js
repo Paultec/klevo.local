@@ -447,10 +447,12 @@ $(function(){
     /******************************************************************************
      edit product select default options
      *******************************************************************************/
-    var brand_state   = $('[name="brand_state"]').val(),
-        catalog_state = $('[name="catalog_state"]').val(),
-        brand_options = $('.brand_select').find('option'),
-        category_options = options;
+    var brand_state         = $('[name="brand_state"]').val(),
+        supplier_state      = $('[name="supplier_state"]').val(),
+        catalog_state       = $('[name="catalog_state"]').val(),
+        supplier_options    = $('.supplier_select').find('option'),
+        brand_options       = $('.brand_select').find('option'),
+        category_options    = options;
 
     brand_options.each(function(){
         if (brand_state == $(this).val()) {
@@ -463,6 +465,13 @@ $(function(){
             $(this).css('color', '#428BCA').attr('selected', true);
         }
     });
+
+    supplier_options.each(function(){
+        if (supplier_state == $(this).val()) {
+            $(this).css('color', '#428BCA').attr('selected', true);
+        }
+    });
+
 
     /******************************************************************************
      show/hide brand and category list

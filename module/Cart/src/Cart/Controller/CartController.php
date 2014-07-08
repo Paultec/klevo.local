@@ -6,7 +6,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
+
 use Cart\Entity\CartEntity;
+
 use GoSession;
 
 class CartController extends AbstractActionController
