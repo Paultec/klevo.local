@@ -31,6 +31,7 @@ class ParseController extends AbstractActionController
     protected $insertRow = 0;
     protected $skipRow   = 0;
     protected $errorRow  = 0;
+    protected $errorData = array();
 
     /**
      * @return ViewModel
@@ -45,7 +46,8 @@ class ParseController extends AbstractActionController
         return new ViewModel(array(
             'insertRow' => $this->insertRow,
             'skipRow'   => $this->skipRow,
-            'errorRow'  => $this->errorRow
+            'errorRow'  => $this->errorRow,
+            'errorData' => $this->errorData
         ));
     }
 
@@ -59,6 +61,11 @@ class ParseController extends AbstractActionController
         $parse = $this->parseExcel();
         array_shift($parse);
 
+        // Идентификаторы
+        $categoryIds = $this->getEntityId($entity = self::CATEGORY_ENTITY);
+        $brandIds    = $this->getEntityId($entity = self::BRAND_ENTITY);
+        $storeIds    = $this->getEntityId($entity = self::STORE_ENTITY);
+
         $prepareData = array();
 
         foreach ($parse as $dataRow) {
@@ -67,9 +74,11 @@ class ParseController extends AbstractActionController
 
                 try {
                     // Выбросить исключение, если не числовой тип
-                    if (gettype($dataRow[2]) !== 'double' ||
-                        gettype($dataRow[3]) !== 'double' ||
-                        gettype($dataRow[4]) !== 'double') {
+                    if ((gettype($dataRow[2]) !== 'double' || !in_array((int)$dataRow[2], $storeIds)) ||
+                        (gettype($dataRow[3]) !== 'double' || !in_array((int)$dataRow[3], $brandIds)) ||
+                        (gettype($dataRow[4]) !== 'double' || !in_array((int)$dataRow[4], $categoryIds)) ||
+                        gettype($dataRow[5])  !== 'double'
+                    ) {
                         throw new \Exception('Invalid data type');
                     }
 
@@ -80,12 +89,12 @@ class ParseController extends AbstractActionController
                     $prepareData['idCatalog']   = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $dataRow[4]);
                     $prepareData['price']       = (int)($dataRow[5] * 100);
 
-
                     $product->populate($prepareData);
 
                     $this->getEntityManager()->persist($product);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->errorRow++;
+                    $this->errorData[] = $dataRow[0];
 
                     continue;
                 }
@@ -97,6 +106,25 @@ class ParseController extends AbstractActionController
         }
 
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param $entity
+     *
+     * @return array
+     */
+    protected function getEntityId($entity)
+    {
+        $items = $this->getEntityManager()->getRepository($entity)
+            ->findAll();
+
+        $tmpArray = array();
+
+        foreach ($items as $item) {
+                $tmpArray[] = $item->getId();
+        }
+
+        return $tmpArray;
     }
 
     /**
