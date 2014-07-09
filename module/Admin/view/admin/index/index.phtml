@@ -6,12 +6,12 @@
                 Отчеты и аналитика <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="<?php echo $this->url('register');?>">Журнал операций</a></li>
-                <li><a href="<?php echo $this->url('remains');?>">Остатки товара</a></li>
-                <li><a href="<?php echo $this->url('balance');?>">Баланс</a></li>
-                <li><a href="<?php echo $this->url('order');?>">Заказы</a></li>
-                <li><a href="<?php echo $this->url('payment');?>">Платежи</a></li>
-                <li><a href="<?php echo $this->url('user');?>">Пользователи</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('register');?>">Журнал операций</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('remains');?>">Остатки товара</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('balance');?>">Баланс</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('order');?>">Заказы</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('payment');?>">Платежи</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('user');?>">Пользователи</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -19,8 +19,8 @@
                 Справочник товаров <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="<?php echo $this->url('editproduct');?>">Работа с продуктом</a></li>
-                <li><a href="<?php echo $this->url('fileupload');?>">Загрузить продукт из Excel-документа</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('editproduct');?>">Работа с продуктом</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('fileupload');?>">Загрузить продукт из Excel-документа</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -28,9 +28,9 @@
                 Справочники <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="<?php echo $this->url('brand');?>">Производители</a></li>
-                <li><a href="<?php echo $this->url('category');?>">Категории</a></li>
-                <li><a href="<?php echo $this->url('data/store');?>">Поставщики</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('brand');?>">Производители</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('category');?>">Категории</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('data/store');?>">Поставщики</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -38,8 +38,8 @@
                 Поиск <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="<?php echo $this->url('search/create', array('action' => 'create'));?>">Создать/Обновить индексы</a></li>
-                <li><a href="<?php echo $this->url('search/optimize', array('action' => 'optimize'));?>">Оптимизировать индексы</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('search/create', array('action' => 'create'));?>">Создать/Обновить индексы</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('search/optimize', array('action' => 'optimize'));?>">Оптимизировать индексы</a></li>
             </ul>
         </li>
     </ul>
