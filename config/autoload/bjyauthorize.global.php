@@ -28,6 +28,16 @@ return array(
                     'action'     => array('index', 'view'),
                     'roles'      => array(),
                 ),
+                array(
+                    'controller' => 'Cart\Controller\Cart',
+                    'action'     => array('index', 'add'),
+                    'roles'      => array(),
+                ),
+                array(
+                    'controller' => 'Search\Controller\Search',
+                    'action'     => array('index', 'create', 'optimize'),
+                    'roles'      => array(),
+                ),
                 // конец раздела 1
 
                 // Раздел 2
@@ -51,15 +61,9 @@ return array(
 
                 // Раздел 4
                 // разрешения для авторизованных пользователей с ролью MANAGER
-
-                // конец раздела 4
-
-                // Раздел 5
-                // разрешения для авторизованных пользователей с ролью ADMIN
                 array(
                     'controller' => array(
                         'Admin\Controller\Index',
-                        //'Cart\Controller\Cart',
                         'Catalog\Controller\Brand',
                         'Catalog\Controller\Catalog',
                         'Catalog\Controller\Index',
@@ -76,6 +80,19 @@ return array(
                         'Register\Controller\Index',
                         'Register\Controller\Register',
                         'Register\Controller\RegisterTable',
+                        'Register\Controller\Remains',
+                    ),
+                    'roles'      => array('manager'),
+                ),
+                // конец раздела 4
+
+                // Раздел 5
+                // разрешения для авторизованных пользователей с ролью ADMIN
+                array(
+                    'controller' => array(
+                        'Register\Controller\Balance',
+                        'Register\Controller\Order',
+                        'Register\Controller\Payment',
                     ),
                     'roles'      => array('admin'),
                 ),
@@ -85,24 +102,7 @@ return array(
                 // глобальные разрешения для авторизованных пользователей с ролью BOSS
                 array(
                     'controller' => array(
-                        //'Admin\Controller\Index',
-                        'Cart\Controller\Cart',
-//                        'Catalog\Controller\Brand',
-//                        'Catalog\Controller\Catalog',
-//                        'Catalog\Controller\Index',
-//                        'Data\Controller\Attribute',
-//                        'Data\Controller\Index',
-//                        'Data\Controller\Operation',
-//                        'Data\Controller\PaymentType',
-//                        'Data\Controller\Status',
-//                        'Data\Controller\Store',
-//                        'Product\Controller\Edit',
-//                        'Product\Controller\Index',
-//                        'Product\Controller\Parse',
-//                        'Product\Controller\Upload',
-//                        'Register\Controller\Index',
-//                        'Register\Controller\Register',
-//                        'Register\Controller\RegisterTable',
+                        'Register\Controller\User',
                     ),
                     'roles'      => array('boss'),
                 ),
