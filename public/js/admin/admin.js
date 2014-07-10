@@ -6,7 +6,7 @@ $(function() {
     });
 
     // image overlay
-    $('body').append($('<div id="showImgDiv"><img src="/" alt="" ></div>'));
+    $('body').append($('<div id="showImgDiv"><img src="/" alt=""></div>'));
 
     var showImgDiv = $('#showImgDiv');
 

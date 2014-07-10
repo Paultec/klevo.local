@@ -52,24 +52,11 @@ $(function(){
     grab.children().unwrap();
 
     /* Sub-nav */
-    var sub_nav = $('.nav li'), logout = $('.logout');
-
-    sub_nav.hover(function() {
-        $('ul', this).slideDown();
-    }, function() {
-        $('ul', this).slideUp();
-    });
-
-    $('.sub-nav li').hover(function() {
-        logout.css('background-color', '#eee');
-    }, function() {
-        logout.css('background-color', 'transparent');
-    });
-
-    logout.hover(function() {
-        $(this).css('background-color', '#eee');
-    }, function() {
-        $(this).css('background-color', 'transparent');
+    // Menu dropdown
+    $('ul.nav').find('li.dropdown').hover(function(){
+        $('.dropdown-menu', this).fadeIn();
+    }, function(){
+        $('.dropdown-menu', this).fadeOut();
     });
 
     /* Bottom-menu */
@@ -402,7 +389,7 @@ $(function(){
     /******************************************************************************
      Logout confirm
      *******************************************************************************/
-    logout.on('click', function(){
+    $('.logout').on('click', function(){
         // TODO change standard confirm
         return confirm('Вы действительно хотите выйти из системы?');
     });
@@ -447,12 +434,12 @@ $(function(){
     /******************************************************************************
      edit product select default options
      *******************************************************************************/
-    var brand_state         = $('[name="brand_state"]').val(),
-        supplier_state      = $('[name="supplier_state"]').val(),
-        catalog_state       = $('[name="catalog_state"]').val(),
-        supplier_options    = $('.supplier_select').find('option'),
-        brand_options       = $('.brand_select').find('option'),
-        category_options    = options;
+    var brand_state      = $('[name="brand_state"]').val(),
+        supplier_state   = $('[name="supplier_state"]').val(),
+        catalog_state    = $('[name="catalog_state"]').val(),
+        supplier_options = $('.supplier_select').find('option'),
+        brand_options    = $('.brand_select').find('option'),
+        category_options = options;
 
     brand_options.each(function(){
         if (brand_state == $(this).val()) {
