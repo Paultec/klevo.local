@@ -11,13 +11,13 @@ class ShowList extends AbstractHelper
 {
     private $newList = array();
     private $tmp     = array();
-    private $seoUrl = array();
+    private $seoUrl  = array();
 
     /**
      * @param $list
      * @param null $idParent
      */
-    public function __invoke($list, $idParent = null, $seoUrl)
+    public function __invoke($list, $idParent, $seoUrl)
     {
         $this->seoUrl = $seoUrl;
 
@@ -54,7 +54,7 @@ class ShowList extends AbstractHelper
 
                     $this->__invoke($this->newList, $elem['id'], $this->seoUrl);
                 } else {
-                    echo '<a href="/product/'; if (isset($this->seoUrl['brandName'])) {echo $this->seoUrl['brandName'] . '/';}; echo $elem['translit'] . '" class="empty catalog-link">' . $elem['name'] . '</a>' . "\n";
+                    echo '<a href="/product/'; if (isset($this->seoUrl['brandName'])) { echo $this->seoUrl['brandName'] . '/'; } echo $elem['translit'] . '" class="empty catalog-link">' . $elem['name'] . '</a>' . "\n";
 //                    echo $this->partialLoop('catalog/partial/categoryLoop.phtml', $elem);
 
 //                    echo '<a class="empty brand-link" href="'. $this->url('product/catalog', array('category' => $elem['translit'])) .'">'. $elem['name'] .'</a>';

@@ -10,7 +10,13 @@
             <?php
             var_dump($this->seoUrlParams);
             ?>
-            <?php echo $this->partialLoop('catalog/partial/brandLoop.phtml', $this->brandList); ?>
+<!--            --><?php //echo $this->partialLoop('catalog/partial/brandLoop.phtml', $this->brandList); ?>
+
+            <?php
+                foreach ($this->brandList as $brand) {
+                    echo '<a href="/product/' . $brand['translit']; if (isset($this->seoUrlParams['categoryName'])) { echo '/' . $this->seoUrlParams['categoryName']; }  echo '/" class="empty catalog-link">' . $brand['name'] . '</a>' . "\n";
+                }
+            ?>
         </div>
     </div>
 

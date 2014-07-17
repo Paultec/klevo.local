@@ -31,14 +31,14 @@ class IndexController extends AbstractActionController
         $param = array();
 
         $routeParam = $this->params()->fromRoute();
-        //var_dump($routeParam);
+        var_dump($routeParam);
 
         $currentSession = new Container();
         //var_dump($currentSession->seoUrlParams);
         if (!isset($currentSession->seoUrlParams)) {
             $currentSession->seoUrlParams = array();
         }
-        //var_dump($currentSession->seoUrlParams);
+//        var_dump($currentSession->seoUrlParams);
 
         if (isset($routeParam['brand'])) {
             $currentSession->seoUrlParams['brandName'] = $routeParam['brand'];
@@ -51,7 +51,9 @@ class IndexController extends AbstractActionController
         if (isset($routeParam['page'])) {
             $currentSession->seoUrlParams['pageNum'] = $routeParam['page'];
         }
-        //var_dump($currentSession->seoUrlParams);
+        var_dump($currentSession->seoUrlParams);
+
+//        var_dump($routeParam);
 
         // URL сопоставление транслитерации с id
         if (isset($routeParam['brand'])) {
