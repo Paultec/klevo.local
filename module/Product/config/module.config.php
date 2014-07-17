@@ -15,7 +15,7 @@ return array(
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
-                        'type'    => 'Segment',
+                        'type'    => 'Wildcard',
                         'options' => array(
                             'route'    => '/[:controller[/:action]]',
                             'constraints' => array(
@@ -53,6 +53,19 @@ return array(
                             'defaults' => array(
                                 'controller'    => 'index',
                                 'action'        => 'index',
+                            ),
+                        ),
+                    ),
+                    'catalog' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/[:brand[/:category]]',
+                            'constraints' => array(
+                                'category' => '[a-zA-Z0-9_-]+',
+                                'brand'    => '[a-zA-Z0-9_-]+',
+                            ),
+                            'defaults' => array(
+                                'action' => 'index'
                             ),
                         ),
                     ),

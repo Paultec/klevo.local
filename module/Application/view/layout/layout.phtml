@@ -89,7 +89,8 @@
                         </li>
                     <?php endif ?>
                     <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
-                    <li><a href="<?php echo $this->url('admin');?>" class="float-shadow"><?php echo $this->userRole;?> <span class="glyphicon glyphicon-wrench"></a></li>
+                        <!-- Admin button -->
+                        <li id="control" style="display: block; position: absolute; right: -60px; z-index: 999; overflow: visible"><a href="<?php echo $this->url('admin');?>"><?php echo $this->userRole;?> <span class="glyphicon glyphicon-wrench"></a></li>
                     <?php endif ?>
                 </div>
             </div><!-- /Horizontal menu  -->
@@ -107,7 +108,7 @@
                     </form>
                 </div>
                 <div class="col col-lg-3">
-                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span>Корзина (товаров: 0)</a>
+                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span> (товаров: 0)</a>
                 </div>
             </div><!-- /Search and Cart -->
             <?php echo $this->content; ?>
@@ -116,7 +117,7 @@
                 <div class="bottom-nav col col-lg-8 col-lg-offset-4 hidden-sm hidden-xs">
                     <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav center-block'); ?>
                 </div><!-- /Horizontal menu  -->
-                <p class="text-muted">&copy; <?php echo date('Y') ?> by <a href="http://versover.com" target="_blank">Versover</a> <?php echo $this->translate('All rights reserved.') ?></p>
+                <p class="text-muted">&copy; <?php echo date('Y') ?> by Klevo <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
         <a href="#" class="feedback hidden-sm hidden-xs">Обратная связь</a>

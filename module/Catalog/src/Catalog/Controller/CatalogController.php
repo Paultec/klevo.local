@@ -48,9 +48,13 @@ class CatalogController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                // Вызов сервиса транслитерации
+                $translit = $this->getServiceLocator()->get('translitService');
+
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
+                $postData['translit'] = $translit->getTranslit($postData['name']);
 
                 $catalog->populate($postData);
 
@@ -94,9 +98,13 @@ class CatalogController extends AbstractActionController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
+                // Вызов сервиса транслитерации
+                $translit = $this->getServiceLocator()->get('translitService');
+
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
+                $postData['translit'] = $translit->getTranslit($postData['name']);
 
                 $catalog->populate($postData);
 

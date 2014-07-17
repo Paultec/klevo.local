@@ -68,6 +68,9 @@ class ParseController extends AbstractActionController
 
         $prepareData = array();
 
+        // Вызов сервиса транслитерации
+        $translit = $this->getServiceLocator()->get('translitService');
+
         foreach ($parse as $dataRow) {
             if (!isset($currentData[strtolower($dataRow[0])])) {
                 $product = new Product();
@@ -77,12 +80,13 @@ class ParseController extends AbstractActionController
                     if ((gettype($dataRow[2]) !== 'double' || !in_array((int)$dataRow[2], $storeIds)) ||
                         (gettype($dataRow[3]) !== 'double' || !in_array((int)$dataRow[3], $brandIds)) ||
                         (gettype($dataRow[4]) !== 'double' || !in_array((int)$dataRow[4], $categoryIds)) ||
-                        gettype($dataRow[5])  !== 'double'
+                         gettype($dataRow[5]) !== 'double'
                     ) {
                         throw new \Exception('Invalid data type');
                     }
 
                     $prepareData['name']        = $dataRow[0];
+                    $prepareData['translit']    = $translit->getTranslit($dataRow[0]);
                     $prepareData['description'] = $dataRow[1] ?: null;
                     $prepareData['idSupplier']  = $this->getEntityManager()->find(self::STORE_ENTITY, $dataRow[2]);
                     $prepareData['idBrand']     = $this->getEntityManager()->find(self::BRAND_ENTITY, $dataRow[3]);
@@ -115,8 +119,7 @@ class ParseController extends AbstractActionController
      */
     protected function getEntityId($entity)
     {
-        $items = $this->getEntityManager()->getRepository($entity)
-            ->findAll();
+        $items = $this->getEntityManager()->getRepository($entity)->findAll();
 
         $tmpArray = array();
 

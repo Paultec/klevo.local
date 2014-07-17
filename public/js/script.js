@@ -20,20 +20,18 @@ $(function(){
      Horizontal menu
      *******************************************************************************/
 
-    var menuItem = $('.horizontal-nav a');
+    var menuItem = $('.horizontal-nav');
 
-    menuItem.hover(
-        function() {
+    menuItem.find('a').hover(function() {
         $(this).css({'color': '#563D7C'})
                .children().css({'color': '#428BCA'});
-        },
-        function() {
+        },function() {
             $(this).css({'color': '#428BCA'})
                 .children().css({'color': '#563D7C'});
-        }
-    );
+        });
 
-    var menu_glyphicon = ['glyphicon-picture',
+    var menu_glyphicon = ['glyphicon-home',
+                          'glyphicon-picture',
                           'glyphicon-pencil',
                           'glyphicon-comment',
                           'glyphicon-shopping-cart',
@@ -44,6 +42,8 @@ $(function(){
     nav.each(function(index) {
         $(this).append(' <span class="glyphicon '+ menu_glyphicon[index] +'\"><span>');
     });
+
+    menuItem.find('li.active').addClass('outline-outward');
 
     /* Grab navigation */
     var grab = $('.grub-data');

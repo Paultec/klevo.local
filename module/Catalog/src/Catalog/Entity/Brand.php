@@ -29,6 +29,13 @@ class Brand
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="translit", type="string", length=40, nullable=true)
+     */
+    private $translit;
+
+    /**
      * @var \Data\Entity\Status
      *
      * @ORM\ManyToOne(targetEntity="Data\Entity\Status")
@@ -72,6 +79,29 @@ class Brand
     }
 
     /**
+     * Set translit
+     *
+     * @param string $translit
+     * @return Brand
+     */
+    public function setTranslit($translit)
+    {
+        $this->translit = $translit;
+
+        return $this;
+    }
+
+    /**
+     * Get translit
+     *
+     * @return string
+     */
+    public function getTranslit()
+    {
+        return $this->translit;
+    }
+
+    /**
      * Set idStatus
      *
      * @param \Data\Entity\Status $idStatus
@@ -111,6 +141,7 @@ class Brand
     {
         $this->id   	= $data['id'];
         $this->name 	= $data['name'];
+        $this->translit = $data['translit'];
 		$this->idStatus = $data['idStatus'];
     }
 }

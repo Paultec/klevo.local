@@ -14,34 +14,34 @@ return array(
             ),
         ),
 
-        'guards'            => array(
-            'BjyAuthorize\Guard\Controller' => array(
+//        'guards'            => array(
+//            'BjyAuthorize\Guard\Controller' => array(
                 // Раздел 1
                 // разрешения для всех посетителей сайта (включая незарегистрированных)
-                array(
-                    'controller' => 'Application\Controller\Index',
-                    'action'     => array('index'),
-                    'roles'      => array(),
-                ),
-                array(
-                    'controller' => 'Product\Controller\Index',
-                    'action'     => array('index', 'view'),
-                    'roles'      => array(),
-                ),
+//                array(
+//                    'controller' => 'Application\Controller\Index',
+//                    'action'     => array('index'),
+//                    'roles'      => array(),
+//                ),
+//                array(
+//                    'controller' => 'Product\Controller\Index',
+//                    'action'     => array('index', 'view'),
+//                    'roles'      => array(),
+//                ),
                 // конец раздела 1
 
                 // Раздел 2
                 // разграничение доступа к модулю ZfcUser для неавторизовавшихся и авторизовавшихся
-                array(
-                    'controller' => 'zfcuser',
-                    'action'     => array('index', 'login', 'authenticate','register'),
-                    'roles'      => array('guest'),
-                ),
-                array(
-                    'controller' => 'zfcuser',
-                    'action'     => array('logout', 'changepassword', 'changeEmail'),
-                    'roles'      => array('user'),
-                ),
+//                array(
+//                    'controller' => 'zfcuser',
+//                    'action'     => array('index', 'login', 'authenticate','register'),
+//                    'roles'      => array('guest'),
+//                ),
+//                array(
+//                    'controller' => 'zfcuser',
+//                    'action'     => array('logout', 'changepassword', 'changeEmail'),
+//                    'roles'      => array('user'),
+//                ),
                 // конец раздела 2
 
                 // Раздел 3
@@ -56,37 +56,10 @@ return array(
 
                 // Раздел 5
                 // разрешения для авторизованных пользователей с ролью ADMIN
-                array(
-                    'controller' => array(
-                        'Admin\Controller\Index',
-                        //'Cart\Controller\Cart',
-                        'Catalog\Controller\Brand',
-                        'Catalog\Controller\Catalog',
-                        'Catalog\Controller\Index',
-                        'Data\Controller\Attribute',
-                        'Data\Controller\Index',
-                        'Data\Controller\Operation',
-                        'Data\Controller\PaymentType',
-                        'Data\Controller\Status',
-                        'Data\Controller\Store',
-                        'Product\Controller\Edit',
-                        'Product\Controller\Index',
-                        'Product\Controller\Parse',
-                        'Product\Controller\Upload',
-                        'Register\Controller\Index',
-                        'Register\Controller\Register',
-                        'Register\Controller\RegisterTable',
-                    ),
-                    'roles'      => array('admin'),
-                ),
-                // конец раздела 5
-
-                // Раздел 6
-                // глобальные разрешения для авторизованных пользователей с ролью BOSS
-                array(
-                    'controller' => array(
-                        //'Admin\Controller\Index',
-                        'Cart\Controller\Cart',
+//                array(
+//                    'controller' => array(
+//                        'Admin\Controller\Index',
+//                        //'Cart\Controller\Cart',
 //                        'Catalog\Controller\Brand',
 //                        'Catalog\Controller\Catalog',
 //                        'Catalog\Controller\Index',
@@ -103,12 +76,39 @@ return array(
 //                        'Register\Controller\Index',
 //                        'Register\Controller\Register',
 //                        'Register\Controller\RegisterTable',
-                    ),
-                    'roles'      => array('boss'),
-                ),
+//                    ),
+//                    'roles'      => array('admin'),
+//                ),
+                // конец раздела 5
+
+                // Раздел 6
+                // глобальные разрешения для авторизованных пользователей с ролью BOSS
+//                array(
+//                    'controller' => array(
+//                        'Admin\Controller\Index',
+//                        'Cart\Controller\Cart',
+//                        'Catalog\Controller\Brand',
+//                        'Catalog\Controller\Catalog',
+//                        'Catalog\Controller\Index',
+//                        'Data\Controller\Attribute',
+//                        'Data\Controller\Index',
+//                        'Data\Controller\Operation',
+//                        'Data\Controller\PaymentType',
+//                        'Data\Controller\Status',
+//                        'Data\Controller\Store',
+//                        'Product\Controller\Edit',
+//                        'Product\Controller\Index',
+//                        'Product\Controller\Parse',
+//                        'Product\Controller\Upload',
+//                        'Register\Controller\Index',
+//                        'Register\Controller\Register',
+//                        'Register\Controller\RegisterTable',
+//                    ),
+//                    'roles'      => array('boss'),
+//                ),
                 // конец раздела 6
             ),
-        ),
-
-    ),
+//        ),
+//
+//    ),
 );

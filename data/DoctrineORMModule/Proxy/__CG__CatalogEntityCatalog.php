@@ -64,10 +64,10 @@ class Catalog extends \Catalog\Entity\Catalog implements \Doctrine\ORM\Proxy\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idParent', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idStatus');
+            return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'translit', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idParent', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idStatus');
         }
 
-        return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idParent', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idStatus');
+        return array('__isInitialized__', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'id', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'name', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'translit', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idParent', '' . "\0" . 'Catalog\\Entity\\Catalog' . "\0" . 'idStatus');
     }
 
     /**
@@ -208,6 +208,28 @@ class Catalog extends \Catalog\Entity\Catalog implements \Doctrine\ORM\Proxy\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getName', array());
 
         return parent::getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setTranslit($translit)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setTranslit', array($translit));
+
+        return parent::setTranslit($translit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTranslit()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslit', array());
+
+        return parent::getTranslit();
     }
 
     /**
