@@ -83,6 +83,9 @@ return array(
         ),
     ),
     'service_manager' => array(
+        'invokables' => array(
+            'translitService' => 'Application\Service\TranslitService',
+        ),
         'abstract_factories' => array(
             'Zend\Log\LoggerAbstractServiceFactory',
         ),

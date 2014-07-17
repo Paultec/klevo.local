@@ -18,7 +18,7 @@ $this->headTitle($title);
 
     echo '<label>Список категорий:' . "\n";
     echo '<select class="form-control" name="idParent">' . "\n";
-    echo $this->partialLoop('catalog/partial/categoryLoop.phtml', $this->categories);
+    echo $this->partialLoop('catalog/partial/categorySelectLoop.phtml', $this->categories);
     echo '</select>' . "\n";
     echo '</label>' . "\n";
 

@@ -6,11 +6,11 @@
     </aside>
 </section>
 
-<section class="col col-lg-6">
+<section class="col col-lg-9">
     <?php if (!is_null($this->product->getImg())) : ?>
-    <p class="product-image">
+    <div class="product-image">
         <img src="/img/product/<?php echo $this->product->getImg(); ?>" alt="">
-    </p>
+    </div>
     <?php endif ?>
     <h2 class="product-name">
         <?php echo $this->product->getName(); ?>

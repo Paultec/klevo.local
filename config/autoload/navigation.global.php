@@ -7,6 +7,11 @@ return array(
     'navigation' => array(
         'default' => array(
             array(
+                'label' => 'Главная',
+                'route' => 'home',
+                'class' => 'float-shadow',
+            ),
+            array(
                 'label' => 'Галерея',
                 'route' => 'gallery',
                 'class' => 'float-shadow',
@@ -18,7 +23,7 @@ return array(
             ),
             array(
                 'label' => 'Форум',
-                'route' => 'home',
+                'route' => 'article',
                 'class' => 'float-shadow',
             ),
             array(

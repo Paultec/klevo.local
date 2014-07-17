@@ -127,6 +127,9 @@ class EditController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                // Вызов сервиса транслитерации
+                $translit = $this->getServiceLocator()->get('translitService');
+
                 $postData = $form->getData();
 
                 $postData['price'] = (int)($postData['price'] * 100);
@@ -136,6 +139,7 @@ class EditController extends AbstractActionController
                     find(self::CATEGORY_ENTITY, $postData['idCatalog']);
                 $postData['idBrand'] = $this->getEntityManager()->
                     find(self::BRAND_ENTITY, $postData['idBrand']);
+                $postData['translit'] = $translit->getTranslit($postData['name']);
 
                 // empty description fix
                 if ($postData['description'] === 'empty') {
@@ -189,6 +193,9 @@ class EditController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                // Вызов сервиса транслитерации
+                $translit = $this->getServiceLocator()->get('translitService');
+
                 $postData = $form->getData();
 
                 $postData['idSupplier'] = $this->getEntityManager()->
@@ -197,6 +204,7 @@ class EditController extends AbstractActionController
                     find(self::BRAND_ENTITY, $postData['idBrand']);
                 $postData['idCatalog'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idCatalog']);
+                $postData['translit'] = $translit->getTranslit($postData['name']);
 
                 // empty description fix
                 if ($postData['description'] === 'empty') {

@@ -31,6 +31,13 @@ class Product
     /**
      * @var string
      *
+     * @ORM\Column(name="translit", type="string", length=100, nullable=true)
+     */
+    private $translit;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
@@ -134,6 +141,29 @@ class Product
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set translit
+     *
+     * @param string $translit
+     * @return Product
+     */
+    public function setTranslit($translit)
+    {
+        $this->translit = $translit;
+
+        return $this;
+    }
+
+    /**
+     * Get translit
+     *
+     * @return string
+     */
+    public function getTranslit()
+    {
+        return $this->translit;
     }
 
     /**
@@ -360,6 +390,7 @@ class Product
     {
         $this->id          = $data['id'];
         $this->name        = $data['name'];
+        $this->translit    = $data['translit'];
         $this->description = $data['description'];
         $this->price       = $data['price'];
         $this->img         = $data['img'];

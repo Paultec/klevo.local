@@ -51,7 +51,10 @@ class ShowList extends AbstractHelper
 
                     $this->__invoke($this->newList, $elem['id']);
                 } else {
-                    echo '<a href="/product/?catalog=' . $elem['id'] . '" class="empty catalog-link">' . $elem['name'] . '</a>' . "\n";
+                    echo '<a href="/product/' . $elem['translit'] . '" class="empty catalog-link">' . $elem['name'] . '</a>' . "\n";
+//                    echo $this->partialLoop('catalog/partial/categoryLoop.phtml', $elem);
+
+//                    echo '<a class="empty brand-link" href="'. $this->url('product/catalog', array('category' => $elem['translit'])) .'">'. $elem['name'] .'</a>';
 
                     $this->__invoke($this->newList, $elem['id']);
                 }

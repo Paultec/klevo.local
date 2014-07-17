@@ -25,11 +25,30 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
+        $param = array();
+
+        $routeParam = $this->params()->fromRoute();
+
+        // URL сопоставление транслитерации с id
+        if (isset($routeParam['brand'])) {
+            $brand = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)
+                ->findBy(array('translit' => $routeParam['brand']));
+
+            $param['brand'] = $brand[0]->getId();
+        }
+
+        if (isset($routeParam['category'])) {
+            $category = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)
+                ->findBy(array('translit' => $routeParam['category']));
+
+            $param['category'] = $category[0]->getId();
+        }
+
         // Получение queryString параметров (array)
-        $param = $this->params()->fromQuery();
+//        $param = $this->params()->fromQuery();
 
         // Формирование запроса, в зависимости от к-ва параметров
-        if (isset($param['brand']) && isset($param['catalog'])) {
+        if (!empty($param['brand']) && !empty($param['catalog'])) {
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
                 WHERE p.idBrand = ' . $param['brand'] .
@@ -39,7 +58,7 @@ class IndexController extends AbstractActionController
 
             $brand    = $this->getBreadcrumbs($param, 'brand');
             $category = $this->getBreadcrumbs($param, 'catalog');
-        } elseif (isset($param['brand'])) {
+        } elseif (!empty($param['brand'])) {
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
                 WHERE p.idBrand = ' . $param['brand'] .
@@ -47,7 +66,7 @@ class IndexController extends AbstractActionController
             );
 
             $brand = $this->getBreadcrumbs($param, 'brand');
-        } elseif (isset($param['catalog'])) {
+        } elseif (!empty($param['catalog'])) {
             $dql = $this->getEntityManager()->createQuery(
                 'SELECT p FROM Product\Entity\Product p
                 WHERE p.idCatalog = ' . $param['catalog'] .
@@ -83,6 +102,11 @@ class IndexController extends AbstractActionController
         $res->addChild($catalog, 'catalog');
 
         return $res;
+    }
+
+    public function brandAction()
+    {
+        var_dump('brandAction'); exit;
     }
 
     /**

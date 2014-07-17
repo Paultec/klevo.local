@@ -29,6 +29,13 @@ class Catalog
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="translit", type="string", length=60, nullable=true)
+     */
+    private $translit;
+
+    /**
      * @var \Catalog\Entity\Catalog
      *
      * @ORM\ManyToOne(targetEntity="Catalog\Entity\Catalog")
@@ -79,6 +86,29 @@ class Catalog
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set translit
+     *
+     * @param string $translit
+     * @return Catalog
+     */
+    public function setTranslit($translit)
+    {
+        $this->translit = $translit;
+
+        return $this;
+    }
+
+    /**
+     * Get translit
+     *
+     * @return string
+     */
+    public function getTranslit()
+    {
+        return $this->translit;
     }
 
     /**
@@ -144,6 +174,7 @@ class Catalog
     {
         $this->id       = $data['id'];
         $this->name     = $data['name'];
+        $this->translit = $data['translit'];
         $this->idParent = $data['idParent'];
 		$this->idStatus = $data['idStatus'];
     }

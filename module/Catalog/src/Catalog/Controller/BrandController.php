@@ -48,7 +48,13 @@ class BrandController extends AbstractActionController
 
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $brand->populate($form->getData());
+                // Вызов сервиса транслитерации
+                $translit = $this->getServiceLocator()->get('translitService');
+
+                $postData = $form->getData();
+                $postData['translit'] = $translit->getTranslit($postData['name']);
+
+                $brand->populate($postData);
 
                 $this->getEntityManager()->persist($brand);
                 $this->getEntityManager()->flush();
@@ -83,7 +89,13 @@ class BrandController extends AbstractActionController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                $brand->populate($form->getData());
+                // Вызов сервиса транслитерации
+                $translit = $this->getServiceLocator()->get('translitService');
+
+                $postData = $form->getData();
+                $postData['translit'] = $translit->getTranslit($postData['name']);
+
+                $brand->populate($postData);
 
                 $this->getEntityManager()->persist($brand);
                 $this->getEntityManager()->flush();
