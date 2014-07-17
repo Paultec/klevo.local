@@ -106,6 +106,7 @@ class RegisterController extends AbstractActionController
         $request = $this->getRequest();
 
         $currentSession = new Container();
+        unset($currentSession->seoUrlParams);
 
         if ($request->getPost()) {
             if ($request->getPost('beginDateReset')) {
@@ -380,6 +381,19 @@ class RegisterController extends AbstractActionController
             'operation'   => $this->setOptionItems(self::OPERATION_ENTITY),
             'paymentType' => $this->setOptionItems(self::PAYMENT_TYPE_ENTITY),
             'status'      => $this->setOptionItems(self::STATUS_ENTITY),
+        ));
+    }
+
+    public function editAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()){
+            $register = $request->getPost('idRegister');
+        }
+
+        return new ViewModel(array(
+            'register' => $register,
         ));
     }
 }

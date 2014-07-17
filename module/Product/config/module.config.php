@@ -15,7 +15,7 @@ return array(
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
-                        'type'    => 'Wildcard',
+                        'type'    => 'Segment',
                         'options' => array(
                             'route'    => '/[:controller[/:action]]',
                             'constraints' => array(
@@ -57,15 +57,31 @@ return array(
                         ),
                     ),
                     'catalog' => array(
-                        'type' => 'segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route' => '/[:brand[/:category]]',
+                            'route' => '/[:brand/[:category]]',
                             'constraints' => array(
-                                'category' => '[a-zA-Z0-9_-]+',
-                                'brand'    => '[a-zA-Z0-9_-]+',
+                                'brand' => '[a-zA-Z0-9_-]+',
+                                //'category' => '[a-zA-Z0-9_-]+',
                             ),
                             'defaults' => array(
                                 'action' => 'index'
+                            )
+                        ),
+                        'may_terminate' => 'true',
+                        'child_routes' => array(
+                            'category' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/[:category]',
+                                    'constraints' => array(
+                                        //'brand' => '[a-zA-Z0-9_-]+',
+                                        'category' => '[a-zA-Z0-9_-]+',
+                                    ),
+                                    'defaults' => array(
+                                        'action' => 'index'
+                                    )
+                                ),
                             ),
                         ),
                     ),

@@ -1,12 +1,15 @@
 <section id="accordion">
 
-    <?php echo $this->showList($this->categoryList); ?>
+    <?php echo $this->showList($this->categoryList, null, $this->seoUrlParams); ?>
 
     <hr class="delim">
 
     <div class="accordion">
         <h3 class="filled">Производители</h3>
         <div>
+            <?php
+            var_dump($this->seoUrlParams);
+            ?>
             <?php echo $this->partialLoop('catalog/partial/brandLoop.phtml', $this->brandList); ?>
         </div>
     </div>
@@ -14,7 +17,7 @@
     <!-- Delete -->
     <div class="test">
         <div class="test">
-            <a href="<?php echo $this->url('product/catalog', array('brand' => '', 'category' => 'spinningovie')); ?>">Спиннинговые</a>
+            <a href="<?php echo $this->url('product/catalog', array('brand' => 'abu-garcia', 'category' => 'spinningovie')); ?>">Спиннинговые</a>
         </div>
     </div>
     <!-- /Delete -->

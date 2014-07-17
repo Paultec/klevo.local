@@ -5,9 +5,12 @@ namespace Product\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Paginator\Paginator;
+use Zend\Session\Container;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+
+use GoSession;
 
 class IndexController extends AbstractActionController
 {
@@ -28,6 +31,27 @@ class IndexController extends AbstractActionController
         $param = array();
 
         $routeParam = $this->params()->fromRoute();
+        //var_dump($routeParam);
+
+        $currentSession = new Container();
+        //var_dump($currentSession->seoUrlParams);
+        if (!isset($currentSession->seoUrlParams)) {
+            $currentSession->seoUrlParams = array();
+        }
+        //var_dump($currentSession->seoUrlParams);
+
+        if (isset($routeParam['brand'])) {
+            $currentSession->seoUrlParams['brandName'] = $routeParam['brand'];
+        }
+
+        if (isset($routeParam['category'])) {
+            $currentSession->seoUrlParams['categoryName'] = $routeParam['category'];
+        }
+
+        if (isset($routeParam['page'])) {
+            $currentSession->seoUrlParams['pageNum'] = $routeParam['page'];
+        }
+        //var_dump($currentSession->seoUrlParams);
 
         // URL сопоставление транслитерации с id
         if (isset($routeParam['brand'])) {
@@ -41,7 +65,7 @@ class IndexController extends AbstractActionController
             $category = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)
                 ->findBy(array('translit' => $routeParam['category']));
 
-            $param['category'] = $category[0]->getId();
+            $param['catalog'] = $category[0]->getId();
         }
 
         // Получение queryString параметров (array)

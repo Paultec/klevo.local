@@ -1,3 +1,11 @@
+<div>
+<form class="float-form" method="post" action="<?php echo $this->url('register/edit', array('action' => 'edit')); ?>">
+    <input type="submit" class="btn btn-info" name="editRegister" value="Редактировать">
+    <input type="hidden" name="idRegister" value="<?php echo $this->register->getId(); ?>">
+</form>
+</div>
+
+<div>
 <?php
     echo 'ID: ' . $this->register->getId();
     echo '<br/>Дата: ' . $this->register->getDate()->format('d.m.Y');
@@ -8,6 +16,8 @@
     echo '<br/>Форма оплаты: ' . $this->register->getIdPaymentType()->getName();
     echo '<br/>Пользователь: ' . $this->register->getIdUser()->getEmail();
 ?>
+</div>
+
 <table>
     <tbody>
 <?php

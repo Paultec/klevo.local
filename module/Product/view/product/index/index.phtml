@@ -20,47 +20,47 @@
                 }
             }*/
 
-            if (is_null($this->breadcrumbs['catalog'])) {
-                foreach ($this->breadcrumbs as $key => $value) {
-                    if (is_array($value)) {
-                        echo '<li>' . $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a></li>';
-                    }
-                }
-            } elseif (is_null($this->breadcrumbs['brand'])) {
-                foreach ($this->breadcrumbs as $key => $value) {
-                    if (is_null($value[0])) {
-                        if (is_array($value)) {
-                            if (!is_null($value[1])) {
-                                echo '<li>' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
-                            } else {
-                                echo '<li><a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
-                            }
-                        }
-                    } else {
-                        if (is_array($value)) {
-                            echo '<li>' .$value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
-                        }
-                    }
-                }
-            } else {
-                foreach ($this->breadcrumbs as $key => $value) {
-                    echo '<li>';
-                    if (is_string($value[0])) {
-                        echo $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a>';
-                    } else {
-                        if (is_null($value[0])) {
-                            if (!is_null($value[1])) {
-                                echo $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
-                            } else {
-                                echo '<a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
-                            }
-                        } else{
-                            echo $value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
-                        }
-                    }
-                    echo '</li>';
-                }
-            }
+//            if (is_null($this->breadcrumbs['catalog'])) {
+//                foreach ($this->breadcrumbs as $key => $value) {
+//                    if (is_array($value)) {
+//                        echo '<li>' . $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a></li>';
+//                    }
+//                }
+//            } elseif (is_null($this->breadcrumbs['brand'])) {
+//                foreach ($this->breadcrumbs as $key => $value) {
+//                    if (is_null($value[0])) {
+//                        if (is_array($value)) {
+//                            if (!is_null($value[1])) {
+//                                echo '<li>' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+//                            } else {
+//                                echo '<li><a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+//                            }
+//                        }
+//                    } else {
+//                        if (is_array($value)) {
+//                            echo '<li>' .$value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
+//                        }
+//                    }
+//                }
+//            } else {
+//                foreach ($this->breadcrumbs as $key => $value) {
+//                    echo '<li>';
+//                    if (is_string($value[0])) {
+//                        echo $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a>';
+//                    } else {
+//                        if (is_null($value[0])) {
+//                            if (!is_null($value[1])) {
+//                                echo $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
+//                            } else {
+//                                echo '<a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
+//                            }
+//                        } else{
+//                            echo $value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
+//                        }
+//                    }
+//                    echo '</li>';
+//                }
+//            }
             ?>
         </ol>
     <?php endif ?>

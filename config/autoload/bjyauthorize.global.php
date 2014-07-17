@@ -49,7 +49,7 @@ return array(
                 ),
                 array(
                     'controller' => 'zfcuser',
-                    'action'     => array('logout', 'changepassword', 'changeEmail'),
+                    'action'     => array('logout', 'changepassword', 'changeemail'),
                     'roles'      => array('user'),
                 ),
                 // конец раздела 2
