@@ -14,10 +14,11 @@ class ShowList extends AbstractHelper
     private $seoUrl  = array();
 
     /**
-     * @param $list
+     * @param      $list
+     * @param      $seoUrl
      * @param null $idParent
      */
-    public function __invoke($list, $idParent, $seoUrl)
+    public function __invoke($list, $seoUrl, $idParent = null)
     {
         $this->seoUrl = $seoUrl;
 
@@ -34,9 +35,6 @@ class ShowList extends AbstractHelper
                 //}
             }
 
-            /**
-             * @todo think about the best solution
-             */
             for ($i = 0, $item = count($this->newList); $i < $item; $i++) {
                 if (!in_array($this->newList[$i]['idParent'], $this->tmp)) {
 
@@ -52,14 +50,11 @@ class ShowList extends AbstractHelper
                 if (in_array($elem['id'], $this->tmp)) {
                     echo '<h3 class="filled">' . $elem['name'] . '</h3>' . "\n";
 
-                    $this->__invoke($this->newList, $elem['id'], $this->seoUrl);
+                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
                 } else {
-                    echo '<a href="/product/'; if (isset($this->seoUrl['brandName'])) { echo $this->seoUrl['brandName'] . '/'; } echo $elem['translit'] . '" class="empty catalog-link">' . $elem['name'] . '</a>' . "\n";
-//                    echo $this->partialLoop('catalog/partial/categoryLoop.phtml', $elem);
+                    echo '<a class="empty brand-link" href="'. $this->view->url('product/catalog', array('category' => $elem['translit'])) .'">'. $elem['name'] .'</a>';
 
-//                    echo '<a class="empty brand-link" href="'. $this->url('product/catalog', array('category' => $elem['translit'])) .'">'. $elem['name'] .'</a>';
-
-                    $this->__invoke($this->newList, $elem['id'], $this->seoUrl);
+                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
                 }
             }
         }
