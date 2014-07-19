@@ -106,6 +106,7 @@ class RegisterController extends AbstractActionController
         $request = $this->getRequest();
 
         $currentSession = new Container();
+        //var_dump($currentSession->seoUrlParams);
         unset($currentSession->seoUrlParams);
 
         if ($request->getPost()) {

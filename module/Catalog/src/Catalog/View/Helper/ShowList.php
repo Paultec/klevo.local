@@ -11,7 +11,7 @@ class ShowList extends AbstractHelper
 {
     private $newList = array();
     private $tmp     = array();
-    private $seoUrl  = array();
+    private $seoUrlParams  = array();
 
     /**
      * @param      $list
@@ -20,8 +20,8 @@ class ShowList extends AbstractHelper
      */
     public function __invoke($list, $seoUrl, $idParent = null)
     {
-        $this->seoUrl = $seoUrl;
-
+        $this->seoUrlParams = $seoUrl;
+        //var_dump($list);
         if (empty($this->newList)) {
             for ($i = 0, $item = count($list); $i < $item; $i++) {
                 // Если статус NULL или 3 - показать -> перенес в IndexController
@@ -42,6 +42,7 @@ class ShowList extends AbstractHelper
                 }
             }
         }
+        //var_dump($this->newList);
 
         echo '<div class="accordion">' . "\n";
 
@@ -50,11 +51,15 @@ class ShowList extends AbstractHelper
                 if (in_array($elem['id'], $this->tmp)) {
                     echo '<h3 class="filled">' . $elem['name'] . '</h3>' . "\n";
 
-                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
+                    $this->__invoke($this->newList, $this->seoUrlParams, $elem['id']);
                 } else {
-                    echo '<a class="empty brand-link" href="'. $this->view->url('product/catalog', array('category' => $elem['translit'])) .'">'. $elem['name'] .'</a>';
+                    //$this->seoUrlParams['path'] = 'product/seoUrlC';
+                    //$this->seoUrlParams['params']['category'] = $elem['translit'];
+                    echo '<a class="empty brand-link" href="' .
+                        $this->view->url('product/seoUrlC', array('category' => $elem['translit'])) .'">'. $elem['name']
+                        . '</a>';
 
-                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
+                    $this->__invoke($this->newList, $this->seoUrlParams, $elem['id']);
                 }
             }
         }

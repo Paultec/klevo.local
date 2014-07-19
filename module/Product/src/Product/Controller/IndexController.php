@@ -35,23 +35,6 @@ class IndexController extends AbstractActionController
 
         $currentSession = new Container();
         //var_dump($currentSession->seoUrlParams);
-        if (!isset($currentSession->seoUrlParams)) {
-            $currentSession->seoUrlParams = array();
-        }
-//        var_dump($currentSession->seoUrlParams);
-
-        if (isset($routeParam['brand'])) {
-            $currentSession->seoUrlParams['brandName'] = $routeParam['brand'];
-        }
-
-        if (isset($routeParam['category'])) {
-            $currentSession->seoUrlParams['categoryName'] = $routeParam['category'];
-        }
-
-        if (isset($routeParam['page'])) {
-            $currentSession->seoUrlParams['pageNum'] = $routeParam['page'];
-        }
-        var_dump($currentSession->seoUrlParams);
 
 //        var_dump($routeParam);
 

@@ -56,35 +56,6 @@ return array(
                             ),
                         ),
                     ),
-                    'catalog' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/[:brand/[:category]]',
-                            'constraints' => array(
-                                'brand' => '[a-zA-Z0-9_-]+',
-                                //'category' => '[a-zA-Z0-9_-]+',
-                            ),
-                            'defaults' => array(
-                                'action' => 'index'
-                            )
-                        ),
-                        'may_terminate' => 'true',
-                        'child_routes' => array(
-                            'category' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/[:category]',
-                                    'constraints' => array(
-                                        //'brand' => '[a-zA-Z0-9_-]+',
-                                        'category' => '[a-zA-Z0-9_-]+',
-                                    ),
-                                    'defaults' => array(
-                                        'action' => 'index'
-                                    )
-                                ),
-                            ),
-                        ),
-                    ),
                 ),
             ),
             'editproduct' => array(
