@@ -8,7 +8,14 @@
         <h3 class="filled">Производители</h3>
         <div>
             <?php
-
+            $seoUrlParams = $this->seoUrlParams;
+            foreach ($this->brandList as $brand) {
+                $seoUrlParams['brand'] = $brand['translit'];
+                //var_dump($seoUrlParams);
+                echo '<a href="' .
+                    $this->url('product/seoUrl', $seoUrlParams/*array('brand' => $brand['translit'])*/)
+                    . '" class="empty catalog-link">' . $brand['name'] . '</a>' . "\n";
+            }
             ?>
         </div>
     </div>

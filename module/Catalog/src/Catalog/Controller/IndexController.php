@@ -22,11 +22,18 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
+        $currentSession = new Container();
+
+        if (isset($currentSession->seoUrlParams)) {
+            $seoUrlParams = $currentSession->seoUrlParams;
+        } else {
+            $seoUrlParams = array();
+        }
 
         return new ViewModel(array(
             'brandList'    => $this->getLoop(self::BRAND_ENTITY, 'brands'),
             'categoryList' => $this->getLoop(self::CATEGORY_ENTITY, 'categories'),
-
+            'seoUrlParams' => $seoUrlParams,
         ));
     }
 

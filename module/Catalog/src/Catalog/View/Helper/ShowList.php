@@ -11,7 +11,7 @@ class ShowList extends AbstractHelper
 {
     private $newList = array();
     private $tmp     = array();
-    private $seoUrlParams  = array();
+    private $seoUrl  = array();
 
     /**
      * @param      $list
@@ -20,18 +20,18 @@ class ShowList extends AbstractHelper
      */
     public function __invoke($list, $seoUrl, $idParent = null)
     {
-        $this->seoUrlParams = $seoUrl;
-        //var_dump($list);
+        $this->seoUrl = $seoUrl;
+
         if (empty($this->newList)) {
             for ($i = 0, $item = count($list); $i < $item; $i++) {
                 // Если статус NULL или 3 - показать -> перенес в IndexController
                 //if (is_null($list[$i]['idStatus']) || ($list[$i]['idStatus'] == 3)) {
-                    if (is_object($list[$i]['idParent'])) {
-                        $this->newList[$i] = $list[$i];
-                        $this->newList[$i]['idParent'] = (int)$list[$i]['idParent']->getId();
-                    } else {
-                        $this->newList[$i] = $list[$i];
-                    }
+                if (is_object($list[$i]['idParent'])) {
+                    $this->newList[$i] = $list[$i];
+                    $this->newList[$i]['idParent'] = (int)$list[$i]['idParent']->getId();
+                } else {
+                    $this->newList[$i] = $list[$i];
+                }
                 //}
             }
 
@@ -42,7 +42,6 @@ class ShowList extends AbstractHelper
                 }
             }
         }
-        //var_dump($this->newList);
 
         echo '<div class="accordion">' . "\n";
 
@@ -51,15 +50,14 @@ class ShowList extends AbstractHelper
                 if (in_array($elem['id'], $this->tmp)) {
                     echo '<h3 class="filled">' . $elem['name'] . '</h3>' . "\n";
 
-                    $this->__invoke($this->newList, $this->seoUrlParams, $elem['id']);
+                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
                 } else {
-                    //$this->seoUrlParams['path'] = 'product/seoUrlC';
-                    //$this->seoUrlParams['params']['category'] = $elem['translit'];
-                    echo '<a class="empty brand-link" href="' .
-                        $this->view->url('product/seoUrlC', array('category' => $elem['translit'])) .'">'. $elem['name']
-                        . '</a>';
+                    $this->seoUrl['category'] = $elem['translit'];
+                    echo '<a class="empty brand-link" href="'.
+                        $this->view->url('product/seoUrl', $this->seoUrl/*array('category' => $elem['translit'])*/)
+                        .'">'. $elem['name'] .'</a>';
 
-                    $this->__invoke($this->newList, $this->seoUrlParams, $elem['id']);
+                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
                 }
             }
         }

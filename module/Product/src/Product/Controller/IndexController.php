@@ -31,12 +31,50 @@ class IndexController extends AbstractActionController
         $param = array();
 
         $routeParam = $this->params()->fromRoute();
-        var_dump($routeParam);
+//        var_dump($routeParam);
 
         $currentSession = new Container();
-        //var_dump($currentSession->seoUrlParams);
+        if (!isset($currentSession->seoUrlParams)) {
+            $currentSession->seoUrlParams = array();
+        }
 
-//        var_dump($routeParam);
+        switch ($routeParam) {
+            case isset($routeParam['brand']) && !isset($routeParam['category']) && !isset($routeParam['page']) :
+                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
+                unset($currentSession->seoUrlParams['category']);
+                //unset($currentSession->seoUrlParams['page']);
+                break;
+            case !isset($routeParam['brand']) && isset($routeParam['category']) && !isset($routeParam['page']) :
+                $currentSession->seoUrlParams['category'] = $routeParam['category'];
+                unset($currentSession->seoUrlParams['brand']);
+                //unset($currentSession->seoUrlParams['page']);
+                break;
+            case isset($routeParam['brand']) && isset($routeParam['category']) && !isset($routeParam['page']) :
+                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
+                $currentSession->seoUrlParams['category'] = $routeParam['category'];
+                //unset($currentSession->seoUrlParams['page']);
+                break;
+        }
+
+//        if (!isset($currentSession->seoUrlParams)) {
+//            $currentSession->seoUrlParams = array();
+//        }
+
+//        if (isset($routeParam['brand'])) {
+//            var_dump($routeParam);
+//            $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
+//        }
+//
+//        if (isset($routeParam['category'])) {
+//            var_dump($routeParam);
+//            $currentSession->seoUrlParams['category'] = $routeParam['category'];
+//        }
+
+//        if (isset($routeParam['page'])) {
+//            $currentSession->seoUrlParams['pageNum'] = $routeParam['page'];
+//        }
+
+//        var_dump($currentSession->seoUrlParams);
 
         // URL сопоставление транслитерации с id
         if (isset($routeParam['brand'])) {
