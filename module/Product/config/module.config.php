@@ -59,39 +59,16 @@ return array(
                     'seoUrl' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '[/:brand]/[:category]',
+                            'route' => '[/:brand][/:category][/:page]',
                             'constraints' => array(
                                 'brand' => '[a-zA-Z0-9_-]+',
                                 'category' => '[a-zA-Z0-9_-]+',
+                                'page' => '[0-9]+',
                             ),
                             'defaults' => array(
-                                'action' => 'index'
-                            )
-                        ),
-                    ),
-                    'seoUrlB' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/:brand/[:category]',
-                            'constraints' => array(
-                                'brand' => '[a-zA-Z0-9_-]+',
-                                'category' => '[a-zA-Z0-9_-]+',
-                            ),
-                            'defaults' => array(
-                                'action' => 'index'
-                            )
-                        ),
-                    ),
-                    'seoUrlC' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '[/:brand]/:category',
-                            'constraints' => array(
-                                'brand' => '[a-zA-Z0-9_-]+',
-                                'category' => '[a-zA-Z0-9_-]+',
-                            ),
-                            'defaults' => array(
-                                'action' => 'index'
+                                'brand'  => 0,
+                                'category'  => 0,
+                                'page'  => 0,
                             )
                         ),
                     ),

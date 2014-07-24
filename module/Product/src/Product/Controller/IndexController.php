@@ -31,7 +31,24 @@ class IndexController extends AbstractActionController
         $param = array();
 
         $routeParam = $this->params()->fromRoute();
-//        var_dump($routeParam);
+        var_dump($routeParam);
+        //$urlParams = array();
+        //$urlParams['brand'] = $this->getEvent()->getRouteMatch()->getParam('brand', 0);
+        //$urlParams['category'] = $this->getEvent()->getRouteMatch()->getParam('category', 0);
+        //$urlParams['page'] = $this->getEvent()->getRouteMatch()->getParam('page', 0);
+        //var_dump($urlParams); 
+
+        if ($routeParam['brand'] == '') {
+            unset($routeParam['brand']);
+        }
+
+        if ($routeParam['category'] == '') {
+            unset($routeParam['category']);
+        }
+
+        if ($routeParam['page'] == '') {
+            unset($routeParam['page']);
+        }
 
         $currentSession = new Container();
         if (!isset($currentSession->seoUrlParams)) {
@@ -42,39 +59,37 @@ class IndexController extends AbstractActionController
             case isset($routeParam['brand']) && !isset($routeParam['category']) && !isset($routeParam['page']) :
                 $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
                 unset($currentSession->seoUrlParams['category']);
-                //unset($currentSession->seoUrlParams['page']);
+                unset($currentSession->seoUrlParams['page']);
                 break;
             case !isset($routeParam['brand']) && isset($routeParam['category']) && !isset($routeParam['page']) :
                 $currentSession->seoUrlParams['category'] = $routeParam['category'];
                 unset($currentSession->seoUrlParams['brand']);
-                //unset($currentSession->seoUrlParams['page']);
+                unset($currentSession->seoUrlParams['page']);
                 break;
             case isset($routeParam['brand']) && isset($routeParam['category']) && !isset($routeParam['page']) :
                 $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
                 $currentSession->seoUrlParams['category'] = $routeParam['category'];
-                //unset($currentSession->seoUrlParams['page']);
+                unset($currentSession->seoUrlParams['page']);
+                break;
+            case isset($routeParam['brand']) && !isset($routeParam['category']) && isset($routeParam['page']) :
+                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
+                $currentSession->seoUrlParams['page'] = $routeParam['page'];
+                unset($currentSession->seoUrlParams['category']);
+                break;
+            case !isset($routeParam['brand']) && isset($routeParam['category']) && isset($routeParam['page']) :
+                $currentSession->seoUrlParams['category'] = $routeParam['category'];
+                $currentSession->seoUrlParams['page'] = $routeParam['page'];
+                unset($currentSession->seoUrlParams['brand']);
+                break;
+            case isset($routeParam['brand']) && isset($routeParam['category']) && isset($routeParam['page']) :
+                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
+                $currentSession->seoUrlParams['category'] = $routeParam['category'];
+                $currentSession->seoUrlParams['page'] = $routeParam['page'];
+                break;
+            default :
+                unset($currentSession->seoUrlParams);
                 break;
         }
-
-//        if (!isset($currentSession->seoUrlParams)) {
-//            $currentSession->seoUrlParams = array();
-//        }
-
-//        if (isset($routeParam['brand'])) {
-//            var_dump($routeParam);
-//            $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
-//        }
-//
-//        if (isset($routeParam['category'])) {
-//            var_dump($routeParam);
-//            $currentSession->seoUrlParams['category'] = $routeParam['category'];
-//        }
-
-//        if (isset($routeParam['page'])) {
-//            $currentSession->seoUrlParams['pageNum'] = $routeParam['page'];
-//        }
-
-//        var_dump($currentSession->seoUrlParams);
 
         // URL сопоставление транслитерации с id
         if (isset($routeParam['brand'])) {
@@ -141,6 +156,7 @@ class IndexController extends AbstractActionController
 
         $res = new ViewModel(array(
             'paginator'  => $paginator,
+            'seoUrlParams' => $currentSession->seoUrlParams,
             'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
         ));
 
