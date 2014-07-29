@@ -28,20 +28,20 @@ return array(
                             ),
                         ),
                     ),
-                    'pager' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '[/:page]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller'    => 'index',
-                                'action'        => 'index',
-                            ),
-                        ),
-                    ),
+//                    'pager' => array(
+//                        'type'    => 'Segment',
+//                        'options' => array(
+//                            'route'    => '[/:page]',
+//                            'constraints' => array(
+//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                            ),
+//                            'defaults' => array(
+//                                'controller'    => 'index',
+//                                'action'        => 'index',
+//                            ),
+//                        ),
+//                    ),
                     'view' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -59,16 +59,16 @@ return array(
                     'seoUrl' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '[/:brand][/:category][/:page]',
+                            'route' => '[/:param1][/:param2][/:page]',
                             'constraints' => array(
-                                'brand' => '[a-zA-Z0-9_-]+',
-                                'category' => '[a-zA-Z0-9_-]+',
-                                'page' => '[0-9]+',
+                                'param1' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'param2' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'page'   => '[0-9]+',
                             ),
                             'defaults' => array(
-                                'brand'  => 0,
-                                'category'  => 0,
-                                'page'  => 0,
+                                'param1' => '',
+                                'param2' => '',
+                                'page'   => 0,
                             )
                         ),
                     ),

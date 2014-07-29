@@ -22,92 +22,30 @@ class IndexController extends AbstractActionController
      * @var
      */
     protected $em;
+    private $currentSession;
+
+    public function __construct()
+    {
+        $this->currentSession = new Container();
+    }
 
     /**
      * @return ViewModel
      */
     public function indexAction()
     {
-        $param = array();
-
         $routeParam = $this->params()->fromRoute();
-        var_dump($routeParam);
-        //$urlParams = array();
-        //$urlParams['brand'] = $this->getEvent()->getRouteMatch()->getParam('brand', 0);
-        //$urlParams['category'] = $this->getEvent()->getRouteMatch()->getParam('category', 0);
-        //$urlParams['page'] = $this->getEvent()->getRouteMatch()->getParam('page', 0);
-        //var_dump($urlParams); 
 
-        if ($routeParam['brand'] == '') {
-            unset($routeParam['brand']);
+        if (!isset($this->currentSession->seoUrlParams)) {
+            $this->currentSession->seoUrlParams = array();
         }
 
-        if ($routeParam['category'] == '') {
-            unset($routeParam['category']);
-        }
+        $param = $this->getFilterFromRouteParam(array(
+                $routeParam['param1'],
+                $routeParam['param2']
+        ));
 
-        if ($routeParam['page'] == '') {
-            unset($routeParam['page']);
-        }
-
-        $currentSession = new Container();
-        if (!isset($currentSession->seoUrlParams)) {
-            $currentSession->seoUrlParams = array();
-        }
-
-        switch ($routeParam) {
-            case isset($routeParam['brand']) && !isset($routeParam['category']) && !isset($routeParam['page']) :
-                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
-                unset($currentSession->seoUrlParams['category']);
-                unset($currentSession->seoUrlParams['page']);
-                break;
-            case !isset($routeParam['brand']) && isset($routeParam['category']) && !isset($routeParam['page']) :
-                $currentSession->seoUrlParams['category'] = $routeParam['category'];
-                unset($currentSession->seoUrlParams['brand']);
-                unset($currentSession->seoUrlParams['page']);
-                break;
-            case isset($routeParam['brand']) && isset($routeParam['category']) && !isset($routeParam['page']) :
-                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
-                $currentSession->seoUrlParams['category'] = $routeParam['category'];
-                unset($currentSession->seoUrlParams['page']);
-                break;
-            case isset($routeParam['brand']) && !isset($routeParam['category']) && isset($routeParam['page']) :
-                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
-                $currentSession->seoUrlParams['page'] = $routeParam['page'];
-                unset($currentSession->seoUrlParams['category']);
-                break;
-            case !isset($routeParam['brand']) && isset($routeParam['category']) && isset($routeParam['page']) :
-                $currentSession->seoUrlParams['category'] = $routeParam['category'];
-                $currentSession->seoUrlParams['page'] = $routeParam['page'];
-                unset($currentSession->seoUrlParams['brand']);
-                break;
-            case isset($routeParam['brand']) && isset($routeParam['category']) && isset($routeParam['page']) :
-                $currentSession->seoUrlParams['brand'] = $routeParam['brand'];
-                $currentSession->seoUrlParams['category'] = $routeParam['category'];
-                $currentSession->seoUrlParams['page'] = $routeParam['page'];
-                break;
-            default :
-                unset($currentSession->seoUrlParams);
-                break;
-        }
-
-        // URL сопоставление транслитерации с id
-        if (isset($routeParam['brand'])) {
-            $brand = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)
-                ->findBy(array('translit' => $routeParam['brand']));
-
-            $param['brand'] = $brand[0]->getId();
-        }
-
-        if (isset($routeParam['category'])) {
-            $category = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)
-                ->findBy(array('translit' => $routeParam['category']));
-
-            $param['catalog'] = $category[0]->getId();
-        }
-
-        // Получение queryString параметров (array)
-//        $param = $this->params()->fromQuery();
+        var_dump($this->currentSession->flag);
 
         // Формирование запроса, в зависимости от к-ва параметров
         if (!empty($param['brand']) && !empty($param['catalog'])) {
@@ -156,7 +94,7 @@ class IndexController extends AbstractActionController
 
         $res = new ViewModel(array(
             'paginator'  => $paginator,
-            'seoUrlParams' => $currentSession->seoUrlParams,
+            'seoUrlParams' => $this->currentSession->seoUrlParams,
             'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
         ));
 
@@ -165,11 +103,6 @@ class IndexController extends AbstractActionController
         $res->addChild($catalog, 'catalog');
 
         return $res;
-    }
-
-    public function brandAction()
-    {
-        var_dump('brandAction'); exit;
     }
 
     /**
@@ -194,6 +127,74 @@ class IndexController extends AbstractActionController
         $res->addChild($catalog, 'catalog');
 
         return $res;
+    }
+
+    /**
+     * @param $param
+     *
+     * @return array
+     */
+    protected function getFilterFromRouteParam($param)
+    {
+        $result = array();
+
+        $ent    = array(
+            'brand'   => self::BRAND_ENTITY,
+            'catalog' => self::CATEGORY_ENTITY
+        );
+
+        $attributes = $this->getAttributesParams();
+
+        $this->currentSession->flag = array();
+
+        $count = 1;
+        foreach ($param as $item) {
+            foreach ($attributes as $key => $value) {
+                if (isset($value[$item])) {
+                    $element = $this->getEntityManager()->getRepository($ent[$key])
+                        ->findBy(array('translit' => $param));
+
+                    $result[$key] = $element[0]->getId();
+
+                    $this->currentSession->flag[$key] = true;
+                    $this->currentSession->seoUrlParams['param'.$count] = $element[0]->getTranslit();
+                    $count++;
+
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    private function getAttributesParams()
+    {
+        $result = array();
+
+        $cache = $this->getServiceLocator()->get('filesystem');
+
+        if (!$cache->hasItem('params')) {
+            $brand    = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
+            $category = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->findAll();
+
+            foreach ($brand as $brandItem) {
+                $result['brand'][$brandItem->getTranslit()] = true;
+            }
+
+            foreach ($category as $categoryItem) {
+                $result['catalog'][$categoryItem->getTranslit()] = true;
+            }
+
+            $cache->setItem('params', serialize($result));
+        } else {
+            $result = unserialize($cache->getItem('params'));
+        }
+
+        return $result;
     }
 
     /**

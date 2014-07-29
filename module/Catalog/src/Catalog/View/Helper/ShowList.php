@@ -2,6 +2,7 @@
 namespace Catalog\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
+use Zend\Session\Container;
 
 /**
  * Class ShowList
@@ -20,6 +21,8 @@ class ShowList extends AbstractHelper
      */
     public function __invoke($list, $seoUrl, $idParent = null)
     {
+        $currentSession = new Container();
+
         $this->seoUrl = $seoUrl;
 
         if (empty($this->newList)) {
@@ -43,6 +46,8 @@ class ShowList extends AbstractHelper
             }
         }
 
+        $flag = $currentSession->flag;
+
         echo '<div class="accordion">' . "\n";
 
         foreach ($this->newList as $elem) {
@@ -52,10 +57,16 @@ class ShowList extends AbstractHelper
 
                     $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
                 } else {
-                    $this->seoUrl['category'] = $elem['translit'];
-                    echo '<a class="empty brand-link" href="'.
-                        $this->view->url('product/seoUrl', $this->seoUrl/*array('category' => $elem['translit'])*/)
-                        .'">'. $elem['name'] .'</a>';
+
+                    if (isset($flag['brand'])) {
+                        $this->seoUrl['param2'] = $elem['translit'];
+                    } else {
+                        $this->seoUrl['param1'] = $elem['translit'];
+                    }
+
+                    echo '<a href="'.
+                        $this->view->url('product/seoUrl', $this->seoUrl)
+                        .'"class="empty brand-link">'. $elem['name'] .'</a>';
 
                     $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
                 }

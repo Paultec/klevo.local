@@ -9,10 +9,17 @@
         <div>
             <?php
             $seoUrlParams = $this->seoUrlParams;
+            $flag         = $this->sessionFlag;
+
+            if (isset($flag['catalog'])) {
+                $seoUrlParams['param2'] = $seoUrlParams['param1'];
+            }
+
             foreach ($this->brandList as $brand) {
-                $seoUrlParams['brand'] = $brand['translit'];
+                $seoUrlParams['param1'] = $brand['translit'];
+
                 echo '<a href="' .
-                    $this->url('product/seoUrl', $seoUrlParams/*array('brand' => $brand['translit'])*/)
+                    $this->url('product/seoUrl', $seoUrlParams)
                     . '" class="empty catalog-link">' . $brand['name'] . '</a>' . "\n";
             }
             ?>

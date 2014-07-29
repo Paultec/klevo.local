@@ -34,6 +34,7 @@ class IndexController extends AbstractActionController
             'brandList'    => $this->getLoop(self::BRAND_ENTITY, 'brands'),
             'categoryList' => $this->getLoop(self::CATEGORY_ENTITY, 'categories'),
             'seoUrlParams' => $seoUrlParams,
+            'sessionFlag'  => $currentSession->flag
         ));
     }
 

@@ -6,25 +6,6 @@ use Zend\Mvc\MvcEvent;
 
 class Module
 {
-    private $adminControllers = array(
-        'Admin\Controller\Index',
-        'Catalog\Controller\Brand',
-        'Catalog\Controller\Catalog',
-        'Catalog\Controller\Index',
-        'Data\Controller\Attribute',
-        'Data\Controller\Index',
-        'Data\Controller\Operation',
-        'Data\Controller\PaymentType',
-        'Data\Controller\Status',
-        'Data\Controller\Store',
-        'Product\Controller\Edit',
-        'Product\Controller\Parse',
-        'Product\Controller\Upload',
-        'Register\Controller\Index',
-        'Register\Controller\Register',
-        'Register\Controller\RegisterTable'
-    );
-
     public function onBootstrap(MvcEvent $e)
     {
         $eventManager = $e->getApplication()->getEventManager();
@@ -34,9 +15,26 @@ class Module
             $controllerName = $controller->getEvent()
                 ->getRouteMatch()->getParam('controller');
 
-            if (in_array($controllerName, $this->adminControllers)) {
-                $controller->layout('admin/layout');
-            }
+                if (in_array($controllerName, array(
+                        'Admin\Controller\Index',
+                        'Catalog\Controller\Brand',
+                        'Catalog\Controller\Catalog',
+                        'Catalog\Controller\Index',
+                        'Data\Controller\Attribute',
+                        'Data\Controller\Index',
+                        'Data\Controller\Operation',
+                        'Data\Controller\PaymentType',
+                        'Data\Controller\Status',
+                        'Data\Controller\Store',
+                        'Product\Controller\Edit',
+                        'Product\Controller\Parse',
+                        'Product\Controller\Upload',
+                        'Register\Controller\Index',
+                        'Register\Controller\Register',
+                        'Register\Controller\RegisterTable'
+                    ))) {
+                    $controller->layout('admin/layout');
+                }
         });
     }
 
