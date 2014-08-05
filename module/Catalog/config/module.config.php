@@ -19,7 +19,11 @@ return array(
             )
         )
     ),
-
+    'service_manager' => array(
+        'invokables' => array(
+            'cacheService' => 'Catalog\Service\CacheService',
+        ),
+    ),
     'controllers' => array(
         'invokables' => array(
             'Catalog\Controller\Index'   => 'Catalog\Controller\IndexController',

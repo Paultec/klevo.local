@@ -54,12 +54,15 @@ class CatalogController extends AbstractActionController
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
-                $postData['translit'] = $translit->getTranslit($postData['name']);
+                $postData['translit'] = $translit->getTranslit($this->getFullNameCategory($postData['id']));
 
                 $catalog->populate($postData);
 
                 $this->getEntityManager()->persist($catalog);
                 $this->getEntityManager()->flush();
+
+                // Очистить кэш с параметрами категорий
+                $this->clearCache();
 
                 // Redirect to list of categories
                 return $this->redirect()->toRoute('category');
@@ -104,12 +107,15 @@ class CatalogController extends AbstractActionController
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
-                $postData['translit'] = $translit->getTranslit($postData['name']);
+                $postData['translit'] = $translit->getTranslit($this->getFullNameCategory($postData['id']));
 
                 $catalog->populate($postData);
 
                 $this->getEntityManager()->persist($catalog);
                 $this->getEntityManager()->flush();
+
+                // Очистить кэш с параметрами категорий
+                $this->clearCache();
 
                 // Redirect to list of categories
                 return $this->redirect()->toRoute('category');
@@ -188,6 +194,22 @@ class CatalogController extends AbstractActionController
             'id'       => $id,
             'category' => $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id)
         ));
+    }
+
+    /**
+     * @return bool
+     */
+    protected function clearCache()
+    {
+        $cache = $this->getServiceLocator()->get('filesystem');
+
+        if ($cache->hasItem('params')) {
+            $cache->removeItem('params');
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

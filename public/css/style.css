@@ -201,15 +201,11 @@ Horizontal menu
     text-transform: uppercase;
  }
 
-.horizontal-nav li.active {
-
-}
-
 .horizontal-nav a {
     color: #428BCA;
 }
 
-.horizontal-nav span {
+.horizontal-nav i {
     color: #563D7C;
 }
 

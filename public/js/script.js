@@ -40,7 +40,7 @@ $(function(){
     var nav = $('.nav:first').find('li').find('a');
 
     nav.each(function(index) {
-        $(this).append(' <span class="glyphicon '+ menu_glyphicon[index] +'\"><span>');
+        $(this).append(' <i class="glyphicon '+ menu_glyphicon[index] +'\"></i>');
     });
 
     menuItem.find('li.active').addClass('outline-outward');
@@ -503,71 +503,6 @@ $(function(){
     function setImgUploadActive() {
         img_btn.attr('disabled', false);
     }
-
-    /******************************************************************************
-     product the same height
-     *******************************************************************************/
-//    var thumbnail = $('.thumbnail'),
-//        max_height = 0;
-//
-//    thumbnail.each(function(){
-//        var this_height = $(this).height();
-//
-//        if (this_height > max_height) {
-//            max_height = this_height;
-//        }
-//    });
-//
-//    thumbnail.height(max_height);
-
-    /******************************************************************************
-     url query
-     *******************************************************************************/
-    var location = window.location.search,
-        brand    = $('.brand-link'),
-        catalog  = $('.catalog-link');
-
-    if (location.indexOf('brand') != -1) {
-        catalog.each(function(index){
-            var brand =  location.slice(1, location.length) + '&';
-
-            var href = $(this).attr('href');
-
-            var firstPart = href.slice(0, href.indexOf('?') + 1);
-            var lastPart  = href.slice(href.indexOf('?') + 1, href.length);
-
-            var res = firstPart + brand + lastPart;
-
-            $(this).attr('href', res);
-        });
-    }
-
-    if (location.indexOf('catalog') != -1) {
-        brand.each(function(index){
-            $(this).attr('href', ($(this).attr('href') + '&' + location.slice(1, location.length)));
-        });
-    }
-
-    if (location.indexOf('brand') > 0 && location.indexOf('catalog') > 0) {
-        brand.each(function(index){
-            var href = $(this).attr('href');
-
-            var firstPart = href.slice(0, href.indexOf('&'));
-            var lastPart  = href.slice(href.lastIndexOf('&'), href.length);
-
-            $(this).attr('href', firstPart + lastPart);
-        });
-
-        catalog.each(function(){
-            var href = $(this).attr('href');
-
-            var firstPart = href.slice(0, href.indexOf('&'));
-            var lastPart  = href.slice(href.lastIndexOf('&'), href.length);
-
-            $(this).attr('href', firstPart + lastPart);
-        });
-    }
-
     /******************************************************************************
      url query edit-product
      *******************************************************************************/
@@ -592,42 +527,9 @@ $(function(){
     }
 
     /******************************************************************************
-     fix first page pagination
-     *******************************************************************************/
-    var first_page = $('.first-page');
-
-    first_page.on('click', function(e) {
-        var href = window.location.href;
-
-        if (location.indexOf('brand') > 0 || location.indexOf('catalog') > 0) {
-            var firstPart = href.slice(0, href.lastIndexOf('/') + 1);
-            var lastPart  = href.slice(href.indexOf('?'), href.length);
-
-            window.location = firstPart + '1' + lastPart;
-
-            e.preventDefault();
-        }
-    });
-
-    var first_search_page = $('.first-search-page');
-
-    first_search_page.on('click', function(e) {
-        var href = window.location.href;
-
-        if (location.indexOf('q') > 0) {
-            var firstPart = href.slice(0, href.lastIndexOf('?') - 1);
-            var lastPart  = href.slice(href.indexOf('?'), href.length);
-
-            window.location = firstPart + lastPart;
-        }
-
-        e.preventDefault();
-    });
-
-    /******************************************************************************
      insert search query into input
      *******************************************************************************/
-    if (location.indexOf('q') > 0) {
+    if (location.href.indexOf('q') > 0) {
         var href = window.location.href;
 
         var query = href.slice(href.indexOf('=') + 1, href.length);
@@ -658,13 +560,13 @@ $(function(){
         e.preventDefault();
     });
 
-    if (location.indexOf('brand') == -1 && location.indexOf('catalog') == -1) {
-        breadcrumb.css('visibility', 'hidden');
-    }
-
-    if ($('#productList-table').length > 0) {
-        breadcrumb.css('visibility', 'visible');
-    }
+//    if (location.href.indexOf('brand') == -1 && location.href.indexOf('catalog') == -1) {
+//        breadcrumb.css('visibility', 'hidden');
+//    }
+//
+//    if ($('#productList-table').length > 0) {
+//        breadcrumb.css('visibility', 'visible');
+//    }
 
     /******************************************************************************
      set number input

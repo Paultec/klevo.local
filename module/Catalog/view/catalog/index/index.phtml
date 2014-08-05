@@ -11,7 +11,7 @@
             $seoUrlParams = $this->seoUrlParams;
             $flag         = $this->sessionFlag;
 
-            if (isset($flag['catalog'])) {
+            if (isset($flag['catalog']) && !isset($flag['brand'])) {
                 $seoUrlParams['param2'] = $seoUrlParams['param1'];
             }
 

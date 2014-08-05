@@ -1,11 +1,7 @@
 <?php
-$url = $this->url('product/pager');
-
-$parameterGet = $this->Requesthelper();
-if ($parameterGet != ""){
-    $parameterGet = "?".$parameterGet;
-}
+$url = $this->url('product/seoUrl', $this->params);
 ?>
+
 <?php if ($this->pageCount): ?>
     <ul class="pagination">
         <!-- Previous page link -->
@@ -14,7 +10,7 @@ if ($parameterGet != ""){
                 <a href="<?php echo $url.'/1'?>" class="first-page" data-toggle="tooltip" data-placement="top" title="Первая">&lt;&lt;&lt;</a>
             </li>
             <li>
-                <a href="<?php echo $url.'/'.$this->previous.$parameterGet; ?>" data-toggle="tooltip" data-placement="top" title="Предыдущая">&lt;&lt;</a>
+                <a href="<?php echo $url.'/'.$this->previous; ?>" data-toggle="tooltip" data-placement="top" title="Предыдущая">&lt;&lt;</a>
             </li>
         <?php else: ?>
             <li class="disabled">
@@ -33,7 +29,7 @@ if ($parameterGet != ""){
         <?php foreach ($this->pagesInRange as $page): ?>
             <?php if ($page != $this->current): ?>
                 <li>
-                    <a href="<?php echo $url.'/'.$page.$parameterGet; ?>">
+                    <a href="<?php echo $url.'/'.$page; ?>">
                         <?php echo $page; ?>
                     </a>
                 </li>
@@ -47,10 +43,10 @@ if ($parameterGet != ""){
         <!-- Next page link -->
         <?php if (isset($this->next)): ?>
             <li>
-                <a href="<?php echo $url.'/'.$this->next.$parameterGet; ?>" data-toggle="tooltip" data-placement="top" title="Следующая">&gt;&gt;</a>
+                <a href="<?php echo $url.'/'.$this->next; ?>" data-toggle="tooltip" data-placement="top" title="Следующая">&gt;&gt;</a>
             </li>
             <li>
-                <a href="<?php echo $url.'/'.$this->pageCount.$parameterGet; ?>" data-toggle="tooltip" data-placement="top" title="Последняя">&gt;&gt;&gt;</a>
+                <a href="<?php echo $url.'/'.$this->pageCount; ?>" data-toggle="tooltip" data-placement="top" title="Последняя">&gt;&gt;&gt;</a>
             </li>
         <?php else: ?>
             <li class="disabled">

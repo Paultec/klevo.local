@@ -34,8 +34,8 @@ return array(
                     'roles'      => array(),
                 ),
                 array(
-                    'controller' => 'Search\Controller\Search',
-                    'action'     => array('index', 'create', 'optimize'),
+                    'controller' => 'Search\Controller\Index',
+                    'action'     => array('index'),
                     'roles'      => array(),
                 ),
                 // конец раздела 1

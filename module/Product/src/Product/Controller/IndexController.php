@@ -22,6 +22,7 @@ class IndexController extends AbstractActionController
      * @var
      */
     protected $em;
+    protected $fullName;
     private $currentSession;
 
     public function __construct()
@@ -45,47 +46,50 @@ class IndexController extends AbstractActionController
                 $routeParam['param2']
         ));
 
-        var_dump($this->currentSession->flag);
+        // Если найден несопоставимый параметр - вернуть 404
+        if ($param === false) {
+            $view = new ViewModel();
+            $view->setTemplate('error/404');
+            return $view;
+        }
 
         // Формирование запроса, в зависимости от к-ва параметров
-        if (!empty($param['brand']) && !empty($param['catalog'])) {
-            $dql = $this->getEntityManager()->createQuery(
-                'SELECT p FROM Product\Entity\Product p
-                WHERE p.idBrand = ' . $param['brand'] .
-                ' AND p.idCatalog = ' . $param['catalog'] .
-                ' AND p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qs = $qb->select('p')
+            ->from(self::PRODUCT_ENTITY, 'p')
+            ->where('p.price != 0')
+            ->andWhere(
+                $qb->expr()->orX('p.idStatus != 4', 'p.idStatus IS NULL')
             );
 
-            $brand    = $this->getBreadcrumbs($param, 'brand');
-            $category = $this->getBreadcrumbs($param, 'catalog');
-        } elseif (!empty($param['brand'])) {
-            $dql = $this->getEntityManager()->createQuery(
-                'SELECT p FROM Product\Entity\Product p
-                WHERE p.idBrand = ' . $param['brand'] .
-                ' AND p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
-            );
+        $breadcrumbs = array();
+        if (!empty($param)) {
+            $count = 1;
+            foreach ($param as $key => $value) {
+                $qb->andWhere('p.id' . ucfirst($key) . ' = ?' . $count)
+                    ->setParameter($count, $value);
 
-            $brand = $this->getBreadcrumbs($param, 'brand');
-        } elseif (!empty($param['catalog'])) {
-            $dql = $this->getEntityManager()->createQuery(
-                'SELECT p FROM Product\Entity\Product p
-                WHERE p.idCatalog = ' . $param['catalog'] .
-                ' AND p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
-            );
+                // Получаем крошки
+                if ($key != 'brand') {
+                    $breadcrumbs[$key]['id']   = $value;
+                    $breadcrumbs[$key]['name'] = $this->getFullNameCategory($value);
+                } else {
+                    $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
 
-            $category = $this->getBreadcrumbs($param, 'catalog');
-        } else {
-            $dql = $this->getEntityManager()->createQuery(
-                'SELECT p FROM Product\Entity\Product p
-                WHERE p.price != 0 AND (p.idStatus != 4 OR p.idStatus IS NULL)'
-            );
+                    $breadcrumbs[$key]['id'] = $brand->getId();
+                    $breadcrumbs[$key]['name'] = 'Производитель :: ' . $brand->getName();
+                }
+
+                $count++;
+            }
         }
 
         // Pagination
         $matches = $this->getEvent()->getRouteMatch();
         $page    = $matches->getParam('page', 1);
 
-        $adapter   = new DoctrineAdapter(new ORMPaginator($dql));
+        $adapter   = new DoctrineAdapter(new ORMPaginator($qs));
         $paginator = new Paginator($adapter);
 
         $paginator
@@ -93,9 +97,9 @@ class IndexController extends AbstractActionController
             ->setItemCountPerPage(24);
 
         $res = new ViewModel(array(
-            'paginator'  => $paginator,
+            'paginator'    => $paginator,
             'seoUrlParams' => $this->currentSession->seoUrlParams,
-            'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
+            'breadcrumbs'  => $breadcrumbs ?: null,
         ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
@@ -110,13 +114,14 @@ class IndexController extends AbstractActionController
      */
     public function viewAction()
     {
-        $id = (int)$this->params()->fromRoute('id', 0);
+        $name = (string)$this->params()->fromRoute('name', null);
 
-        if (!$id) {
+        if (!$name) {
             return $this->redirect()->toRoute('product');
         }
 
-        $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id);
+        $product = $this->getEntityManager()
+            ->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('translit' => $name));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 
@@ -147,21 +152,46 @@ class IndexController extends AbstractActionController
 
         $this->currentSession->flag = array();
 
+        // Проверка на несуществующий параметр
+        $is404 = array();
+        $countParam = 0;
+
         $count = 1;
         foreach ($param as $item) {
+            // Пропустить значение элемента поумолчанию (пустая строка)
+            if (empty($item)) {
+                $is404[$countParam] = false;
+
+                continue;
+            }
+
+            $is404[$countParam] = true;
+
             foreach ($attributes as $key => $value) {
                 if (isset($value[$item])) {
-                    $element = $this->getEntityManager()->getRepository($ent[$key])
-                        ->findBy(array('translit' => $param));
+                    $is404[$countParam] = false;
 
-                    $result[$key] = $element[0]->getId();
+                    $element = $this->getEntityManager()->getRepository($ent[$key])
+                        ->findOneBy(array('translit' => $param));
+
+                    $result[$key] = $element->getId();
 
                     $this->currentSession->flag[$key] = true;
-                    $this->currentSession->seoUrlParams['param'.$count] = $element[0]->getTranslit();
+                    $this->currentSession->seoUrlParams['param'.$count] = $element->getTranslit();
+
                     $count++;
 
                     break;
                 }
+            }
+
+            $countParam++;
+        }
+
+        foreach ($is404 as $page404) {
+            if ($page404) {
+                // Найдено несопоставимое значение
+                return false;
             }
         }
 
@@ -198,6 +228,38 @@ class IndexController extends AbstractActionController
     }
 
     /**
+     * Get full category name with parent category
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function getFullNameCategory($id)
+    {
+        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
+        $fullName = $category->getName();
+
+        if (null == $category->getIdParent()) {
+            if (!$this->fullName) {
+                $this->fullName = $fullName;
+            }
+
+            return $this->fullName;
+        } else {
+            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
+            $parentName = $parent->getName();
+
+            if ($this->fullName) {
+                $this->fullName = $parentName . " :: " . $this->fullName;
+            } else {
+                $this->fullName = $parentName . " :: " . $fullName;
+            }
+
+            return $this->getFullNameCategory($parent->getId());
+        }
+    }
+
+    /**
      * @param $param
      * @param $type
      *
@@ -205,37 +267,40 @@ class IndexController extends AbstractActionController
      */
     protected function getBreadcrumbs($param, $type)
     {
-        if ($type == 'brand') {
-            $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
+//        if ($type == 'brand') {
+//            $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
+//
+//            $arr = array(
+//                'Производитель :: ',
+//                $brand
+//            );
+//        } else {
+//            $first  = null;
+//            $parent = null;
+//
+//            $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
+//
+//            if (!is_null($catalog->getIdParent()) && !is_null($catalog->getIdParent()->getId())) {
+//                $parent = $this->getEntityManager()
+//                    ->getRepository(self::CATEGORY_ENTITY)->findBy(array('id' => $catalog->getIdParent()->getId()));
+//
+//                if (!is_null($parent[0]->getIdParent())) {
+//                    $first = $this->getEntityManager()
+//                        ->getRepository(self::CATEGORY_ENTITY)->findBy(array('id' => $parent[0]->getIdParent()->getId()));
+//                }
+//            }
+//
+//            $arr = array(
+//                $first,
+//                $parent,
+//                $catalog
+//            );
+//        }
+//
+//        return $arr;
 
-            $arr = array(
-                'Производитель :: ',
-                $brand
-            );
-        } else {
-            $first  = null;
-            $parent = null;
 
-            $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
 
-            if (!is_null($catalog->getIdParent()) && !is_null($catalog->getIdParent()->getId())) {
-                $parent = $this->getEntityManager()
-                    ->getRepository(self::CATEGORY_ENTITY)->findBy(array('id' => $catalog->getIdParent()->getId()));
-
-                if (!is_null($parent[0]->getIdParent())) {
-                    $first = $this->getEntityManager()
-                        ->getRepository(self::CATEGORY_ENTITY)->findBy(array('id' => $parent[0]->getIdParent()->getId()));
-                }
-            }
-
-            $arr = array(
-                $first,
-                $parent,
-                $catalog
-            );
-        }
-
-        return $arr;
     }
 
     /**

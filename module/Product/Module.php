@@ -9,17 +9,16 @@ class Module
 
     public function onBootstrap(MvcEvent $e)
     {
+        // Удалить ключи из сессии для очистки seoUrl параметров
         $eventManager = $e->getApplication()->getEventManager();
 
-        $eventManager->attach('dispatch', function($e) {
-                $controller     = $e->getTarget();
-                $controllerName = $controller->getEvent()->getRouteMatch()
-                    ->getParam('controller');
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function($e) {
+                $currentRoute = $e->getRouteMatch()->getMatchedRouteName();
 
-                if (!in_array($controllerName, array('Product\Controller\Index'))) {
+                $match = strpos($currentRoute, 'product');
+
+                if ($match === false) {
                     $currentSession = new Container();
-
-                    var_dump($currentSession->seoUrlParams);
 
                     if (!empty($currentSession->seoUrlParams)) {
                         foreach ($currentSession->seoUrlParams as $key => $value) {
@@ -28,10 +27,8 @@ class Module
 
                         unset($currentSession->flag);
                     }
-
-                    var_dump($currentSession->seoUrlParams);
                 }
-        });
+            }, 100);
     }
 
     public function getConfig()

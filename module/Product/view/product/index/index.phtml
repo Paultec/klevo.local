@@ -6,62 +6,25 @@
 </aside>
 </section>
 
+<?php
+    var_dump($this->breadcrumbs);
+?>
+
 <section class="col col-lg-9">
-    <?php if (count($this->breadcrumbs) > 0) : ?>
+    <?php if (!is_null($this->breadcrumbs)) : ?>
         <ol class="breadcrumb">
-            <?php
-            /*
-             * @todo change breadcrumbs
-             */
-
-            /*foreach ($this->breadcrumbs as $key => $value) {
-                if (is_object($value)) {
-                    echo '<li><a href="?' . $key . '=' . $value->getId() . '">' . $value->getName() . '</a></li>';
-                }
-            }*/
-
-//            if (is_null($this->breadcrumbs['catalog'])) {
-//                foreach ($this->breadcrumbs as $key => $value) {
-//                    if (is_array($value)) {
-//                        echo '<li>' . $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a></li>';
-//                    }
-//                }
-//            } elseif (is_null($this->breadcrumbs['brand'])) {
-//                foreach ($this->breadcrumbs as $key => $value) {
-//                    if (is_null($value[0])) {
-//                        if (is_array($value)) {
-//                            if (!is_null($value[1])) {
-//                                echo '<li>' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
-//                            } else {
-//                                echo '<li><a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
-//                            }
-//                        }
-//                    } else {
-//                        if (is_array($value)) {
-//                            echo '<li>' .$value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a></li>';
-//                        }
-//                    }
-//                }
-//            } else {
-//                foreach ($this->breadcrumbs as $key => $value) {
-//                    echo '<li>';
-//                    if (is_string($value[0])) {
-//                        echo $value[0] . '<a href="?' . $key . '=' . $value[1]->getId() . '">' . $value[1]->getName() . '</a>';
-//                    } else {
-//                        if (is_null($value[0])) {
-//                            if (!is_null($value[1])) {
-//                                echo $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
-//                            } else {
-//                                echo '<a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
-//                            }
-//                        } else{
-//                            echo $value[0][0]->getName() . ' :: ' . $value[1][0]->getName() . ' :: <a href="?' . $key . '=' . $value[2]->getId() . '">' . $value[2]->getName() . '</a>';
-//                        }
-//                    }
-//                    echo '</li>';
-//                }
-//            }
-            ?>
+            <?php foreach ($this->breadcrumbs as $key => $value) : ?>
+                <li>
+                    <form method="post" action="">
+                        <?php echo $value['name']; ?>
+                        <input name="<?php echo $key;?>" type="hidden" value="<?php echo $value['id']; ?>">
+                        <button type="submit" class="close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Удалить</span>
+                        </button>
+                    </form>
+                </li>
+            <?php endforeach; ?>
         </ol>
     <?php endif ?>
     <div class="delim"></div>
@@ -74,17 +37,17 @@
             <section class="product row">
                 <div class="col col-md-4">
                     <?php if ($item->getImg()): ?>
-                        <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
+                        <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>">
                             <img class="lazy img-responsive" data-original="/img/product/<?php echo $item->getImg()?>" alt="">
                         </a>
                     <?php else:?>
-                    <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
+                    <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>">
                         <img class="lazy" data-original="/img/product/noimage.png" width="270" alt="">
                     </a>
                     <?php endif; ?>
                 </div>
                 <div class="col col-md-6">
-                    <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>"><?php echo $item->getName(); ?></a></h5>
+                    <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>"><?php echo $item->getName(); ?></a></h5>
                     <p><?php echo $item->getDescription(); ?></p>
                     <?php if ($item->getPrice() !== 0):?>
                         <p class="product-price"><?php echo $item->getPrice() / 100; ?></p>
@@ -112,6 +75,6 @@
 <section class="col col-lg-9 col-lg-offset-3 text-center paginator-holder">
     <div class="delim"></div>
 <?php
-    //echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'product/paginator/pagination.phtml') : "";
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'product/paginator/pagination.phtml', array('params' => $this->seoUrlParams)) : "";
 ?>
 </section>

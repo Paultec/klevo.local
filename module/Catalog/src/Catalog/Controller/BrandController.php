@@ -59,6 +59,9 @@ class BrandController extends AbstractActionController
                 $this->getEntityManager()->persist($brand);
                 $this->getEntityManager()->flush();
 
+                // Очистить кэш с параметрами производителей
+                $this->clearCache();
+
                 // Redirect to list of brands
                 return $this->redirect()->toRoute('brand');
             }
@@ -99,6 +102,9 @@ class BrandController extends AbstractActionController
 
                 $this->getEntityManager()->persist($brand);
                 $this->getEntityManager()->flush();
+
+                // Очистить кэш с параметрами производителей
+                $this->clearCache();
 
                 // Redirect to list of brands
                 return $this->redirect()->toRoute('brand');
@@ -188,6 +194,22 @@ class BrandController extends AbstractActionController
         $form    = $builder->createForm($entity);
 
         return $form;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function clearCache()
+    {
+        $cache = $this->getServiceLocator()->get('filesystem');
+
+        if ($cache->hasItem('params')) {
+            $cache->removeItem('params');
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -28,31 +28,18 @@ return array(
                             ),
                         ),
                     ),
-//                    'pager' => array(
-//                        'type'    => 'Segment',
-//                        'options' => array(
-//                            'route'    => '[/:page]',
-//                            'constraints' => array(
-//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                            ),
-//                            'defaults' => array(
-//                                'controller'    => 'index',
-//                                'action'        => 'index',
-//                            ),
-//                        ),
-//                    ),
                     'view' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '[/:action[/:id[/]]]',
+                            'route'    => '[/:name].html',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'name'       => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
                                 'controller'    => 'index',
-                                'action'        => 'index',
+                                'action'        => 'view',
                             ),
                         ),
                     ),
@@ -68,7 +55,6 @@ return array(
                             'defaults' => array(
                                 'param1' => '',
                                 'param2' => '',
-                                'page'   => 0,
                             )
                         ),
                     ),
@@ -120,11 +106,6 @@ return array(
                 'pattern'  => '%s.mo',
             ),
         ),
-    ),
-    'view_helpers' => array(
-        'factories' => array(
-            'Requesthelper' => 'Product\View\Helper\Factory\RequestHelperFactory',
-        )
     ),
     'view_manager' => array(
         'template_path_stack' => array(
