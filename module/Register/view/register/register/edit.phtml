@@ -1,3 +1,13 @@
 <?php
 
-var_dump($this->register);
+//var_dump($this->register);
+//var_dump($this->form);
+$form = $this->form;
+$form->setAttribute('action', $this->url('register/default', array('action' => 'edit')));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+
+
+echo $this->form()->closeTag();

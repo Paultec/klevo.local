@@ -74,15 +74,24 @@ class IndexController extends AbstractActionController
                 if ($key != 'brand') {
                     $breadcrumbs[$key]['id']   = $value;
                     $breadcrumbs[$key]['name'] = $this->getFullNameCategory($value);
+                    // seoUrlParams['idCatalog'] нужен в Catalog/IndexController
+                    // для связанного отображения категорий и производителей
+                    $this->currentSession->seoUrlParams['idCatalog'] = $value;
                 } else {
                     $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
 
                     $breadcrumbs[$key]['id'] = $brand->getId();
                     $breadcrumbs[$key]['name'] = 'Производитель :: ' . $brand->getName();
+                    // seoUrlParams['idBrand'] нужен в Catalog/IndexController
+                    // для связанного отображения категорий и производителей
+                    $this->currentSession->seoUrlParams['idBrand'] = $brand->getId();
                 }
 
                 $count++;
             }
+        } else {
+            unset($this->currentSession->seoUrlParams['idCatalog']);
+            unset($this->currentSession->seoUrlParams['idBrand']);
         }
 
         // Pagination

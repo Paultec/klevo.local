@@ -390,11 +390,14 @@ class RegisterController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()){
-            $register = $request->getPost('idRegister');
+            $idRegister = $request->getPost('idRegister');
+            $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
+            $form = $this->getForm();
         }
 
         return new ViewModel(array(
             'register' => $register,
+            'form' => $form,
         ));
     }
 }
