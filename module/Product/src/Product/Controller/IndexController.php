@@ -35,12 +35,32 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
+        // Получение параметров из URL
         $routeParam = $this->params()->fromRoute();
 
         if (!isset($this->currentSession->seoUrlParams)) {
             $this->currentSession->seoUrlParams = array();
         }
 
+        // Удаление крошек
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $postData = (array)$request->getPost();
+
+            $shift = isset($postData['idBrand']) ? $postData['idBrand'] : $postData['idCatalog'];
+
+            $sessionData = $this->currentSession->seoUrlParams;
+
+            foreach ($sessionData as $sessionKey => $sessionItem) {
+                if ($sessionItem === $shift) {
+                    unset($this->currentSession->seoUrlParams[$sessionKey]);
+                    unset($this->currentSession->seoUrlParams[key($postData)]); // idBrand или idCatalog
+                    unset($routeParam[$sessionKey]);
+                }
+            }
+        }
+
+        //
         $param = $this->getFilterFromRouteParam(array(
                 $routeParam['param1'],
                 $routeParam['param2']
@@ -72,16 +92,18 @@ class IndexController extends AbstractActionController
 
                 // Получаем крошки
                 if ($key != 'brand') {
-                    $breadcrumbs[$key]['id']   = $value;
-                    $breadcrumbs[$key]['name'] = $this->getFullNameCategory($value);
+                    $breadcrumbs['idCatalog']['id']       = $value;
+                    $breadcrumbs['idCatalog']['translit'] = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $value)->getTranslit();
+                    $breadcrumbs['idCatalog']['name']     = $this->getFullNameCategory($value);
                     // seoUrlParams['idCatalog'] нужен в Catalog/IndexController
                     // для связанного отображения категорий и производителей
                     $this->currentSession->seoUrlParams['idCatalog'] = $value;
                 } else {
                     $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
 
-                    $breadcrumbs[$key]['id'] = $brand->getId();
-                    $breadcrumbs[$key]['name'] = 'Производитель :: ' . $brand->getName();
+                    $breadcrumbs['idBrand']['id']       = $brand->getId();
+                    $breadcrumbs['idBrand']['translit'] = $brand->getTranslit();
+                    $breadcrumbs['idBrand']['name']     = 'Производитель :: ' . $brand->getName();
                     // seoUrlParams['idBrand'] нужен в Catalog/IndexController
                     // для связанного отображения категорий и производителей
                     $this->currentSession->seoUrlParams['idBrand'] = $brand->getId();
@@ -266,50 +288,6 @@ class IndexController extends AbstractActionController
 
             return $this->getFullNameCategory($parent->getId());
         }
-    }
-
-    /**
-     * @param $param
-     * @param $type
-     *
-     * @return array
-     */
-    protected function getBreadcrumbs($param, $type)
-    {
-//        if ($type == 'brand') {
-//            $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
-//
-//            $arr = array(
-//                'Производитель :: ',
-//                $brand
-//            );
-//        } else {
-//            $first  = null;
-//            $parent = null;
-//
-//            $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
-//
-//            if (!is_null($catalog->getIdParent()) && !is_null($catalog->getIdParent()->getId())) {
-//                $parent = $this->getEntityManager()
-//                    ->getRepository(self::CATEGORY_ENTITY)->findBy(array('id' => $catalog->getIdParent()->getId()));
-//
-//                if (!is_null($parent[0]->getIdParent())) {
-//                    $first = $this->getEntityManager()
-//                        ->getRepository(self::CATEGORY_ENTITY)->findBy(array('id' => $parent[0]->getIdParent()->getId()));
-//                }
-//            }
-//
-//            $arr = array(
-//                $first,
-//                $parent,
-//                $catalog
-//            );
-//        }
-//
-//        return $arr;
-
-
-
     }
 
     /**

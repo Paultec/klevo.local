@@ -542,31 +542,26 @@ $(function(){
     /******************************************************************************
      breadcrumb
      *******************************************************************************/
-    var breadcrumb = $('.breadcrumb');
+    var breadcrumb = $('.product-filter');
 
-    breadcrumb.find('a').on('click', function(e) {
-        var href = window.location.href;
+//    breadcrumb.each(function() {
+//        $(this).on('submit', function(e) {
+//            var val = $(this).find('input[type="hidden"]').val();
+//
+//            window.location = window.location.href.replace('/' + val, '');
+//
+//            e.preventDefault();
+//        });
+//    });
 
-        var firstPart = href.slice(0, href.lastIndexOf('/') + 1);
-
-        window.location = firstPart + $(this).attr('href');
-
-        e.preventDefault();
-    });
-
+    /******************************************************************************
+     show all products
+     *******************************************************************************/
     $('.product-list').on('click', function(e) {
         window.location = '/product'
 
         e.preventDefault();
     });
-
-//    if (location.href.indexOf('brand') == -1 && location.href.indexOf('catalog') == -1) {
-//        breadcrumb.css('visibility', 'hidden');
-//    }
-//
-//    if ($('#productList-table').length > 0) {
-//        breadcrumb.css('visibility', 'visible');
-//    }
 
     /******************************************************************************
      set number input

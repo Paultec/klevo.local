@@ -6,26 +6,20 @@
 </aside>
 </section>
 
-<?php
-    var_dump($this->breadcrumbs);
-?>
-
 <section class="col col-lg-9">
     <?php if (!is_null($this->breadcrumbs)) : ?>
-        <ol class="breadcrumb">
+        <div class="filter-criteria">
             <?php foreach ($this->breadcrumbs as $key => $value) : ?>
-                <li>
-                    <form method="post" action="">
-                        <?php echo $value['name']; ?>
-                        <input name="<?php echo $key;?>" type="hidden" value="<?php echo $value['id']; ?>">
-                        <button type="submit" class="close">
-                            <span aria-hidden="true">&times;</span>
-                            <span class="sr-only">Удалить</span>
-                        </button>
+                    <form class="product-filter" method="post" action="<?php echo $this->url('product/seoUrl', $this->seoUrlParams);?>">
+                        <strong><?php echo $value['name']; ?></strong>
+                        <input name="<?php echo $key;?>" type="hidden" value="<?php echo $value['translit']; ?>">
+                        <label class="btn-remove">
+                            <input type="submit" class="btn btn-danger hide" name="Удалить">
+                            <span class="glyphicon glyphicon-remove cross" data-toggle="tooltip" data-placement="top" title="Удалить фильтр"></span>
+                        </label>
                     </form>
-                </li>
             <?php endforeach; ?>
-        </ol>
+        </div>
     <?php endif ?>
     <div class="delim"></div>
 </section>

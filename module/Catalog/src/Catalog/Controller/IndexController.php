@@ -147,9 +147,9 @@ class IndexController extends AbstractActionController
         return $actualBrandList;
     }
 
+
     /**
-     * @param $repository
-     *
+     * @param $category
      */
     protected function getParentCategory($category)
     {
@@ -183,9 +183,7 @@ class IndexController extends AbstractActionController
      */
     protected function getLoop($repository)
     {
-        $items = $this->getEntityManager()
-            ->getRepository($repository)
-            ->findAll();
+        $items = $this->getEntityManager()->getRepository($repository)->findAll();
 
         $tmpArray = array();
 

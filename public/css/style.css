@@ -621,6 +621,26 @@ product
 }
 
 /******************************************************************************
+ main-product filter
+ *******************************************************************************/
+.filter-criteria {
+    padding: 0 15px 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.product-filter {
+    float: left;
+    padding-top: 5px;
+    padding-right: 15px;
+}
+
+.product-filter .cross {
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+/******************************************************************************
 product price & name style
  *******************************************************************************/
 .product-name {
