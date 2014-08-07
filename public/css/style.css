@@ -624,18 +624,20 @@ product
  main-product filter
  *******************************************************************************/
 .filter-criteria {
-    padding: 0 15px 0;
     border-radius: 10px;
-    overflow: hidden;
 }
 
-.product-filter {
+.filter-criteria a {
+    text-decoration: none;
+}
+/*.product-filter {
     float: left;
     padding-top: 5px;
     padding-right: 15px;
-}
+}*/
 
-.product-filter .cross {
+.cross-link {
+    color: #cc0000;
     font-size: 16px;
     vertical-align: middle;
 }

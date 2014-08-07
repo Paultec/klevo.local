@@ -304,7 +304,7 @@ class CatalogController extends AbstractActionController
      *
      * @return mixed
      */
-    public function getFullNameCategory($id)
+    protected function getFullNameCategory($id)
     {
         $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
         $fullName = $category->getName();

@@ -542,17 +542,22 @@ $(function(){
     /******************************************************************************
      breadcrumb
      *******************************************************************************/
-    var breadcrumb = $('.product-filter');
+    var filter = $('.filter-criteria');
 
-//    breadcrumb.each(function() {
-//        $(this).on('submit', function(e) {
-//            var val = $(this).find('input[type="hidden"]').val();
-//
-//            window.location = window.location.href.replace('/' + val, '');
-//
-//            e.preventDefault();
-//        });
-//    });
+    (function() {
+        var link = filter.find('a'),
+            data_array = [];
+
+        if (link.length < 2) { return; }
+
+        link.each(function() {
+            // добавление элементов в массив и его переворот
+            data_array.reverse(data_array.push($(this).data('link')));
+        }).each(function(index) {
+            // модификация href
+            $(this).attr('href', $(this).attr('href') + '/' + data_array[index]);
+        });
+    })();
 
     /******************************************************************************
      show all products

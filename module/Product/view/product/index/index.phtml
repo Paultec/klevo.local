@@ -10,14 +10,14 @@
     <?php if (!is_null($this->breadcrumbs)) : ?>
         <div class="filter-criteria">
             <?php foreach ($this->breadcrumbs as $key => $value) : ?>
-                    <form class="product-filter" method="post" action="<?php echo $this->url('product/seoUrl', $this->seoUrlParams);?>">
-                        <strong><?php echo $value['name']; ?></strong>
-                        <input name="<?php echo $key;?>" type="hidden" value="<?php echo $value['translit']; ?>">
-                        <label class="btn-remove">
-                            <input type="submit" class="btn btn-danger hide" name="Удалить">
-                            <span class="glyphicon glyphicon-remove cross" data-toggle="tooltip" data-placement="top" title="Удалить фильтр"></span>
-                        </label>
-                    </form>
+                <span>
+                    <strong>
+                        <?php echo $value['name']; ?>
+                    </strong>
+                    <a href="/product" data-link="<?php echo $value['translit'];?>">
+                        <i class="glyphicon glyphicon-remove cross-link" data-toggle="tooltip" data-placement="top" title="Удалить фильтр"></i>&nbsp;
+                    </a>
+                </span>
             <?php endforeach; ?>
         </div>
     <?php endif ?>

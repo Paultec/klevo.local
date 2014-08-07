@@ -40,24 +40,9 @@ class IndexController extends AbstractActionController
 
         if (!isset($this->currentSession->seoUrlParams)) {
             $this->currentSession->seoUrlParams = array();
-        }
-
-        // Удаление крошек
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $postData = (array)$request->getPost();
-
-            $shift = isset($postData['idBrand']) ? $postData['idBrand'] : $postData['idCatalog'];
-
-            $sessionData = $this->currentSession->seoUrlParams;
-
-            foreach ($sessionData as $sessionKey => $sessionItem) {
-                if ($sessionItem === $shift) {
-                    unset($this->currentSession->seoUrlParams[$sessionKey]);
-                    unset($this->currentSession->seoUrlParams[key($postData)]); // idBrand или idCatalog
-                    unset($routeParam[$sessionKey]);
-                }
-            }
+        } else {
+            // Обнуление параметров сессии при удалении фильтра продуктов
+            $this->clearSession($this->currentSession->seoUrlParams, $routeParam);
         }
 
         //
@@ -92,18 +77,18 @@ class IndexController extends AbstractActionController
 
                 // Получаем крошки
                 if ($key != 'brand') {
-                    $breadcrumbs['idCatalog']['id']       = $value;
-                    $breadcrumbs['idCatalog']['translit'] = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $value)->getTranslit();
-                    $breadcrumbs['idCatalog']['name']     = $this->getFullNameCategory($value);
+                    $breadcrumbs['catalog']['id']       = $value;
+                    $breadcrumbs['catalog']['translit'] = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $value)->getTranslit();
+                    $breadcrumbs['catalog']['name']     = $this->getFullNameCategory($value);
                     // seoUrlParams['idCatalog'] нужен в Catalog/IndexController
                     // для связанного отображения категорий и производителей
                     $this->currentSession->seoUrlParams['idCatalog'] = $value;
                 } else {
                     $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
 
-                    $breadcrumbs['idBrand']['id']       = $brand->getId();
-                    $breadcrumbs['idBrand']['translit'] = $brand->getTranslit();
-                    $breadcrumbs['idBrand']['name']     = 'Производитель :: ' . $brand->getName();
+                    $breadcrumbs['brand']['id']       = $brand->getId();
+                    $breadcrumbs['brand']['translit'] = $brand->getTranslit();
+                    $breadcrumbs['brand']['name']     = 'Производитель :: ' . $brand->getName();
                     // seoUrlParams['idBrand'] нужен в Catalog/IndexController
                     // для связанного отображения категорий и производителей
                     $this->currentSession->seoUrlParams['idBrand'] = $brand->getId();
@@ -163,6 +148,34 @@ class IndexController extends AbstractActionController
         $res->addChild($catalog, 'catalog');
 
         return $res;
+    }
+
+    /**
+     * @param $sessionParam
+     * @param $routeParam
+     */
+    protected function clearSession($sessionParam, $routeParam)
+    {
+        for ($i = 1, $count = count($sessionParam); $i < $count; $i++) {
+            $currentParam = $sessionParam['param' . $i];
+
+            if (!is_null($currentParam) && !in_array($currentParam, $routeParam)) {
+                unset($this->currentSession->seoUrlParams['param' . $i]);
+
+                $attributes = $this->getAttributesParams();
+                foreach ($attributes as $attributeKey => $attributeValue) {
+                    if (isset($attributeValue[$currentParam])) {
+                        unset($this->currentSession->seoUrlParams['id' . ucfirst($attributeKey)]);
+                    }
+                }
+            }
+        }
+        // fix: Переместить param2 в param1, если param1 отсутсвует
+        if (isset($this->currentSession->seoUrlParams['param2'])
+            && !$this->currentSession->seoUrlParams['param1']) {
+            $this->currentSession->seoUrlParams['param1'] = $this->currentSession->seoUrlParams['param2'];
+            unset($this->currentSession->seoUrlParams['param2']);
+        }
     }
 
     /**
