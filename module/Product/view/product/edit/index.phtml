@@ -11,23 +11,18 @@
     </form>
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
-        <span class="link-type" data-type="<?php echo $this->type;?>"></span>
         <!-- Accordion -->
         <?php echo $this->catalog ;?><!-- /Accordion -->
     </aside>
 </section>
 
 <section class="col col-lg-9 edit-table">
-    <?php if (count($this->breadcrumbs) > 0) : ?>
-        <ol class="breadcrumb">
-            <?php
-            foreach ($this->breadcrumbs as $key => $value) {
-                if (is_object($value)) {
-                    echo '<li><a href="?' . $key . '=' . $value->getId() . '">' . $value->getName() . '</a></li>';
-                }
-            }
-            ?>
-        </ol>
+    <?php if (!is_null($this->breadcrumbs)) : ?>
+        <div class="filter-criteria">
+            <?php foreach ($this->breadcrumbs as $key => $value) : ?>
+                    <strong><?php echo $value['name']; ?></strong>&nbsp;&nbsp;&nbsp;
+            <?php endforeach; ?>
+        </div>
     <?php endif ?>
     <?php if ($this->result): ?>
         <table id="productList-table" class="table table-striped">
@@ -71,15 +66,15 @@
                 <td><?php echo $this->result[$i]->getDescription() ?: 'Нет'; ?></td>
                 <td><?php echo $this->result[$i]->getPrice() / 100; ?></td>
                 <td><?php echo $this->result[$i]->getImg() ?
-                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '" class="text-img" data-img="/img/product/'. $this->result[$i]->getImg() .'">Да</a>' :
-                        '<a href="' . $this->url('editproduct', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '">Нет</a>'; ?>
+                        '<a href="' . $this->url('editproduct/edit', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '" class="text-img" data-img="/img/product/'. $this->result[$i]->getImg() .'">Да</a>' :
+                        '<a href="' . $this->url('editproduct/edit', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '">Нет</a>'; ?>
                 </td>
                 <td><?php echo $this->result[$i]->getIndexed() ? 'Да' : 'Нет'; ?></td>
                 <td class="same-width">
-                    <a class="btn btn-primary" href="<?php echo $this->url('editproduct',
-                        array('action'=>'edit', 'id' => $this->result[$i]->getId()));?>"><span class="glyphicon glyphicon-edit"></span> Редактировать</a>
-                    <a class="btn btn-warning show-hide" href="<?php echo $this->url('editproduct',
-                        array('action'=>'hide', 'id' => $this->result[$i]->getId()));?>"><span class="glyphicon glyphicon glyphicon-eye-close"></span> Скрыть</a>
+                    <a class="btn btn-primary" href="<?php echo $this->url('editproduct/edit',
+                        array('action'=>'edit', 'id' => $this->result[$i]->getId()));?>"><i class="glyphicon glyphicon-edit"></i> Редактировать</a>
+                    <a class="btn btn-warning show-hide" href="<?php echo $this->url('editproduct/edit',
+                        array('action'=>'hide', 'id' => $this->result[$i]->getId()));?>"><i class="glyphicon glyphicon-eye-close"></i> Скрыть</a>
                 </td>
             </tr>
         <?php endfor; ?>
@@ -87,6 +82,6 @@
         </table>
     <?php else: ?>
         <h2>Выберите категорию для редактирования.</h2>
-        <h2>Или добавьте <a href="<?php echo $this->url('editproduct', array('action' => 'add'));?>">новый</a> продукт.</h2>
+        <h2>Или добавьте <a href="<?php echo $this->url('addproduct', array('action' => 'add'));?>">новый</a> продукт.</h2>
     <?php endif ?>
 </section>

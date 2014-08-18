@@ -27,23 +27,31 @@ class EditController extends AbstractActionController
      */
     protected $em;
     protected $fullName;
+    private $currentSession;
+
+    public function __construct()
+    {
+        $this->currentSession = new Container();
+    }
 
     /**
      * @return array|\Zend\Http\Response|ViewModel
      */
     public function indexAction()
     {
-        $currentSession = new Container();
+        var_dump($this->currentSession->seoUrlParams);
 
-        // Если редирект на главную-редактирования через кнопку
+        // Получение queryString параметров (array)
+        $routeParam = $this->params()->fromRoute();
+
+        // Если редирект на главную-редактирования через кнопку - удалить сессию
         $request = $this->getRequest();
 
         if ($request->isPost()) {
             $data = $request->getPost('redirect');
 
             if (isset($data)) {
-                unset($currentSession->idBrand);
-                unset($currentSession->idCatalog);
+                $this->clearSession($this->currentSession->seoUrlParams, $routeParam);
 
                 return $this->prg('/edit-product', true);
             }
@@ -51,62 +59,72 @@ class EditController extends AbstractActionController
 
         $externalCall = $this->params('externalCall', false);
 
-        // Получение queryString параметров (array)
-        $param = $this->params()->fromQuery();
-
-        // Сохранение/подстановка параметров запроса в/из сессии
-        if (isset($currentSession->idBrand) && !isset($param['brand'])) {
-            $param['brand'] = $currentSession->idBrand;
-        } elseif (isset($param['brand'])) {
-            $currentSession->idBrand = $param['brand'];
+        if (!isset($this->currentSession->seoUrlParams)) {
+            $this->currentSession->seoUrlParams = array();
         }
 
-        if (isset($currentSession->idCatalog) && !isset($param['catalog'])) {
-            $param['catalog'] = $currentSession->idCatalog;
-        } elseif (isset($param['catalog'])) {
-            $currentSession->idCatalog = $param['catalog'];
+        //
+        $param = $this->getFilterFromRouteParam(array(
+                $routeParam['param1'],
+                $routeParam['param2']
+        ));
+
+        // Если найден несопоставимый параметр - вернуть 404
+        if ($param === false) {
+            $view = new ViewModel();
+            $view->setTemplate('error/404');
+
+            return $view;
         }
 
-        // Формирование запроса, в зависимости от к-ва параметров
-        if (isset($param['brand']) && isset($param['catalog'])) {
-            $query = array(
-                'idBrand'   => $param['brand'],
-                'idCatalog' => $param['catalog']
-            );
+        $qs = null;
 
-            $brand    = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
-            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
-        } elseif (isset($param['brand'])) {
-            $query = array(
-                'idBrand'   => $param['brand']
-            );
+        $breadcrumbs = array();
+        if (!empty($param)) {
+            // Формирование запроса, в зависимости от к-ва параметров
+            $qb = $this->getEntityManager()->createQueryBuilder();
 
-            $brand    = $this->getEntityManager()->find(self::BRAND_ENTITY, $param['brand']);
-        } elseif (isset($param['catalog'])) {
-            $query = array(
-                'idCatalog' => $param['catalog']
-            );
+            $qs = $qb->select('p')
+                ->from(self::PRODUCT_ENTITY, 'p');
 
-            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $param['catalog']);
+            $count = 1;
+            foreach ($param as $key => $value) {
+                $qb->andWhere('p.id' . ucfirst($key) . ' = ?' . $count)
+                    ->setParameter($count, $value);
+
+                // Получаем крошки
+                if ($key != 'brand') {
+                    $breadcrumbs['catalog']['name'] = $this->getFullNameCategory($value);
+                    // seoUrlParams['idCatalog'] нужен в Catalog/IndexController
+                    // для связанного отображения категорий и производителей
+                    $this->currentSession->seoUrlParams['idCatalog'] = $value;
+                } else {
+                    $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
+
+                    $breadcrumbs['brand']['name'] = 'Производитель :: ' . $brand->getName();
+                    // seoUrlParams['idBrand'] нужен в Catalog/IndexController
+                    // для связанного отображения категорий и производителей
+                    $this->currentSession->seoUrlParams['idBrand'] = $brand->getId();
+                }
+
+                $count++;
+            }
         } else {
-            $query = null;
+            unset($this->currentSession->seoUrlParams['idCatalog']);
+            unset($this->currentSession->seoUrlParams['idBrand']);
         }
 
-        if (!is_null($query)) {
-            $result = $this->getEntityManager()
-                ->getRepository(self::PRODUCT_ENTITY)->findBy($query);
-        } else {
-            $result = false;
-        }
+        // $qs поумолчанию null
+        $result = !is_null($qs) ? $qs->getQuery()->getResult() : $qs;
 
         $res = new ViewModel(array(
-            'type'       => 'edit-product',
-            'breadcrumbs'=> array('brand' => $brand, 'catalog' => $category),
-            'result'     => $result
+            'breadcrumbs' => $breadcrumbs ?: null,
+            'result'      => $result
         ));
 
         if (!$externalCall) {
-            $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+            $catalog = $this->forward()->dispatch('Catalog\Controller\Index',
+                array('action' => 'index', 'route' => 'editproduct/seoUrl'));
             $res->addChild($catalog, 'catalog');
         }
 
@@ -224,7 +242,7 @@ class EditController extends AbstractActionController
                 $this->getEntityManager()->persist($product);
                 $this->getEntityManager()->flush();
 
-                return $this->redirect()->toRoute('editproduct');
+                return $this->redirect()->toRoute('editproduct/seoUrl', $this->currentSession->seoUrlParams);
             }
         }
 
@@ -274,7 +292,7 @@ class EditController extends AbstractActionController
                 $this->getEntityManager()->flush();
             }
 
-            return $this->redirect()->toRoute('editproduct');
+            return $this->redirect()->toRoute('editproduct/seoUrl', $this->currentSession->seoUrlParams);
         }
 
         return new ViewModel(array(
@@ -308,7 +326,7 @@ class EditController extends AbstractActionController
             if ($form->isValid()) {
                 $formData = $form->getData();
 
-                $explode  = explode('/', $formData['file']['tmp_name']);
+                $explode  = explode(DIRECTORY_SEPARATOR, $formData['file']['tmp_name']);
                 $fileName = $explode[count($explode) - 1];
 
                 $qb = $this->getEntityManager()->createQueryBuilder();
@@ -336,7 +354,7 @@ class EditController extends AbstractActionController
                     ->getQuery();
                 $qu->execute();
 
-                return $this->redirect()->toRoute('editproduct');
+                return $this->redirect()->toRoute('editproduct/seoUrl', $this->currentSession->seoUrlParams);
             }
         }
 
@@ -344,6 +362,35 @@ class EditController extends AbstractActionController
             'form' => $form,
             'id'   => $id
         ));
+    }
+
+    /**
+     * @return array|mixed
+     */
+    private function getAttributesParams()
+    {
+        $result = array();
+
+        $cache = $this->getServiceLocator()->get('filesystem');
+
+        if (!$cache->hasItem('params')) {
+            $brand    = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
+            $category = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->findAll();
+
+            foreach ($brand as $brandItem) {
+                $result['brand'][$brandItem->getTranslit()] = true;
+            }
+
+            foreach ($category as $categoryItem) {
+                $result['catalog'][$categoryItem->getTranslit()] = true;
+            }
+
+            $cache->setItem('params', serialize($result));
+        } else {
+            $result = unserialize($cache->getItem('params'));
+        }
+
+        return $result;
     }
 
     /**
@@ -361,6 +408,98 @@ class EditController extends AbstractActionController
     }
 
     /**
+     * @param $param
+     *
+     * @return array
+     */
+    protected function getFilterFromRouteParam($param)
+    {
+        $result = array();
+
+        $ent    = array(
+            'brand'   => self::BRAND_ENTITY,
+            'catalog' => self::CATEGORY_ENTITY
+        );
+
+        $attributes = $this->getAttributesParams();
+
+        $this->currentSession->flag = array();
+
+        // Проверка на несуществующий параметр
+        $is404 = array();
+        $countParam = 0;
+
+        $count = 1;
+        foreach ($param as $item) {
+            // Пропустить значение элемента-роута поумолчанию (пустая строка)
+            if (empty($item)) {
+                $is404[$countParam] = false;
+
+                continue;
+            }
+
+            $is404[$countParam] = true;
+
+            foreach ($attributes as $key => $value) {
+                if (isset($value[$item])) {
+                    $is404[$countParam] = false;
+
+                    $element = $this->getEntityManager()->getRepository($ent[$key])
+                        ->findOneBy(array('translit' => $param));
+
+                    $result[$key] = $element->getId();
+
+                    $this->currentSession->flag[$key] = true;
+                    $this->currentSession->seoUrlParams['param'.$count] = $element->getTranslit();
+
+                    $count++;
+
+                    break;
+                }
+            }
+
+            $countParam++;
+        }
+
+        foreach ($is404 as $page404) {
+            if ($page404) {
+                // Найдено несопоставимое значение
+                return false;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $sessionParam
+     * @param $routeParam
+     */
+    protected function clearSession($sessionParam, $routeParam)
+    {
+        for ($i = 1, $count = count($sessionParam); $i < $count; $i++) {
+            $currentParam = $sessionParam['param' . $i];
+
+            if (!is_null($currentParam) && !in_array($currentParam, $routeParam)) {
+                unset($this->currentSession->seoUrlParams['param' . $i]);
+
+                $attributes = $this->getAttributesParams();
+                foreach ($attributes as $attributeKey => $attributeValue) {
+                    if (isset($attributeValue[$currentParam])) {
+                        unset($this->currentSession->seoUrlParams['id' . ucfirst($attributeKey)]);
+                    }
+                }
+            }
+        }
+        // fix: Переместить param2 в param1, если param1 отсутствует
+        if (isset($this->currentSession->seoUrlParams['param2'])
+            && !$this->currentSession->seoUrlParams['param1']) {
+            $this->currentSession->seoUrlParams['param1'] = $this->currentSession->seoUrlParams['param2'];
+            unset($this->currentSession->seoUrlParams['param2']);
+        }
+    }
+
+    /**
      * Add full name
      *
      * @require @function getFullNameCategory
@@ -372,10 +511,6 @@ class EditController extends AbstractActionController
 
         for ($i = 0, $count = count($catalog); $i < $count; $i++) {
             $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
-
-//            if (is_null($catalog[$i]['name'])) {
-//                unset($catalog[$i]);
-//            }
 
             $this->fullName = null;
         }
@@ -398,10 +533,8 @@ class EditController extends AbstractActionController
             $categories = $this->getEntityManager()
                 ->getRepository(self::CATEGORY_ENTITY)->findAll();
 
-            for ($i = 0, $category = count($categories); $i < $category; $i++) {
-                $option_arr[$i]['id']   = $categories[$i]->getId();
-                $option_arr[$i]['name'] = $categories[$i]->getName();
-            }
+            // Убрать родительские категории
+            $option_arr = $this->filterCategory($categories);
         } elseif ($type == 'supplier') {
             $suppliers = $this->getEntityManager()
                 ->getRepository(self::STORE_ENTITY)->findBy(array('idAttrib' => 3));
@@ -424,13 +557,49 @@ class EditController extends AbstractActionController
     }
 
     /**
+     * @param $categories
+     *
+     * @return array
+     */
+    protected function filterCategory($categories)
+    {
+        $result        = array();
+        $mainCategory  = array();
+
+        foreach ($categories as $categoryItem) {
+            if (!is_null($categoryItem->getIdParent())) {
+                $mainCategory[] = $categoryItem->getIdParent()->getId();
+            }
+        }
+
+        $mainCategory = array_unique($mainCategory);
+
+        foreach ($categories as $categoryItem) {
+            if (!in_array($categoryItem->getId(), $mainCategory)) {
+                // Для того чтобы выставить ключи массива по-порядку
+                // потому как array_unique сохраняет значение ключей
+                // используем array_push
+                array_push(
+                    $result,
+                    array(
+                        'id'   => $categoryItem->getId(),
+                        'name' => $categoryItem->getName()
+                    )
+                );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Get full category name with parent category
      *
      * @param $id
      *
      * @return mixed
      */
-    public function getFullNameCategory($id)
+    protected function getFullNameCategory($id)
     {
         $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
         $fullName = $category->getName();

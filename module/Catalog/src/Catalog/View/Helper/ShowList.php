@@ -17,9 +17,10 @@ class ShowList extends AbstractHelper
     /**
      * @param      $list
      * @param      $seoUrl
+     * @param      $route
      * @param null $idParent
      */
-    public function __invoke($list, $seoUrl, $idParent = null)
+    public function __invoke($list, $seoUrl, $route, $idParent = null)
     {
         $currentSession = new Container();
 
@@ -55,7 +56,7 @@ class ShowList extends AbstractHelper
                 if (in_array($elem['id'], $this->tmp)) {
                     echo '<h3 class="filled">' . $elem['name'] . '</h3>' . "\n";
 
-                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
+                    $this->__invoke($this->newList, $this->seoUrl, $route, $elem['id']);
                 } else {
 
                     if (isset($flag['brand'])) {
@@ -65,10 +66,10 @@ class ShowList extends AbstractHelper
                     }
 
                     echo '<a href="'.
-                        $this->view->url('product/seoUrl', $this->seoUrl)
+                        $this->view->url($route, $this->seoUrl)
                         .'"class="empty brand-link">'. $elem['name'] .'</a>';
 
-                    $this->__invoke($this->newList, $this->seoUrl, $elem['id']);
+                    $this->__invoke($this->newList, $this->seoUrl, $route, $elem['id']);
                 }
             }
         }

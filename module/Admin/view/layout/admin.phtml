@@ -49,10 +49,10 @@
         </div>
         <div class="grub-data">
             <?php if (!$this->zfcUserIdentity()): ?>
-                <li><a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>" class="float-shadow">Войти <span class="glyphicon glyphicon-user"></a></li>
+                <li><a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>" class="float-shadow">Войти <i class="glyphicon glyphicon-user"></i></a></li>
             <?php else: ?>
                 <li>
-                    <a href="<?php echo $this->url('zfcuser/logout'); ?>" class="logout">Выйти <span class="glyphicon glyphicon-user"><span class="caret"></span></a>
+                    <a href="<?php echo $this->url('zfcuser/logout'); ?>" class="logout">Выйти <i class="glyphicon glyphicon-user"></i><span class="caret"></span></a>
                     <ul class="nav sub-nav">
                         <li><a href="<?php echo $this->url('zfcuser/changeemail') . '#changem'; ?>">Изменить email</a></li>
                         <li><a href="<?php echo $this->url('zfcuser/changepassword') . '#changep'; ?>">Изменить пароль</a></li>
@@ -60,7 +60,7 @@
                 </li>
             <?php endif ?>
             <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
-                <li><a href="<?php echo $this->url('admin');?>" class="float-shadow"><?php echo $this->userRole;?> <span class="glyphicon glyphicon-wrench"></a></li>
+                <li><a href="<?php echo $this->url('admin');?>" class="float-shadow"><?php echo $this->userRole;?> <i class="glyphicon glyphicon-wrench"></i></a></li>
             <?php endif ?>
         </div>
     </div><!-- /Horizontal menu  -->

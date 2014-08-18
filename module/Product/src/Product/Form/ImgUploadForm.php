@@ -44,12 +44,13 @@ class ImgUploadForm extends Form
         $file->getFilterChain()->attachByName(
             'filerenameupload',
             array(
-                'target'          => './public/img/product/',
-                'overwrite'       => true,
-                'use_upload_name' => true,
-                'randomize'       => true
+                'target'               => './public/img/product/klevo', // пример klevo_53ee33d555a60.png
+                'overwrite'            => true,
+                'use_upload_extension' => true,
+                'randomize'            => true // тут добавится: _53ee33d555a60
             )
         );
+
         $inputFilter->add($file);
 
         return $inputFilter;

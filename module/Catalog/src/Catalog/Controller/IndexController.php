@@ -28,6 +28,10 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
+        // Передать имя роута на который должны переходить ссылки
+        // При вызове через dispatch 'route' => 'route/subRoute'
+        $route = $this->params('route', 'product/seoUrl');
+
         $currentSession = new Container();
 
         if (isset($currentSession->seoUrlParams)) {
@@ -53,6 +57,7 @@ class IndexController extends AbstractActionController
             'categoryList' => $categoryList,
             'seoUrlParams' => $seoUrlParams,
             'sessionFlag'  => $currentSession->flag,
+            'route'        => $route
         ));
     }
 

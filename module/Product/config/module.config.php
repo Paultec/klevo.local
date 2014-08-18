@@ -38,8 +38,8 @@ return array(
                                 'name'       => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller'    => 'index',
-                                'action'        => 'view',
+                                'controller' => 'index',
+                                'action'     => 'view',
                             ),
                         ),
                     ),
@@ -61,16 +61,51 @@ return array(
                 ),
             ),
             'editproduct' => array(
-                'type'    => 'Segment',
+                'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/edit-product[/][:action][/:id]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
-                    ),
+                    'route'    => '/edit-product',
                     'defaults' => array(
-                        'controller'    => 'Product\Controller\Edit',
+                        '__NAMESPACE__' => 'Product\Controller',
+                        'controller'    => 'edit',
                         'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'edit' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '[/:action[/:id]]',
+                            'constraints' => array(
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'     => '[0-9]+',
+                            ),
+                        ),
+                    ),
+                    'seoUrl' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '[/:param1][/:param2]',
+                            'constraints' => array(
+                                'param1' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'param2' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'param1' => '',
+                                'param2' => '',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'addproduct' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/add-product',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Product\Controller',
+                        'controller'    => 'edit',
+                        'action'        => 'add',
                     ),
                 ),
             ),

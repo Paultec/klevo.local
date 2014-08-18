@@ -41,7 +41,7 @@ class IndexController extends AbstractActionController
         if (!isset($this->currentSession->seoUrlParams)) {
             $this->currentSession->seoUrlParams = array();
         } else {
-            // Обнуление параметров сессии при удалении фильтра продуктов
+            // Обнуление параметров сессии при удалении фильтра продуктов (breadcrumbs)
             $this->clearSession($this->currentSession->seoUrlParams, $routeParam);
         }
 
@@ -55,6 +55,7 @@ class IndexController extends AbstractActionController
         if ($param === false) {
             $view = new ViewModel();
             $view->setTemplate('error/404');
+
             return $view;
         }
 
@@ -170,7 +171,7 @@ class IndexController extends AbstractActionController
                 }
             }
         }
-        // fix: Переместить param2 в param1, если param1 отсутсвует
+        // fix: Переместить param2 в param1, если param1 отсутствует
         if (isset($this->currentSession->seoUrlParams['param2'])
             && !$this->currentSession->seoUrlParams['param1']) {
             $this->currentSession->seoUrlParams['param1'] = $this->currentSession->seoUrlParams['param2'];

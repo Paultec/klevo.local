@@ -14,7 +14,7 @@ $this->headTitle($title);
     </p>
     <?php
     $form = $this->form;
-    $form->setAttribute('action', $this->url('editproduct',
+    $form->setAttribute('action', $this->url('editproduct/edit',
             array('action' => 'img', 'id' => $this->id)));
     $form->prepare();
 

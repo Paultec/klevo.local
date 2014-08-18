@@ -1,7 +1,6 @@
-<?php //var_dump($this->categoryList); var_dump($this->brandList); ?>
 <section id="accordion">
 
-    <?php echo $this->showList($this->categoryList, $this->seoUrlParams); ?>
+    <?php echo $this->showList($this->categoryList, $this->seoUrlParams, $this->route); ?>
 
     <hr class="delim">
 
@@ -19,7 +18,7 @@
             foreach ($this->brandList as $brand) {
                 $seoUrlParams['param1'] = $brand['translit'];
                 echo '<a href="' .
-                    $this->url('product/seoUrl', $seoUrlParams)
+                    $this->url($this->route, $seoUrlParams)
                     . '" class="empty catalog-link">' . $brand['name'] . '</a>' . "\n";
             }
             ?>

@@ -503,28 +503,6 @@ $(function(){
     function setImgUploadActive() {
         img_btn.attr('disabled', false);
     }
-    /******************************************************************************
-     url query edit-product
-     *******************************************************************************/
-    var link_type = $('.link-type').data('type');
-
-    if (link_type != '' && link_type !== undefined) {
-        brand.each(function(index){
-            var href = $(this).attr('href');
-
-            var lastPart  = href.slice(href.lastIndexOf('/'), href.length);
-
-            $(this).attr('href', '/' + link_type + lastPart);
-        });
-
-        catalog.each(function(){
-            var href = $(this).attr('href');
-
-            var lastPart  = href.slice(href.lastIndexOf('/'), href.length);
-
-            $(this).attr('href', '/' + link_type + lastPart);
-        });
-    }
 
     /******************************************************************************
      insert search query into input
