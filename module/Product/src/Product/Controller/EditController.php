@@ -39,29 +39,13 @@ class EditController extends AbstractActionController
      */
     public function indexAction()
     {
-        var_dump($this->currentSession->seoUrlParams);
+        // Очистить предыдущие данные кеша
+        $this->storeInCache($this->currentSession->seoUrlParams, false);
 
         // Получение queryString параметров (array)
         $routeParam = $this->params()->fromRoute();
 
-        // Если редирект на главную-редактирования через кнопку - удалить сессию
-//        $request = $this->getRequest();
-//
-//        if ($request->isPost()) {
-//            $data = $request->getPost('redirect');
-//
-//            if (isset($data)) {
-//                $this->clearSession($this->currentSession->seoUrlParams, $routeParam);
-//
-//                return $this->prg('/edit-product', true);
-//            }
-//        }
-
         $externalCall = $this->params('externalCall', false);
-
-//        if (!isset($this->currentSession->seoUrlParams)) {
-//            $this->currentSession->seoUrlParams = array();
-//        }
 
         //
         $param = $this->getFilterFromRouteParam(array(
@@ -87,7 +71,6 @@ class EditController extends AbstractActionController
 
         $qs = null;
 
-        //$breadcrumbs = array();
         if (!empty($param)) {
             // Формирование запроса, в зависимости от к-ва параметров
             $qb = $this->getEntityManager()->createQueryBuilder();
@@ -100,26 +83,8 @@ class EditController extends AbstractActionController
                 $qb->andWhere('p.id' . ucfirst($key) . ' = ?' . $count)
                     ->setParameter($count, $value);
 
-                // Получаем крошки
-//                if ($key != 'brand') {
-//                    $breadcrumbs['catalog']['name'] = $this->getFullNameCategory($value);
-//                    // seoUrlParams['idCatalog'] нужен в Catalog/IndexController
-//                    // для связанного отображения категорий и производителей
-//                    $this->currentSession->seoUrlParams['idCatalog'] = $value;
-//                } else {
-//                    $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
-//
-//                    $breadcrumbs['brand']['name'] = 'Производитель :: ' . $brand->getName();
-//                    // seoUrlParams['idBrand'] нужен в Catalog/IndexController
-//                    // для связанного отображения категорий и производителей
-//                    $this->currentSession->seoUrlParams['idBrand'] = $brand->getId();
-//                }
-
                 $count++;
             }
-        } else {
-//            unset($this->currentSession->seoUrlParams['idCatalog']);
-//            unset($this->currentSession->seoUrlParams['idBrand']);
         }
 
         // $qs поумолчанию null
@@ -135,7 +100,10 @@ class EditController extends AbstractActionController
                 array('action' => 'index', 'route' => 'editproduct/seoUrl'));
             $res->addChild($catalog, 'catalog');
         }
-        var_dump($this->currentSession->seoUrlParams);
+
+        // Записать новые данные сессии в кеш
+        $this->storeInCache($this->currentSession->seoUrlParams);
+
         return $res;
     }
 
@@ -196,6 +164,10 @@ class EditController extends AbstractActionController
      */
     public function editAction()
     {
+        // Получить данные из кеша и использовать их как параметры redirect
+        $cache = $this->getServiceLocator()->get('filesystem');
+        $seoUrlParams = unserialize($cache->getItem('seoUrlParams'));
+
         $id = (int)$this->params()->fromRoute('id', 0);
 
         if (!$id) {
@@ -250,7 +222,7 @@ class EditController extends AbstractActionController
                 $this->getEntityManager()->persist($product);
                 $this->getEntityManager()->flush();
 
-                return $this->redirect()->toRoute('editproduct/seoUrl', $this->currentSession->seoUrlParams);
+                return $this->redirect()->toRoute('editproduct/seoUrl', $seoUrlParams);
             }
         }
 
@@ -273,6 +245,10 @@ class EditController extends AbstractActionController
      */
     public function hideAction()
     {
+        // Получить данные из кеша и использовать их как параметры redirect
+        $cache = $this->getServiceLocator()->get('filesystem');
+        $seoUrlParams = unserialize($cache->getItem('seoUrlParams'));
+
         $id = (int) $this->params()->fromRoute('id', 0);
 
         if (!$id) {
@@ -300,7 +276,7 @@ class EditController extends AbstractActionController
                 $this->getEntityManager()->flush();
             }
 
-            return $this->redirect()->toRoute('editproduct/seoUrl', $this->currentSession->seoUrlParams);
+            return $this->redirect()->toRoute('editproduct/seoUrl', $seoUrlParams);
         }
 
         return new ViewModel(array(
@@ -314,6 +290,10 @@ class EditController extends AbstractActionController
      */
     public function imgAction()
     {
+        // Получить данные из кеша и использовать их как параметры redirect
+        $cache = $this->getServiceLocator()->get('filesystem');
+        $seoUrlParams = unserialize($cache->getItem('seoUrlParams'));
+
         $id = (int)$this->params()->fromRoute('id', 0);
 
         if (!$id) {
@@ -362,7 +342,7 @@ class EditController extends AbstractActionController
                     ->getQuery();
                 $qu->execute();
 
-                return $this->redirect()->toRoute('editproduct/seoUrl', $this->currentSession->seoUrlParams);
+                return $this->redirect()->toRoute('editproduct/seoUrl', $seoUrlParams);
             }
         }
 
@@ -370,6 +350,17 @@ class EditController extends AbstractActionController
             'form' => $form,
             'id'   => $id
         ));
+    }
+
+    protected function storeInCache($sessionData, $action = true)
+    {
+        $cache = $this->getServiceLocator()->get('filesystem');
+
+        if ($action) {
+            $cache->addItem('seoUrlParams', serialize($sessionData));
+        } else {
+            $cache->removeItem('seoUrlParams');
+        }
     }
 
     /**
@@ -633,7 +624,9 @@ class EditController extends AbstractActionController
     }
 
     /**
+     * @param $urlParam
      *
+     * @return array
      */
     protected function setSessionByUrlParam($urlParam)
     {

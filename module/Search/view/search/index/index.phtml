@@ -13,17 +13,17 @@
                 <section class="product row">
                     <div class="col col-md-4">
                         <?php if ($item->getImg()): ?>
-                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
+                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>">
                                 <img class="lazy" data-original="/img/product/<?php echo $item->getImg()?>" width="270" alt="">
                             </a>
                         <?php else:?>
-                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>">
+                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>">
                                 <img class="lazy" data-original="/img/product/noimage.png" width="270" alt="">
                             </a>
                         <?php endif; ?>
                     </div>
                     <div class="col col-md-6">
-                        <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'id' => $item->getId()));?>"><?php echo $item->getName(); ?></a></h5>
+                        <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>"><?php echo $item->getName(); ?></a></h5>
                         <p><?php echo $item->getDescription(); ?></p>
                         <?php if ($item->getPrice() !== 0):?>
                             <p class="product-price"><?php echo $item->getPrice() / 100; ?></p>

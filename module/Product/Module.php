@@ -6,30 +6,29 @@ use Zend\Session\Container;
 
 class Module
 {
+    public function onBootstrap(MvcEvent $e)
+    {
+        // Удалить ключи из сессии для очистки seoUrl параметров
+        $eventManager = $e->getApplication()->getEventManager();
 
-//    public function onBootstrap(MvcEvent $e)
-//    {
-//        // Удалить ключи из сессии для очистки seoUrl параметров
-//        $eventManager = $e->getApplication()->getEventManager();
-//
-//        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function($e) {
-//                $currentRoute = $e->getRouteMatch()->getMatchedRouteName();
-//
-//                $match = strpos($currentRoute, 'product');
-//
-//                if ($match === false) {
-//                    $currentSession = new Container();
-//
-//                    if (!empty($currentSession->seoUrlParams)) {
-//                        foreach ($currentSession->seoUrlParams as $key => $value) {
-//                            unset($currentSession->seoUrlParams[$key]);
-//                        }
-//
-//                        unset($currentSession->flag);
-//                    }
-//                }
-//            }, 100);
-//    }
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function($e) {
+                $currentRoute = $e->getRouteMatch()->getMatchedRouteName();
+
+                $match = strpos($currentRoute, 'product');
+
+                if ($match === false) {
+                    $currentSession = new Container();
+
+                    if (!empty($currentSession->seoUrlParams)) {
+                        foreach ($currentSession->seoUrlParams as $key => $value) {
+                            unset($currentSession->seoUrlParams[$key]);
+                        }
+
+                        unset($currentSession->flag);
+                    }
+                }
+            }, 100);
+    }
 
     public function getConfig()
     {

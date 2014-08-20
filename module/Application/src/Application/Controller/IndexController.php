@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
 
 class IndexController extends AbstractActionController
 {
@@ -13,11 +12,6 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        $routeParam = $this->params()->fromRoute();
-        //var_dump($routeParam);
-        //$currentSession = new Container();
-        //var_dump($currentSession);
-
         $index = new ViewModel();
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index');

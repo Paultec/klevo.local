@@ -11,9 +11,8 @@ class Module
         $eventManager = $e->getApplication()->getEventManager();
 
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, function($e) {
-            $controller = $e->getTarget();
-            $controllerName = $controller->getEvent()
-                ->getRouteMatch()->getParam('controller');
+                $controller     = $e->getTarget();
+                $controllerName = $e->getRouteMatch()->getParam('controller');
 
                 if (in_array($controllerName, array(
                         'Admin\Controller\Index',

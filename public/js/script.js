@@ -624,4 +624,19 @@ $(function(){
             testarea.val('empty');
         }
     });
+
+    /******************************************************************************
+     fix first search page
+     *******************************************************************************/
+    var serach_page = $('.first-search-page');
+
+    serach_page.on('click', function(e) {
+        var href = window.location.href;
+
+        var query = href.slice(href.indexOf('?'), href.length);
+
+        window.location.href = $(this).attr('href') + query;
+
+        e.preventDefault();
+    });
 });
