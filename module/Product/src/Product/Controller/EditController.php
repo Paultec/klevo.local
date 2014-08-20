@@ -45,29 +45,37 @@ class EditController extends AbstractActionController
         $routeParam = $this->params()->fromRoute();
 
         // Если редирект на главную-редактирования через кнопку - удалить сессию
-        $request = $this->getRequest();
-
-        if ($request->isPost()) {
-            $data = $request->getPost('redirect');
-
-            if (isset($data)) {
-                $this->clearSession($this->currentSession->seoUrlParams, $routeParam);
-
-                return $this->prg('/edit-product', true);
-            }
-        }
+//        $request = $this->getRequest();
+//
+//        if ($request->isPost()) {
+//            $data = $request->getPost('redirect');
+//
+//            if (isset($data)) {
+//                $this->clearSession($this->currentSession->seoUrlParams, $routeParam);
+//
+//                return $this->prg('/edit-product', true);
+//            }
+//        }
 
         $externalCall = $this->params('externalCall', false);
 
-        if (!isset($this->currentSession->seoUrlParams)) {
-            $this->currentSession->seoUrlParams = array();
-        }
+//        if (!isset($this->currentSession->seoUrlParams)) {
+//            $this->currentSession->seoUrlParams = array();
+//        }
 
         //
         $param = $this->getFilterFromRouteParam(array(
                 $routeParam['param1'],
                 $routeParam['param2']
         ));
+
+        if (!empty($param)) {
+            $breadcrumbs = $this->setSessionByUrlParam($param);
+        } else {
+            $this->currentSession->seoUrlParams = array();
+            $this->currentSession->flag = array();
+            $breadcrumbs = array();
+        }
 
         // Если найден несопоставимый параметр - вернуть 404
         if ($param === false) {
@@ -79,7 +87,7 @@ class EditController extends AbstractActionController
 
         $qs = null;
 
-        $breadcrumbs = array();
+        //$breadcrumbs = array();
         if (!empty($param)) {
             // Формирование запроса, в зависимости от к-ва параметров
             $qb = $this->getEntityManager()->createQueryBuilder();
@@ -93,25 +101,25 @@ class EditController extends AbstractActionController
                     ->setParameter($count, $value);
 
                 // Получаем крошки
-                if ($key != 'brand') {
-                    $breadcrumbs['catalog']['name'] = $this->getFullNameCategory($value);
-                    // seoUrlParams['idCatalog'] нужен в Catalog/IndexController
-                    // для связанного отображения категорий и производителей
-                    $this->currentSession->seoUrlParams['idCatalog'] = $value;
-                } else {
-                    $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
-
-                    $breadcrumbs['brand']['name'] = 'Производитель :: ' . $brand->getName();
-                    // seoUrlParams['idBrand'] нужен в Catalog/IndexController
-                    // для связанного отображения категорий и производителей
-                    $this->currentSession->seoUrlParams['idBrand'] = $brand->getId();
-                }
+//                if ($key != 'brand') {
+//                    $breadcrumbs['catalog']['name'] = $this->getFullNameCategory($value);
+//                    // seoUrlParams['idCatalog'] нужен в Catalog/IndexController
+//                    // для связанного отображения категорий и производителей
+//                    $this->currentSession->seoUrlParams['idCatalog'] = $value;
+//                } else {
+//                    $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $value);
+//
+//                    $breadcrumbs['brand']['name'] = 'Производитель :: ' . $brand->getName();
+//                    // seoUrlParams['idBrand'] нужен в Catalog/IndexController
+//                    // для связанного отображения категорий и производителей
+//                    $this->currentSession->seoUrlParams['idBrand'] = $brand->getId();
+//                }
 
                 $count++;
             }
         } else {
-            unset($this->currentSession->seoUrlParams['idCatalog']);
-            unset($this->currentSession->seoUrlParams['idBrand']);
+//            unset($this->currentSession->seoUrlParams['idCatalog']);
+//            unset($this->currentSession->seoUrlParams['idBrand']);
         }
 
         // $qs поумолчанию null
@@ -127,7 +135,7 @@ class EditController extends AbstractActionController
                 array('action' => 'index', 'route' => 'editproduct/seoUrl'));
             $res->addChild($catalog, 'catalog');
         }
-
+        var_dump($this->currentSession->seoUrlParams);
         return $res;
     }
 
@@ -622,6 +630,41 @@ class EditController extends AbstractActionController
 
             return $this->getFullNameCategory($parent->getId());
         }
+    }
+
+    /**
+     *
+     */
+    protected function setSessionByUrlParam($urlParam)
+    {
+        $this->currentSession->seoUrlParams = array();
+        $this->currentSession->flag = array();
+        $breadcrumbs = array();
+        $countParam = 1;
+
+        if (isset($urlParam['brand'])) {
+            $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $urlParam['brand']);
+            $this->currentSession->seoUrlParams['param' . $countParam] = $brand->getTranslit();
+            $this->currentSession->seoUrlParams['idBrand'] = $urlParam['brand'];
+            $breadcrumbs['brand']['id'] = $brand->getId();
+            $breadcrumbs['brand']['translit'] = $brand->getTranslit();
+            $breadcrumbs['brand']['name'] = 'Производитель :: ' . $brand->getName();
+            $this->currentSession->flag['brand'] = true;
+            ++$countParam;
+        }
+
+        if (isset($urlParam['catalog'])) {
+            $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $urlParam['catalog']);
+            $this->currentSession->seoUrlParams['param' . $countParam] = $catalog->getTranslit();
+            $this->currentSession->seoUrlParams['idCatalog'] = $urlParam['catalog'];
+            $breadcrumbs['catalog']['id'] = $catalog->getId();
+            $breadcrumbs['catalog']['translit'] = $catalog->getTranslit();
+            $breadcrumbs['catalog']['name'] = $this->getFullNameCategory($urlParam['catalog']);
+            $this->currentSession->flag['catalog'] = true;
+            ++$countParam;
+        }
+
+        return $breadcrumbs;
     }
 
     /**

@@ -166,7 +166,7 @@ class IndexController extends AbstractActionController
             $idParent = $category->getIdParent();
         }
 
-        // рекурсивно проходим по дереву категорий до самого верхнего родителя
+        // рекурсивно проходим по дереву категорий до самого верхнего родителя 
         if ($idParent == null) {
             $this->actualCatalogList[] = $category->getArrayCopy();
             return;
