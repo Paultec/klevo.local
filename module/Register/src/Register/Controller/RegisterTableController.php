@@ -34,71 +34,92 @@ class RegisterTableController extends AbstractActionController
     {
         $currentSession = new Container();
 
-            //Сохранение и получение текущего id записи из таблицы Register
-            if (isset($currentSession->idRegister)) {
-                $idRegister = $currentSession->idRegister;
-            } else {
-                $currentSession->idRegister = $this->params('content');
-                $idRegister = $currentSession->idRegister;
-            }
+        //Сохранение и получение текущего id записи из таблицы Register
+        if (isset($currentSession->idRegister)) {
+            $idRegister = $currentSession->idRegister;
+        } else {
+            $currentSession->idRegister = $this->params('content');
+            $idRegister = $currentSession->idRegister;
+        }
 
-            $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
+        $request = $this->getRequest();
 
-            $idProduct = $this->getRequest()->getPost('idProduct');
-            if ($idProduct) {
-                $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+        $qs = null;
 
-                // Добавление введенных к-ва и цены в свойства выбранного товара
-                $currentProduct->currentQty   = $this->getRequest()->getPost('qty');
-                $currentProduct->currentPrice = $this->getRequest()->getPost('price');
+        if ($request->isPost()) {
+            if ($request->getPost('idBrand') || $request->getPost('idCatalog')) {
+                $qb = $this->getEntityManager()->createQueryBuilder();
 
-                // Добавление idRegister, idOperation, idUser текущей операции к свойствам,
-                // чтобы не делать дополнительные запросы в addAction
-                //$currentProduct->currentIdRegister  = $register->getId();
-                //$currentProduct->currentIdUser      = $register->getIdUser();
-                //$currentProduct->currentIdOperation = $register->getIdOperation();
+                $qs = $qb->select('p')->from(self::PRODUCT_ENTITY, 'p');
 
-                $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $currentProduct->getIdBrand());
-                $currentProduct->brand = $brand->getName();
+                if ($request->getPost('idBrand')) {
+                    $currentSession->register['idBrand'] = $request->getPost('idBrand');
+                    $qb->andWhere('p.idBrand = :idBrand')->setParameter('idBrand', $currentSession->register['idBrand']);
+                }
 
-                $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $currentProduct->getIdCatalog());
-                $currentProduct->category = $this->getFullNameCategory($category->getId());
-            }
-
-            // Формирование массива с выбранными товарами
-            if (isset($currentSession->productList)) {
-                $currentSession->productList[] = $currentProduct;
-            } elseif ($currentProduct) {
-                $currentSession->productList = array();
-                $currentSession->productList[] = $currentProduct;
-            }
-
-            $product = $this->forward()->dispatch('Product\Controller\Edit',
-                array('action' => 'index', 'externalCall' => true));
-
-            //Добавление свойства с текущим количеством товара
-            if ($product->result) {
-                for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
-                    $idProduct = $product->result[$i]->getId();
-                    $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
-
-                    $qtyProduct = $entityQtyProduct->getQty();
-                    $product->result[$i]->setQty($qtyProduct);
+                if ($request->getPost('idCatalog')) {
+                    $currentSession->register['idCatalog'] = $request->getPost('idCatalog');
+                    $qb->andWhere('p.idCatalog = :idCatalog')->setParameter('idCatalog', $currentSession->register['idCatalog']);
                 }
             }
+        }
 
-            $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+        $product = !is_null($qs) ? $qs->getQuery()->getResult() : $qs;
 
-            $res =  new ViewModel(array(
-                'register'    => $register,
-                'product'     => $product,
-                'type'        => 'register-table',
-                'productList' => $currentSession->productList,
-            ));
+        $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
 
-            $res->addChild($catalog, 'catalog');
+        $catalogList = $this->getCatalogList();
 
-            return $res;
+        $idProduct = $this->getRequest()->getPost('idProduct');
+        if ($idProduct) {
+            $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+
+            // Добавление введенных к-ва и цены в свойства выбранного товара
+            $currentProduct->currentQty   = $this->getRequest()->getPost('qty');
+            $currentProduct->currentPrice = $this->getRequest()->getPost('price');
+
+            $brand = $this->getEntityManager()->find(self::BRAND_ENTITY, $currentProduct->getIdBrand());
+            $currentProduct->brand = $brand->getName();
+
+            $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $currentProduct->getIdCatalog());
+            $currentProduct->category = $this->getFullNameCategory($category->getId());
+        }
+
+        // Формирование массива с выбранными товарами
+//        if (isset($currentSession->productList)) {
+//            $currentSession->productList[] = $currentProduct;
+//        } elseif ($currentProduct) {
+//            $currentSession->productList = array();
+//            $currentSession->productList[] = $currentProduct;
+//        }
+
+//        $product = $this->forward()->dispatch('Product\Controller\Edit',
+//            array('action' => 'index', 'externalCall' => true));
+
+        //Добавление свойства с текущим количеством товара
+//        if ($product->result) {
+//            for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
+//                $idProduct = $product->result[$i]->getId();
+//                $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
+//
+//                $qtyProduct = $entityQtyProduct->getQty();
+//                $product->result[$i]->setQty($qtyProduct);
+//            }
+//        }
+
+//        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+
+        $res =  new ViewModel(array(
+            'register'      => $register,
+            'catalogList'   => $catalogList,
+            'product'     => $product,
+            //'type'        => 'register-table',
+            //'productList' => $currentSession->productList,
+        ));
+
+//        $res->addChild($catalog, 'catalog');
+
+        return $res;
     }
 
     public function addAction()
@@ -194,26 +215,26 @@ class RegisterTableController extends AbstractActionController
     public function getFullNameCategory($id)
     {
         $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
-            $fullName = $category->getName();
+        $fullName = $category->getName();
 
-            if (null == $category->getIdParent()) {
-                if (!$this->fullName) {
-                    $this->fullName = $fullName;
-                }
+        if (null == $category->getIdParent()) {
+            if (!$this->fullName) {
+                $this->fullName = $fullName;
+            }
 
-                return $this->fullName;
+            return $this->fullName;
+        } else {
+            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
+            $parentName = $parent->getName();
+
+            if ($this->fullName) {
+                $this->fullName = $parentName . " :: " . $this->fullName;
             } else {
-                $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
-                $parentName = $parent->getName();
-
-                if ($this->fullName) {
-                    $this->fullName = $parentName . " :: " . $this->fullName;
-                } else {
-                    $this->fullName = $parentName . " :: " . $fullName;
-                }
+                $this->fullName = $parentName . " :: " . $fullName;
             }
 
             return $this->getFullNameCategory($parent->getId());
+        }
     }
 
     public function getDetailAction()
@@ -235,6 +256,64 @@ class RegisterTableController extends AbstractActionController
         ));
     }
 
+    /**
+     * @return array|mixed
+     */
+    private function getCatalogList()
+    {
+        $result = array();
 
+        $cache = $this->getServiceLocator()->get('filesystem');
+        $cache->removeItem('catalogList');
+
+        if (!$cache->hasItem('catalogList')) {
+            $brand    = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
+            $categories = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->findAll();
+
+            foreach ($categories as $categoryItem) {
+                if (!is_null($categoryItem->getIdParent())) {
+                    $mainCategory[] = $categoryItem->getIdParent()->getId();
+                }
+            }
+
+            $mainCategory = array_unique($mainCategory);
+
+            $result['category'] = array();
+            $result['category'][0]['id'] = null;
+            $result['category'][0]['name'] = 'Выбрать категорию';
+            $result['brand'] = array();
+            $result['brand'][0]['id'] = null;
+            $result['brand'][0]['name'] = 'Выбрать производителя';
+
+            foreach ($categories as $categoryItem) {
+                if (!in_array($categoryItem->getId(), $mainCategory)) {
+                    // Для того чтобы выставить ключи массива по-порядку
+                    // потому как array_unique сохраняет значение ключей
+                    // используем array_push
+                    array_push(
+                        $result['category'],
+                        array(
+                            'id'   => $categoryItem->getId(),
+                            'name' => $this->getFullNameCategory($categoryItem->getId()),
+                        )
+                    );
+                }
+                $this->fullName = null;
+            }
+
+            $count = 1;
+            foreach ($brand as $brandItem) {
+                $result['brand'][$count]['id'] = $brandItem->getId();
+                $result['brand'][$count]['name'] = $brandItem->getName();
+                ++$count;
+            }
+
+            $cache->setItem('catalogList', serialize($result));
+        } else {
+            $result = unserialize($cache->getItem('catalogList'));
+        }
+
+        return $result;
+    }
 }
 

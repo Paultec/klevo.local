@@ -202,6 +202,9 @@ class IndexController extends AbstractActionController
 
         $cache = $this->getServiceLocator()->get('filesystem');
 
+        // Раскомментировать при необходимости удалить кэш
+        //ы$cache->removeItem('params');
+
         if (!$cache->hasItem('params')) {
             $brand    = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
             $category = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->findAll();
