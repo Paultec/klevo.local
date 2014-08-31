@@ -27,6 +27,7 @@ class EditController extends AbstractActionController
      */
     protected $em;
     protected $fullName;
+    private $cache;
     private $currentSession;
 
     public function __construct()
@@ -165,8 +166,7 @@ class EditController extends AbstractActionController
     public function editAction()
     {
         // Получить данные из кеша и использовать их как параметры redirect
-        $cache = $this->getServiceLocator()->get('filesystem');
-        $seoUrlParams = unserialize($cache->getItem('seoUrlParams'));
+        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams'));
 
         $id = (int)$this->params()->fromRoute('id', 0);
 
@@ -246,8 +246,7 @@ class EditController extends AbstractActionController
     public function hideAction()
     {
         // Получить данные из кеша и использовать их как параметры redirect
-        $cache = $this->getServiceLocator()->get('filesystem');
-        $seoUrlParams = unserialize($cache->getItem('seoUrlParams'));
+        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams'));
 
         $id = (int) $this->params()->fromRoute('id', 0);
 
@@ -291,8 +290,7 @@ class EditController extends AbstractActionController
     public function imgAction()
     {
         // Получить данные из кеша и использовать их как параметры redirect
-        $cache = $this->getServiceLocator()->get('filesystem');
-        $seoUrlParams = unserialize($cache->getItem('seoUrlParams'));
+        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams'));
 
         $id = (int)$this->params()->fromRoute('id', 0);
 
@@ -352,14 +350,26 @@ class EditController extends AbstractActionController
         ));
     }
 
+    /**
+     * Set cache from factory
+     *
+     * @param $cache
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @param      $sessionData
+     * @param bool $action
+     */
     protected function storeInCache($sessionData, $action = true)
     {
-        $cache = $this->getServiceLocator()->get('filesystem');
-
         if ($action) {
-            $cache->addItem('seoUrlParams', serialize($sessionData));
+            $this->cache->addItem('seoUrlParams', serialize($sessionData));
         } else {
-            $cache->removeItem('seoUrlParams');
+            $this->cache->removeItem('seoUrlParams');
         }
     }
 
@@ -506,12 +516,14 @@ class EditController extends AbstractActionController
      */
     protected function modifyCatalogOptions()
     {
+        // Сервис - получить полное имя категории
+        $fullNameCategory = $this->getServiceLocator()->get('fullNameService');
+
         $catalog = $this->setOptionItems('catalog');
 
         for ($i = 0, $count = count($catalog); $i < $count; $i++) {
-            $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
-
-            $this->fullName = null;
+            $catalog[$i]['name'] = $fullNameCategory->getFullNameCategory($catalog[$i]['id']);
+            $fullNameCategory->setFullNameToNull();
         }
 
         return $catalog;
@@ -592,38 +604,6 @@ class EditController extends AbstractActionController
     }
 
     /**
-     * Get full category name with parent category
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    protected function getFullNameCategory($id)
-    {
-        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
-        $fullName = $category->getName();
-
-        if (null == $category->getIdParent()) {
-            if (!$this->fullName) {
-                $this->fullName = $fullName;
-            }
-
-            return $this->fullName;
-        } else {
-            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
-            $parentName = $parent->getName();
-
-            if ($this->fullName) {
-                $this->fullName = $parentName . " :: " . $this->fullName;
-            } else {
-                $this->fullName = $parentName . " :: " . $fullName;
-            }
-
-            return $this->getFullNameCategory($parent->getId());
-        }
-    }
-
-    /**
      * @param $urlParam
      *
      * @return array
@@ -647,12 +627,15 @@ class EditController extends AbstractActionController
         }
 
         if (isset($urlParam['catalog'])) {
+            // Сервис - получить полное имя категории
+            $fullNameCategory = $this->getServiceLocator()->get('fullNameService');
+
             $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $urlParam['catalog']);
             $this->currentSession->seoUrlParams['param' . $countParam] = $catalog->getTranslit();
             $this->currentSession->seoUrlParams['idCatalog'] = $urlParam['catalog'];
             $breadcrumbs['catalog']['id'] = $catalog->getId();
             $breadcrumbs['catalog']['translit'] = $catalog->getTranslit();
-            $breadcrumbs['catalog']['name'] = $this->getFullNameCategory($urlParam['catalog']);
+            $breadcrumbs['catalog']['name'] = $fullNameCategory->getFullNameCategory($urlParam['catalog']);
             $this->currentSession->flag['catalog'] = true;
             ++$countParam;
         }

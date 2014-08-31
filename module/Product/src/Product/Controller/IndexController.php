@@ -203,7 +203,7 @@ class IndexController extends AbstractActionController
         $cache = $this->getServiceLocator()->get('filesystem');
 
         // Раскомментировать при необходимости удалить кэш
-        //ы$cache->removeItem('params');
+        //$cache->removeItem('params');
 
         if (!$cache->hasItem('params')) {
             $brand    = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
@@ -224,39 +224,6 @@ class IndexController extends AbstractActionController
 
         return $result;
     }
-
-    /**
-     * Get full category name with parent category
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function getFullNameCategory($id)
-    {
-        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
-        $fullName = $category->getName();
-
-        if (null == $category->getIdParent()) {
-            if (!$this->fullName) {
-                $this->fullName = $fullName;
-            }
-
-            return $this->fullName;
-        } else {
-            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
-            $parentName = $parent->getName();
-
-            if ($this->fullName) {
-                $this->fullName = $parentName . " :: " . $this->fullName;
-            } else {
-                $this->fullName = $parentName . " :: " . $fullName;
-            }
-
-            return $this->getFullNameCategory($parent->getId());
-        }
-    }
-
 
     /**
      * @param $urlParam
@@ -282,12 +249,15 @@ class IndexController extends AbstractActionController
         }
 
         if (isset($urlParam['catalog'])) {
+            // Сервис - получить полное имя категории
+            $fullNameCategory = $this->getServiceLocator()->get('fullNameService');
+
             $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $urlParam['catalog']);
             $this->currentSession->seoUrlParams['param' . $countParam] = $catalog->getTranslit();
             $this->currentSession->seoUrlParams['idCatalog'] = $urlParam['catalog'];
             $breadcrumbs['catalog']['id'] = $catalog->getId();
             $breadcrumbs['catalog']['translit'] = $catalog->getTranslit();
-            $breadcrumbs['catalog']['name'] = $this->getFullNameCategory($urlParam['catalog']);
+            $breadcrumbs['catalog']['name'] = $fullNameCategory->getFullNameCategory($urlParam['catalog']);
             $this->currentSession->flag['catalog'] = true;
             ++$countParam;
         }

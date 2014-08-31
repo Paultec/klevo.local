@@ -84,7 +84,17 @@ return array(
     ),
     'service_manager' => array(
         'invokables' => array(
-            'translitService' => 'Application\Service\TranslitService',
+            'translitService'         => 'Application\Service\TranslitService',
+            'fullNameCategoryService' => 'Application\Service\FullNameCategoryService'
+        ),
+        'factories' => array(
+            // Интегрировать Доктрину в сервис
+            'fullNameService' => function($sm) {
+                    $service = new Application\Service\FullNameCategoryService;
+                    $service->setEntityManager($sm->get('doctrine.entitymanager.orm_default'));
+
+                    return $service;
+            }
         ),
         'abstract_factories' => array(
             'Zend\Log\LoggerAbstractServiceFactory',

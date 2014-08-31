@@ -129,7 +129,6 @@ return array(
                     ),
                 ),
             ),
-
         ),
     ),
     'translator' => array(
