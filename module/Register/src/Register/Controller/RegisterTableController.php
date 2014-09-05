@@ -5,6 +5,7 @@ namespace Register\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
+use Zend\Authentication\AuthenticationService;
 
 use GoSession;
 
@@ -30,8 +31,13 @@ class RegisterTableController extends AbstractActionController
 
     protected $fullName = null;
 
+    private $cache;
+
     public function indexAction()
     {
+        $auth = new AuthenticationService();
+        $currentUser = $auth->getIdentity();
+
         $currentSession = new Container();
 
         //Сохранение и получение текущего id записи из таблицы Register
@@ -46,6 +52,20 @@ class RegisterTableController extends AbstractActionController
 
         $qs = null;
 
+        $filter = array();
+
+        // в этом кэше хранятся брэнд и/или категория товаров, выбранные пользователем
+        $filterCache = unserialize($this->cache->getItem($currentUser));
+
+        // если этого кэша нет, создаем его (с пустым массивом)
+        if (!$filterCache) {
+            $filterCache = $filter;
+            $this->cache->addItem($currentUser, serialize($filterCache));
+        } else {
+            $filter = $filterCache;
+        }
+
+        // здесь записываем в $filter выбранные пользователем брэнд и/или категорию
         if ($request->isPost()) {
             if ($request->getPost('idBrand') || $request->getPost('idCatalog')) {
                 $qb = $this->getEntityManager()->createQueryBuilder();
@@ -53,16 +73,20 @@ class RegisterTableController extends AbstractActionController
                 $qs = $qb->select('p')->from(self::PRODUCT_ENTITY, 'p');
 
                 if ($request->getPost('idBrand')) {
-                    $currentSession->register['idBrand'] = $request->getPost('idBrand');
-                    $qb->andWhere('p.idBrand = :idBrand')->setParameter('idBrand', $currentSession->register['idBrand']);
+                    $filter['idBrand'] = $request->getPost('idBrand');
+                    $qb->andWhere('p.idBrand = :idBrand')->setParameter('idBrand', $filter['idBrand']);
                 }
 
                 if ($request->getPost('idCatalog')) {
-                    $currentSession->register['idCatalog'] = $request->getPost('idCatalog');
-                    $qb->andWhere('p.idCatalog = :idCatalog')->setParameter('idCatalog', $currentSession->register['idCatalog']);
+                    $filter['idCatalog'] = $request->getPost('idCatalog');
+                    $qb->andWhere('p.idCatalog = :idCatalog')->setParameter('idCatalog', $filter['idCatalog']);
                 }
+            } else {
+                $this->cache->removeItem($currentUser);
             }
         }
+
+        $this->cache->replaceItem($currentUser, serialize($filter));
 
         $product = !is_null($qs) ? $qs->getQuery()->getResult() : $qs;
 
@@ -71,6 +95,7 @@ class RegisterTableController extends AbstractActionController
         $catalogList = $this->getCatalogList();
 
         $idProduct = $this->getRequest()->getPost('idProduct');
+
         if ($idProduct) {
             $currentProduct = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
 
@@ -86,38 +111,30 @@ class RegisterTableController extends AbstractActionController
         }
 
         // Формирование массива с выбранными товарами
-//        if (isset($currentSession->productList)) {
-//            $currentSession->productList[] = $currentProduct;
-//        } elseif ($currentProduct) {
-//            $currentSession->productList = array();
-//            $currentSession->productList[] = $currentProduct;
-//        }
-
-//        $product = $this->forward()->dispatch('Product\Controller\Edit',
-//            array('action' => 'index', 'externalCall' => true));
+        if (isset($currentSession->productList) && $currentProduct) {
+            $currentSession->productList[] = $currentProduct;
+        } elseif ($currentProduct) {
+            $currentSession->productList = array();
+            $currentSession->productList[] = $currentProduct;
+        }
 
         //Добавление свойства с текущим количеством товара
-//        if ($product->result) {
-//            for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
-//                $idProduct = $product->result[$i]->getId();
-//                $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
-//
-//                $qtyProduct = $entityQtyProduct->getQty();
-//                $product->result[$i]->setQty($qtyProduct);
-//            }
-//        }
+        if ($product->result) {
+            for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
+                $idProduct = $product->result[$i]->getId();
+                $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
 
-//        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+                $qtyProduct = $entityQtyProduct->getQty();
+                $product->result[$i]->setQty($qtyProduct);
+            }
+        }
 
         $res =  new ViewModel(array(
-            'register'      => $register,
-            'catalogList'   => $catalogList,
+            'register'    => $register,
+            'catalogList' => $catalogList,
             'product'     => $product,
-            //'type'        => 'register-table',
-            //'productList' => $currentSession->productList,
+            'productList' => $currentSession->productList,
         ));
-
-//        $res->addChild($catalog, 'catalog');
 
         return $res;
     }
@@ -314,6 +331,30 @@ class RegisterTableController extends AbstractActionController
         }
 
         return $result;
+    }
+
+    /**
+     * Set cache from factory
+     *
+     * @param $cache
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @param int   $currentUser
+     * @param array $filter
+     * @param bool  $action
+     */
+    protected function storeInCache($currentUser, $filter, $action = true)
+    {
+        if ($action) {
+            $this->cache->addItem($currentUser, serialize($filter));
+        } else {
+            $this->cache->removeItem($currentUser);
+        }
     }
 }
 
