@@ -6,6 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
+use Zend\Authentication\AuthenticationService;
 
 use Product\Entity\Product as ProductEntity;
 use Product\Model\Product;
@@ -29,10 +30,16 @@ class EditController extends AbstractActionController
     protected $fullName;
     private $cache;
     private $currentSession;
+    private $currentUser;
+    private $translitService;
+    private $fullNameService;
 
     public function __construct()
     {
         $this->currentSession = new Container();
+
+        $auth = new AuthenticationService();
+        $this->currentUser = $auth->getIdentity();
     }
 
     /**
@@ -41,12 +48,10 @@ class EditController extends AbstractActionController
     public function indexAction()
     {
         // Очистить предыдущие данные кеша
-        $this->storeInCache($this->currentSession->seoUrlParams, false);
+        $this->cache->removeItem('seoUrlParams_'  . $this->currentUser);
 
         // Получение queryString параметров (array)
         $routeParam = $this->params()->fromRoute();
-
-        $externalCall = $this->params('externalCall', false);
 
         //
         $param = $this->getFilterFromRouteParam(array(
@@ -96,14 +101,13 @@ class EditController extends AbstractActionController
             'result'      => $result
         ));
 
-        if (!$externalCall) {
-            $catalog = $this->forward()->dispatch('Catalog\Controller\Index',
-                array('action' => 'index', 'route' => 'editproduct/seoUrl'));
-            $res->addChild($catalog, 'catalog');
-        }
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index',
+            array('action' => 'index', 'route' => 'editproduct/seoUrl'));
+        $res->addChild($catalog, 'catalog');
 
         // Записать новые данные сессии в кеш
-        $this->storeInCache($this->currentSession->seoUrlParams);
+        $this->cache->addItem('seoUrlParams_' . $this->currentUser, serialize($this->currentSession->seoUrlParams));
+
 
         return $res;
     }
@@ -122,9 +126,6 @@ class EditController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                // Вызов сервиса транслитерации
-                $translit = $this->getServiceLocator()->get('translitService');
-
                 $postData = $form->getData();
 
                 $postData['price'] = (int)($postData['price'] * 100);
@@ -134,7 +135,8 @@ class EditController extends AbstractActionController
                     find(self::CATEGORY_ENTITY, $postData['idCatalog']);
                 $postData['idBrand'] = $this->getEntityManager()->
                     find(self::BRAND_ENTITY, $postData['idBrand']);
-                $postData['translit'] = $translit->getTranslit($postData['name']);
+                // Вызов сервиса транслитерации
+                $postData['translit'] = $this->translitService->getTranslit($postData['name']);
 
                 // empty description fix
                 if ($postData['description'] === 'empty') {
@@ -165,8 +167,8 @@ class EditController extends AbstractActionController
      */
     public function editAction()
     {
-        // Получить данные из кеша и использовать их как параметры redirect
-        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams'));
+        // Получить данные из кеша, с учетом идентификатора пользователя и использовать их как параметры redirect
+        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams_' . $this->currentUser));
 
         $id = (int)$this->params()->fromRoute('id', 0);
 
@@ -191,9 +193,6 @@ class EditController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                // Вызов сервиса транслитерации
-                $translit = $this->getServiceLocator()->get('translitService');
-
                 $postData = $form->getData();
 
                 $postData['idSupplier'] = $this->getEntityManager()->
@@ -202,7 +201,8 @@ class EditController extends AbstractActionController
                     find(self::BRAND_ENTITY, $postData['idBrand']);
                 $postData['idCatalog'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idCatalog']);
-                $postData['translit'] = $translit->getTranslit($postData['name']);
+                // Вызов сервиса транслитерации
+                $postData['translit'] = $this->translitService->getTranslit($postData['name']);
 
                 // empty description fix
                 if ($postData['description'] === 'empty') {
@@ -245,8 +245,8 @@ class EditController extends AbstractActionController
      */
     public function hideAction()
     {
-        // Получить данные из кеша и использовать их как параметры redirect
-        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams'));
+        // Получить данные из кеша, с учетом идентификатора пользователя и использовать их как параметры redirect
+        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams_' . $this->currentUser));
 
         $id = (int) $this->params()->fromRoute('id', 0);
 
@@ -289,8 +289,8 @@ class EditController extends AbstractActionController
      */
     public function imgAction()
     {
-        // Получить данные из кеша и использовать их как параметры redirect
-        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams'));
+        // Получить данные из кеша, с учетом идентификатора пользователя и использовать их как параметры redirect
+        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams_' . $this->currentUser));
 
         $id = (int)$this->params()->fromRoute('id', 0);
 
@@ -361,16 +361,23 @@ class EditController extends AbstractActionController
     }
 
     /**
-     * @param      $sessionData
-     * @param bool $action
+     * Set translit service
+     *
+     * @param $tanslit
      */
-    protected function storeInCache($sessionData, $action = true)
+    public function setTranslit($tanslit)
     {
-        if ($action) {
-            $this->cache->addItem('seoUrlParams', serialize($sessionData));
-        } else {
-            $this->cache->removeItem('seoUrlParams');
-        }
+        $this->translitService = $tanslit;
+    }
+
+    /**
+     * Set fullName service
+     *
+     * @param $fullName
+     */
+    public function setFullName($fullName)
+    {
+        $this->fullNameService = $fullName;
     }
 
     /**
@@ -380,9 +387,7 @@ class EditController extends AbstractActionController
     {
         $result = array();
 
-        $cache = $this->getServiceLocator()->get('filesystem');
-
-        if (!$cache->hasItem('params')) {
+        if (!$this->cache->hasItem('params')) {
             $brand    = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
             $category = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->findAll();
 
@@ -394,9 +399,9 @@ class EditController extends AbstractActionController
                 $result['catalog'][$categoryItem->getTranslit()] = true;
             }
 
-            $cache->setItem('params', serialize($result));
+            $this->cache->setItem('params', serialize($result));
         } else {
-            $result = unserialize($cache->getItem('params'));
+            $result = unserialize($this->cache->getItem('params'));
         }
 
         return $result;
@@ -481,34 +486,6 @@ class EditController extends AbstractActionController
     }
 
     /**
-     * @param $sessionParam
-     * @param $routeParam
-     */
-    protected function clearSession($sessionParam, $routeParam)
-    {
-        for ($i = 1, $count = count($sessionParam); $i < $count; $i++) {
-            $currentParam = $sessionParam['param' . $i];
-
-            if (!is_null($currentParam) && !in_array($currentParam, $routeParam)) {
-                unset($this->currentSession->seoUrlParams['param' . $i]);
-
-                $attributes = $this->getAttributesParams();
-                foreach ($attributes as $attributeKey => $attributeValue) {
-                    if (isset($attributeValue[$currentParam])) {
-                        unset($this->currentSession->seoUrlParams['id' . ucfirst($attributeKey)]);
-                    }
-                }
-            }
-        }
-        // fix: Переместить param2 в param1, если param1 отсутствует
-        if (isset($this->currentSession->seoUrlParams['param2'])
-            && !$this->currentSession->seoUrlParams['param1']) {
-            $this->currentSession->seoUrlParams['param1'] = $this->currentSession->seoUrlParams['param2'];
-            unset($this->currentSession->seoUrlParams['param2']);
-        }
-    }
-
-    /**
      * Add full name
      *
      * @require @function getFullNameCategory
@@ -516,14 +493,12 @@ class EditController extends AbstractActionController
      */
     protected function modifyCatalogOptions()
     {
-        // Сервис - получить полное имя категории
-        $fullNameCategory = $this->getServiceLocator()->get('fullNameService');
-
         $catalog = $this->setOptionItems('catalog');
 
         for ($i = 0, $count = count($catalog); $i < $count; $i++) {
-            $catalog[$i]['name'] = $fullNameCategory->getFullNameCategory($catalog[$i]['id']);
-            $fullNameCategory->setFullNameToNull();
+            // Сервис - получить полное имя категории
+            $catalog[$i]['name'] = $this->fullNameService->getFullNameCategory($catalog[$i]['id']);
+            $this->fullNameService->setFullNameToNull();
         }
 
         return $catalog;
@@ -627,15 +602,13 @@ class EditController extends AbstractActionController
         }
 
         if (isset($urlParam['catalog'])) {
-            // Сервис - получить полное имя категории
-            $fullNameCategory = $this->getServiceLocator()->get('fullNameService');
-
             $catalog = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $urlParam['catalog']);
             $this->currentSession->seoUrlParams['param' . $countParam] = $catalog->getTranslit();
             $this->currentSession->seoUrlParams['idCatalog'] = $urlParam['catalog'];
             $breadcrumbs['catalog']['id'] = $catalog->getId();
             $breadcrumbs['catalog']['translit'] = $catalog->getTranslit();
-            $breadcrumbs['catalog']['name'] = $fullNameCategory->getFullNameCategory($urlParam['catalog']);
+            // Сервис - получить полное имя категории
+            $breadcrumbs['catalog']['name'] = $this->fullNameService->getFullNameCategory($urlParam['catalog']);
             $this->currentSession->flag['catalog'] = true;
             ++$countParam;
         }

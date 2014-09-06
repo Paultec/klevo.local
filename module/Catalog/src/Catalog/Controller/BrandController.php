@@ -6,8 +6,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
 
-use Doctrine\ORM\EntityManager;
-
 use Catalog\Entity\Brand as BrandEntity;
 use Catalog\Model\Brand;
 
@@ -21,6 +19,8 @@ class BrandController extends AbstractActionController
      * @var
      */
     protected $em;
+    private $cache;
+    private $translitService;
 
     /**
      * @return ViewModel
@@ -49,10 +49,8 @@ class BrandController extends AbstractActionController
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 // Вызов сервиса транслитерации
-                $translit = $this->getServiceLocator()->get('translitService');
-
                 $postData = $form->getData();
-                $postData['translit'] = $translit->getTranslit($postData['name']);
+                $postData['translit'] = $this->translitService->getTranslit($postData['name']);
 
                 $brand->populate($postData);
 
@@ -60,7 +58,7 @@ class BrandController extends AbstractActionController
                 $this->getEntityManager()->flush();
 
                 // Очистить кэш с параметрами производителей
-                $this->clearCache();
+                $this->cache->removeItem('params');
 
                 // Redirect to list of brands
                 return $this->redirect()->toRoute('brand');
@@ -93,10 +91,8 @@ class BrandController extends AbstractActionController
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 // Вызов сервиса транслитерации
-                $translit = $this->getServiceLocator()->get('translitService');
-
                 $postData = $form->getData();
-                $postData['translit'] = $translit->getTranslit($postData['name']);
+                $postData['translit'] = $this->translitService->getTranslit($postData['name']);
 
                 $brand->populate($postData);
 
@@ -104,7 +100,7 @@ class BrandController extends AbstractActionController
                 $this->getEntityManager()->flush();
 
                 // Очистить кэш с параметрами производителей
-                $this->clearCache();
+                $this->cache->removeItem('params');
 
                 // Redirect to list of brands
                 return $this->redirect()->toRoute('brand');
@@ -185,6 +181,26 @@ class BrandController extends AbstractActionController
     }
 
     /**
+     * Set cache from factory
+     *
+     * @param $cache
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Set translit service
+     *
+     * @param $tanslit
+     */
+    public function setTranslit($tanslit)
+    {
+        $this->translitService = $tanslit;
+    }
+
+    /**
      * @return \Zend\Form\ElementInterface|\Zend\Form\FieldsetInterface|\Zend\Form\Form|\Zend\Form\FormInterface
      */
     protected function getForm()
@@ -194,30 +210,6 @@ class BrandController extends AbstractActionController
         $form    = $builder->createForm($entity);
 
         return $form;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function clearCache()
-    {
-        $cache = $this->getServiceLocator()->get('filesystem');
-
-        if ($cache->hasItem('params')) {
-            $cache->removeItem('params');
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param EntityManager $em
-     */
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
     }
 
     /**

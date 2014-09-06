@@ -13,7 +13,6 @@ use Zend\Paginator\Paginator;
 use Register\Model\Register;
 use Register\Entity\Register as RegisterEntity;
 
-use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
@@ -32,61 +31,6 @@ class RegisterController extends AbstractActionController
      * @var
      */
     protected $em;
-
-    /**
-     * @param EntityManager $em
-     */
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-
-    /**
-     * @return array|object
-     */
-    public function getEntityManager()
-    {
-        if (null === $this->em) {
-            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        }
-
-        return $this->em;
-    }
-
-    /**
-     * @return \Zend\Form\ElementInterface|\Zend\Form\FieldsetInterface|\Zend\Form\Form|\Zend\Form\FormInterface
-     */
-    protected function getForm()
-    {
-        $entity  = new Register();
-        $builder = new AnnotationBuilder();
-        $form    = $builder->createForm($entity);
-
-        return $form;
-    }
-
-    /**
-     * @return array
-     */
-    protected function setOptionItems($entity)
-    {
-        $optionList = $this->getEntityManager()
-            ->getRepository($entity)->findAll();
-
-        $optionArray = array();
-
-        for ($i = 0, $option = count($optionList); $i < $option; $i++) {
-            $optionArray[$i]['id']   = $optionList[$i]->getId();
-            $optionArray[$i]['name'] = $optionList[$i]->getName();
-        }
-
-        array_unshift($optionArray, array(
-            'id'   => null,
-            'name' => 'Выберите из списка'
-        ));
-
-        return $optionArray;
-    }
 
     /**
      * @return ViewModel
@@ -217,46 +161,46 @@ class RegisterController extends AbstractActionController
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->add('select', 'r')
-           ->add('from', 'Register\Entity\Register r');
+            ->add('from', 'Register\Entity\Register r');
 
         if (isset($filter['beginDate'])) {
             $qb->andWhere('r.date >= :beginDate')
-               ->setParameter('beginDate', $filter['beginDate']);
+                ->setParameter('beginDate', $filter['beginDate']);
         }
 
         if (isset($filter['endDate'])) {
             $qb->andWhere('r.date <= :endDate')
-               ->setParameter('endDate', $filter['endDate']);
+                ->setParameter('endDate', $filter['endDate']);
         }
 
         if (isset($filter['storeFrom'])) {
             $qb->andWhere('r.idStoreFrom = :idStoreFrom')
-               ->setParameter('idStoreFrom', $idStoreFrom);
+                ->setParameter('idStoreFrom', $idStoreFrom);
         }
 
         if (isset($filter['storeTo'])) {
             $qb->andWhere('r.idStoreTo = :idStoreTo')
-               ->setParameter('idStoreTo', $idStoreTo);
+                ->setParameter('idStoreTo', $idStoreTo);
         }
 
         if (isset($filter['operation'])) {
             $qb->andWhere('r.idOperation = :idOperation')
-               ->setParameter('idOperation', $idOperation);
+                ->setParameter('idOperation', $idOperation);
         }
 
         if (isset($filter['paymentType'])) {
             $qb->andWhere('r.idPaymentType = :idPaymentType')
-               ->setParameter('idPaymentType', $idPaymentType);
+                ->setParameter('idPaymentType', $idPaymentType);
         }
 
         if (isset($filter['status'])) {
             $qb->andWhere('r.idStatus = :idStatus')
-               ->setParameter('idStatus', $idStatus);
+                ->setParameter('idStatus', $idStatus);
         }
 
         if (isset($filter['user'])) {
             $qb->andWhere('r.idUser = :idUser')
-               ->setParameter('idUser', $idUser);
+                ->setParameter('idUser', $idUser);
         }
 
         // Pagination
@@ -321,7 +265,7 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * @return
+     * @return mixed|ViewModel
      */
     public function addAction()
     {
@@ -385,6 +329,9 @@ class RegisterController extends AbstractActionController
         ));
     }
 
+    /**
+     * @return ViewModel
+     */
     public function editAction()
     {
         $request = $this->getRequest();
@@ -397,7 +344,56 @@ class RegisterController extends AbstractActionController
 
         return new ViewModel(array(
             'register' => $register,
-            'form' => $form,
+            'form'     => $form,
         ));
+    }
+
+    /**
+     * @param $entity
+     *
+     * @return array
+     */
+    protected function setOptionItems($entity)
+    {
+        $optionList = $this->getEntityManager()
+            ->getRepository($entity)->findAll();
+
+        $optionArray = array();
+
+        for ($i = 0, $option = count($optionList); $i < $option; $i++) {
+            $optionArray[$i]['id']   = $optionList[$i]->getId();
+            $optionArray[$i]['name'] = $optionList[$i]->getName();
+        }
+
+        array_unshift($optionArray, array(
+                'id'   => null,
+                'name' => 'Выберите из списка'
+            ));
+
+        return $optionArray;
+    }
+
+    /**
+     * @return \Zend\Form\ElementInterface|\Zend\Form\FieldsetInterface|\Zend\Form\Form|\Zend\Form\FormInterface
+     */
+    protected function getForm()
+    {
+        $entity  = new Register();
+        $builder = new AnnotationBuilder();
+        $form    = $builder->createForm($entity);
+
+        return $form;
+    }
+
+    /**
+     * @return array|object
+     */
+    public function getEntityManager()
+    {
+        if (null === $this->em) {
+            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        }
+
+        return $this->em;
     }
 }

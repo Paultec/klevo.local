@@ -13,26 +13,28 @@ use Register\Entity\RegisterTable as RegisterTableEntity;
 
 class RegisterTableController extends AbstractActionController
 {
-    const OPERATION_ENTITY          = 'Data\Entity\Operation';
-    const PAYMENT_TYPE_ENTITY       = 'Data\Entity\PaymentType';
-    const STATUS_ENTITY             = 'Data\Entity\Status';
-    const STORE_ENTITY              = 'Data\Entity\Store';
-    const USER_ENTITY               = 'User\Entity\User';
-    const REGISTER_ENTITY           = 'Register\Entity\Register';
-    const REGISTER_TABLE_ENTITY     = 'Register\Entity\RegisterTable';
-    const PRODUCT_ENTITY            = 'Product\Entity\Product';
-    const PRODUCT_QTY_ENTITY        = 'Product\Entity\ProductCurrentQty';
-    const BRAND_ENTITY              = 'Catalog\Entity\Brand';
-    const CATEGORY_ENTITY           = 'Catalog\Entity\Catalog';
+    const OPERATION_ENTITY      = 'Data\Entity\Operation';
+    const PAYMENT_TYPE_ENTITY   = 'Data\Entity\PaymentType';
+    const STATUS_ENTITY         = 'Data\Entity\Status';
+    const STORE_ENTITY          = 'Data\Entity\Store';
+    const USER_ENTITY           = 'User\Entity\User';
+    const REGISTER_ENTITY       = 'Register\Entity\Register';
+    const REGISTER_TABLE_ENTITY = 'Register\Entity\RegisterTable';
+    const PRODUCT_ENTITY        = 'Product\Entity\Product';
+    const PRODUCT_QTY_ENTITY    = 'Product\Entity\ProductCurrentQty';
+    const BRAND_ENTITY          = 'Catalog\Entity\Brand';
+    const CATEGORY_ENTITY       = 'Catalog\Entity\Catalog';
+
     /**
      * @var
      */
     protected $em = null;
-
-    protected $fullName = null;
-
     private $cache;
+    private $fullNameService;
 
+    /**
+     * @return ViewModel
+     */
     public function indexAction()
     {
         $auth = new AuthenticationService();
@@ -47,8 +49,6 @@ class RegisterTableController extends AbstractActionController
             $currentSession->idRegister = $this->params('content');
             $idRegister = $currentSession->idRegister;
         }
-
-        $request = $this->getRequest();
 
         $qs = null;
 
@@ -65,6 +65,7 @@ class RegisterTableController extends AbstractActionController
             $filter = $filterCache;
         }
 
+        $request = $this->getRequest();
         // здесь записываем в $filter выбранные пользователем брэнд и/или категорию
         if ($request->isPost()) {
             if ($request->getPost('idBrand') || $request->getPost('idCatalog')) {
@@ -107,7 +108,7 @@ class RegisterTableController extends AbstractActionController
             $currentProduct->brand = $brand->getName();
 
             $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $currentProduct->getIdCatalog());
-            $currentProduct->category = $this->getFullNameCategory($category->getId());
+            $currentProduct->category = $this->fullNameService->getFullNameCategory($category->getId());
         }
 
         // Формирование массива с выбранными товарами
@@ -139,121 +140,88 @@ class RegisterTableController extends AbstractActionController
         return $res;
     }
 
+    /**
+     * @return ViewModel
+     */
     public function addAction()
     {
         $currentSession = new Container();
 
-                $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $currentSession->idRegister);
+        $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $currentSession->idRegister);
 
-                $registerTable = array();
+        $registerTable = array();
 
-                $productList = $currentSession->productList;
+        $productList = $currentSession->productList;
 
-                $totalSum = 0;
+        $totalSum = 0;
 
-                $count = count($productList);
-                for ($i=0; $i<$count; ++$i) {
-                    //var_dump($productList[$i]);
-                    $idProduct = $productList[$i]->getId();
-                    $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
-                    $qty = $productList[$i]->currentQty;
-                    $price = $productList[$i]->currentPrice;
-                    $totalSum += $qty * $price;
-                    unset($productList[$i]->currentQty);
-                    unset($productList[$i]->currentPrice);
-                    //$idUser = $productList[$i]->currentIdUser;
-                    $idUser = $register->getIdUser();
-                    $user = $this->getEntityManager()->find(self::USER_ENTITY, $idUser);
-                    //unset($productList[$i]->currentIdUser);
-                    //$idOperation = $productList[$i]->currentIdOperation;
-                    //var_dump($idOperation);
-                    $idOperation = $register->getIdOperation();
-                    $operation = $this->getEntityManager()->find(self::OPERATION_ENTITY, $idOperation);
-                    //unset($productList[$i]->currentIdOperation);
-                    unset($productList[$i]->brand);
-                    //unset($productList[$i]->qty);
-                    unset($productList[$i]->category);
-                    //var_dump($productList[$i]);
-                    $noteRegisterTable = array(
-                        'idProduct'   => $product,
-                        'qty'         => $qty,
-                        'price'       => $price,
-                        'idRegister'  => $register,
-                        'idUser'      => $user,
-                        'idOperation' => $operation
-                    );
-                    $registerTable[] = $noteRegisterTable;
-                }
+        $count = count($productList);
+        for ($i = 0; $i < $count; ++$i) {
+            //var_dump($productList[$i]);
+            $idProduct = $productList[$i]->getId();
+            $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
+            $qty = $productList[$i]->currentQty;
+            $price = $productList[$i]->currentPrice;
+            $totalSum += $qty * $price;
 
-                foreach ($registerTable as $item) {
-        //            var_dump($item);
-                    $registerTableNote = new RegisterTableEntity();
+            unset($productList[$i]->currentQty);
+            unset($productList[$i]->currentPrice);
 
-                    $registerTableNote->populate($item);
-                    //var_dump($registerTableNote);
+            //$idUser = $productList[$i]->currentIdUser;
+            $idUser = $register->getIdUser();
+            $user = $this->getEntityManager()->find(self::USER_ENTITY, $idUser);
+            //unset($productList[$i]->currentIdUser);
+            //$idOperation = $productList[$i]->currentIdOperation;
+            //var_dump($idOperation);
+            $idOperation = $register->getIdOperation();
+            $operation = $this->getEntityManager()->find(self::OPERATION_ENTITY, $idOperation);
+            //unset($productList[$i]->currentIdOperation);
 
-                    $this->getEntityManager()->persist($registerTableNote);
-                    $this->getEntityManager()->flush();
-                }
+            unset($productList[$i]->brand);
+            //unset($productList[$i]->qty);
+            unset($productList[$i]->category);
+            //var_dump($productList[$i]);
 
-                //var_dump($totalSum);
-                //var_dump($register);
-                $register->setTotalSum($totalSum);
-                //var_dump($register);
+            $noteRegisterTable = array(
+                'idProduct'   => $product,
+                'qty'         => $qty,
+                'price'       => $price,
+                'idRegister'  => $register,
+                'idUser'      => $user,
+                'idOperation' => $operation
+            );
+            $registerTable[] = $noteRegisterTable;
+        }
+
+        foreach ($registerTable as $item) {
+//            var_dump($item);
+            $registerTableNote = new RegisterTableEntity();
+
+            $registerTableNote->populate($item);
+            //var_dump($registerTableNote);
+
+            $this->getEntityManager()->persist($registerTableNote);
+            $this->getEntityManager()->flush();
+        }
+
+        //var_dump($totalSum);
+        //var_dump($register);
+        $register->setTotalSum($totalSum);
+        //var_dump($register);
         $this->getEntityManager()->persist($register);
         $this->getEntityManager()->flush();
 
-                unset($currentSession->idBrand);
-                unset($currentSession->idCatalog);
-                unset($currentSession->idRegister);
-                unset($currentSession->productList);
+        unset($currentSession->idBrand);
+        unset($currentSession->idCatalog);
+        unset($currentSession->idRegister);
+        unset($currentSession->productList);
 
-                return new ViewModel();
+        return new ViewModel();
     }
 
     /**
-     * @return array|object
+     * @return ViewModel
      */
-    public function getEntityManager()
-    {
-        if (null === $this->em) {
-            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        }
-
-        return $this->em;
-    }
-
-    /**
-     * Get full category name with parent category
-     * @param $id
-     * 
-     * @return mixed
-     */
-    public function getFullNameCategory($id)
-    {
-        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
-        $fullName = $category->getName();
-
-        if (null == $category->getIdParent()) {
-            if (!$this->fullName) {
-                $this->fullName = $fullName;
-            }
-
-            return $this->fullName;
-        } else {
-            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
-            $parentName = $parent->getName();
-
-            if ($this->fullName) {
-                $this->fullName = $parentName . " :: " . $this->fullName;
-            } else {
-                $this->fullName = $parentName . " :: " . $fullName;
-            }
-
-            return $this->getFullNameCategory($parent->getId());
-        }
-    }
-
     public function getDetailAction()
     {
         $idRegister = $this->getRequest()->getPost('idRegister');
@@ -261,9 +229,9 @@ class RegisterTableController extends AbstractActionController
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->add('select', 'rt')
-           ->add('from', 'Register\Entity\RegisterTable rt')
-           ->where('rt.idRegister = :idRegister')
-           ->setParameter('idRegister', $register->getId());
+            ->add('from', 'Register\Entity\RegisterTable rt')
+            ->where('rt.idRegister = :idRegister')
+            ->setParameter('idRegister', $register->getId());
         $query = $qb->getQuery();
         $registerTable = $query->getResult();
 
@@ -274,16 +242,35 @@ class RegisterTableController extends AbstractActionController
     }
 
     /**
+     * Set cache from factory
+     *
+     * @param $cache
+     */
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Set fullName service
+     *
+     * @param $fullName
+     */
+    public function setFullName($fullName)
+    {
+        $this->fullNameService = $fullName;
+    }
+
+    /**
      * @return array|mixed
      */
     private function getCatalogList()
     {
         $result = array();
 
-        $cache = $this->getServiceLocator()->get('filesystem');
-        $cache->removeItem('catalogList');
+        $this->cache->removeItem('catalogList');
 
-        if (!$cache->hasItem('catalogList')) {
+        if (!$this->cache->hasItem('catalogList')) {
             $brand    = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
             $categories = $this->getEntityManager()->getRepository(self::CATEGORY_ENTITY)->findAll();
 
@@ -298,6 +285,7 @@ class RegisterTableController extends AbstractActionController
             $result['category'] = array();
             $result['category'][0]['id'] = null;
             $result['category'][0]['name'] = 'Выбрать категорию';
+
             $result['brand'] = array();
             $result['brand'][0]['id'] = null;
             $result['brand'][0]['name'] = 'Выбрать производителя';
@@ -311,11 +299,12 @@ class RegisterTableController extends AbstractActionController
                         $result['category'],
                         array(
                             'id'   => $categoryItem->getId(),
-                            'name' => $this->getFullNameCategory($categoryItem->getId()),
+                            'name' => $this->fullNameService->getFullNameCategory($categoryItem->getId()),
                         )
                     );
                 }
-                $this->fullName = null;
+
+                $this->fullNameService->setFullNameToNull();
             }
 
             $count = 1;
@@ -325,36 +314,23 @@ class RegisterTableController extends AbstractActionController
                 ++$count;
             }
 
-            $cache->setItem('catalogList', serialize($result));
+            $this->cache->setItem('catalogList', serialize($result));
         } else {
-            $result = unserialize($cache->getItem('catalogList'));
+            $result = unserialize($this->cache->getItem('catalogList'));
         }
 
         return $result;
     }
 
     /**
-     * Set cache from factory
-     *
-     * @param $cache
+     * @return array|object
      */
-    public function setCache($cache)
+    public function getEntityManager()
     {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @param int   $currentUser
-     * @param array $filter
-     * @param bool  $action
-     */
-    protected function storeInCache($currentUser, $filter, $action = true)
-    {
-        if ($action) {
-            $this->cache->addItem($currentUser, serialize($filter));
-        } else {
-            $this->cache->removeItem($currentUser);
+        if (null === $this->em) {
+            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         }
+
+        return $this->em;
     }
 }
-

@@ -27,8 +27,45 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Catalog\Controller\Index'   => 'Catalog\Controller\IndexController',
-            'Catalog\Controller\Brand'   => 'Catalog\Controller\BrandController',
-            'Catalog\Controller\Catalog' => 'Catalog\Controller\CatalogController',
+        ),
+        'factories' => array(
+            'Catalog\Controller\Brand' => function($sm) {
+                    $controller = new Catalog\Controller\BrandController();
+
+                    $serviceLocator = $sm->getServiceLocator();
+
+                    $services = array(
+                        'cache'    => $serviceLocator->get('filesystem'),
+                        'translit' => $serviceLocator->get('translitService')
+                    );
+
+                    foreach ($services as $serviceKey => $serviceValue) {
+                        $setter = 'set' . ucfirst($serviceKey);
+
+                        $controller->$setter($serviceValue);
+                    }
+
+                    return $controller;
+                },
+            'Catalog\Controller\Catalog' => function($sm) {
+                    $controller = new Catalog\Controller\CatalogController();
+
+                    $serviceLocator = $sm->getServiceLocator();
+
+                    $services = array(
+                        'cache'    => $serviceLocator->get('filesystem'),
+                        'translit' => $serviceLocator->get('translitService'),
+                        'fullName' => $serviceLocator->get('fullNameService')
+                    );
+
+                    foreach ($services as $serviceKey => $serviceValue) {
+                        $setter = 'set' . ucfirst($serviceKey);
+
+                        $controller->$setter($serviceValue);
+                    }
+
+                    return $controller;
+                },
         ),
     ),
 

@@ -1,34 +1,53 @@
 <div>
-<form class="float-form" method="post" action="<?php echo $this->url('register/edit', array('action' => 'edit')); ?>">
+<form method="post" action="<?php echo $this->url('register/edit', array('action' => 'edit')); ?>">
     <input type="submit" class="btn btn-info" name="editRegister" value="Редактировать">
     <input type="hidden" name="idRegister" value="<?php echo $this->register->getId(); ?>">
 </form>
 </div>
 
 <div>
-<?php
-    echo 'ID: ' . $this->register->getId();
-    echo '<br/>Дата: ' . $this->register->getDate()->format('d.m.Y');
-    echo '<br/>От кого: ' . $this->register->getIdStoreFrom()->getName();
-    echo '<br/>Куда: ' . $this->register->getIdStoreTo()->getName();
-    echo '<br/>Операция: ' . $this->register->getIdOperation()->getName();
-    echo '<br/>Статус: ' . $this->register->getIdStatus()->getName();
-    echo '<br/>Форма оплаты: ' . $this->register->getIdPaymentType()->getName();
-    echo '<br/>Пользователь: ' . $this->register->getIdUser()->getEmail();
-?>
+    <table class="table table-striped">
+        <tr>
+            <th>ID:</th>
+            <th>Дата:</th>
+            <th>От кого:</th>
+            <th>Куда:</th>
+            <th>Операция:</th>
+            <th>Статус:</th>
+            <th>Форма оплаты:</th>
+            <th>Пользователь:</th>
+        </tr>
+        <tr>
+        <?php
+            echo '<td>' . $this->register->getId() .'</td>',
+                 '<td>' . $this->register->getDate()->format('d.m.Y') .'</td>',
+                 '<td>' . $this->register->getIdStoreFrom()->getName() .'</td>',
+                 '<td>' . $this->register->getIdStoreTo()->getName() .'</td>',
+                 '<td>' . $this->register->getIdOperation()->getName() .'</td>',
+                 '<td>' . $this->register->getIdStatus()->getName() .'</td>',
+                 '<td>' . $this->register->getIdPaymentType()->getName() .'</td>',
+                 '<td>' . $this->register->getIdUser()->getEmail() .'</td>';
+        ?>
+        </tr>
+    </table>
 </div>
 
-<table>
-    <tbody>
+<table class="table table-bordered">
+    <tr>
+        <th>Название</th>
+        <th>Категория</th>
+        <th>Производитель</th>
+        <th>К-во</th>
+        <th>Цена</th>
+    </tr>
 <?php
-    foreach($this->registerTable as $item) { ?>
-<tr>
-    <td><?php echo $item->getIdProduct()->getName(); ?></td>
-    <td><?php echo $item->getIdProduct()->getIdCatalog()->getName(); ?></td>
-    <td><?php echo $item->getIdProduct()->getIdBrand()->getName(); ?></td>
-    <td><?php echo $item->getQty(); ?></td>
-    <td><?php echo $item->getPrice(); ?></td>
-</tr>
-<?php } ?>
-    </tbody>
+    foreach($this->registerTable as $item) : ?>
+        <tr>
+            <td><?php echo $item->getIdProduct()->getName(); ?></td>
+            <td><?php echo $item->getIdProduct()->getIdCatalog()->getName(); ?></td>
+            <td><?php echo $item->getIdProduct()->getIdBrand()->getName(); ?></td>
+            <td><?php echo $item->getQty(); ?></td>
+            <td><?php echo $item->getPrice(); ?></td>
+        </tr>
+<?php endforeach; ?>
 </table>

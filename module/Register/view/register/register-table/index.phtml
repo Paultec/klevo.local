@@ -1,38 +1,60 @@
 <?php
     //$data = $this->product->getVariables();
 ?>
-<link rel="stylesheet" href="/css/jquery.dataTables.css">
-<link rel="stylesheet" href="/css/shCore.css">
 <style>
+    label {
+        max-width: 250px;
+        float: left;
+    }
+
     input[type="number"], input[type="submit"] {
-        max-width: 80px;
+        max-width: 100px;
     }
 
     .add {
-        font-size: 18px;
+        width: 22px;
+        font-size: 22px;
         cursor: pointer;
+        margin: 0;
+    }
+
+    .add i {
+        vertical-align: middle;
     }
 </style>
 
 <!--Блок с информацией о записи в таблице Register-->
-<div><p>Данные о записи:</p>
-    <?php
-    $register = $this->register->getArrayCopy();
+<div><p><strong>Данные о записи:</strong></p>
+    <table class="table table-striped">
+        <tr>
+            <th>Дата:</th>
+            <th>От кого:</th>
+            <th>Кому:</th>
+            <th>Тип операции:</th>
+            <th>Форма оплаты:</th>
+            <th>Статус:</th>
+            <th>Кто оформил:</th>
+        </tr>
+        <tr>
+        <?php
+        $register = $this->register->getArrayCopy();
 
-    echo '<p><strong>Дата:</strong> '         . $register['date']->format('d.m.Y')     . "</p> \n";
-    echo '<p><strong>От кого:</strong> '      . $register['idStoreFrom']->getName()    . "</p> \n";
-    echo '<p><strong>Кому:</strong> '         . $register['idStoreTo']->getName()      . "</p> \n";
-    echo '<p><strong>Тип операции:</strong> ' . $register['idOperation']->getName()    . " \n";
-    echo '<strong>Форма оплаты:</strong> '    . $register['idPaymentType']->getName()  . " \n";
-    echo '<strong>Статус:</strong> '          . $register['idStatus']->getName()       . "</p> \n";
-    echo '<strong>Кто оформил:</strong> '     . $register['idUser']->getEmail()        . "</p> \n";
-    ?>
+        echo '<td>' . $register['date']->format('d.m.Y') .'</td>',
+             '<td>' . $register['idStoreFrom']->getName() .'</td>',
+             '<td>' . $register['idStoreTo']->getName() .'</td>',
+             '<td>' . $register['idOperation']->getName() .'</td>',
+             '<td>' . $register['idPaymentType']->getName() .'</td>',
+             '<td>' . $register['idStatus']->getName() .'</td>',
+             '<td>' . $register['idUser']->getEmail() .'</td>';
+        ?>
+        </tr>
+    </table>
 </div>
 <!--Конец блока с информацией о записи в таблице Register-->
 
 <!--Блок с информацией о записи товаров в таблице RegisterTable-->
 <div><p><strong>Товары:</strong></p>
-    <?php if ($this->productList): ;?>
+    <?php if ($this->productList) : ?>
 
     <table id="productList-table" class="table table-striped table-hover">
         <thead>
@@ -94,7 +116,7 @@
 <!--    </aside>-->
 <!--</section>-->
 
-<section class="col col-lg-9">
+<section class="col col-lg-12">
 <!--    --><?php //if (count($data['breadcrumbs']) > 0) : ?>
 <!--        <ol class="breadcrumb">-->
 <!--            --><?php
@@ -109,7 +131,7 @@
 
     <?php if ($this->product): ?>
 
-        <table id="product-table" class="table table-striped">
+        <table id="product-table" class="table table-striped ">
             <thead>
             <tr>
                 <th>Название</th>
@@ -128,23 +150,25 @@
                 <tr>
                     <td style="max-width: 450px"><?php echo $item->getName(); ?></td>
                     <td>
-                        <form method="post" action="<?php echo $this->url('register-table');?>" class="form-inline" role="form">
+                        <form method="post" action="<?php echo $this->url('register-table');?>" class="form-inline product-select" role="form">
                             <input type="hidden" name="idProduct" value="<?php echo $item->getId(); ?>">
 
                             <div class="form-group">
                                 <label class="sr-only" for="qty">К-во:</label>
-                                <input type="number" min="0" step="1" id="qty" class="form-control" name="qty" value="<?php echo $item->getQty(); ?>">
+                                <input type="number" min="1" step="1" class="form-control qty" name="qty" value="<?php echo $item->getQty(); ?>">
                             </div>
 
                             <div class="form-group">
                                 <label class="sr-only" for="price">Цена:</label>
-                                <input type="number" min="0" step="0.1" id="price" class="form-control" name="price" value="<?php echo $item->getPrice() / 100; ?>">
+                                <input type="number" min="0.01" step="0.01" class="form-control price" name="price" value="<?php echo $item->getPrice() / 100; ?>">
                             </div>
 
-                            <label style="max-width: 15px" class="add">
-                                <input class="btn btn-default hide" type="submit" value="Добавить">
-                                <span class="glyphicon glyphicon-circle-arrow-up" data-toggle="tooltip" data-placement="top" title="Добавить"></span>
-                            </label>
+                            <div class="form-group">
+                                <label class="add">
+                                    <input class="btn btn-default hide" type="submit" value="Добавить">
+                                    <i class="glyphicon glyphicon-circle-arrow-up" data-toggle="tooltip" data-placement="top" title="Добавить"></i>
+                                </label>
+                            </div>
                         </form>
                     </td>
                 </tr>
@@ -155,13 +179,9 @@
         <h2>Выберите производителя или категорию для продолжения.</h2>
     <?php endif ?>
 </section>
-
-<script src="/js/jquery.dataTables.js"></script>
-<script src="/js/shCore.js"></script>
 <script>
-    $('#product-table').dataTable({
-        "language": {
-            "url": "/resources/ru_RU.lg"
-        }
+    // Выделить содержимое по клику
+    $('.price').on('click', function() {
+        $(this).select();
     });
 </script>

@@ -20,6 +20,10 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Noto Serif', serif;
 }
 
+a:focus {
+    outline: none;
+}
+
 .container {
     margin-bottom: 60px;
 }

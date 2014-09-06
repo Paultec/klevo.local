@@ -5,8 +5,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
 
-use Doctrine\ORM\EntityManager;
-
 use Catalog\Entity\Catalog as CatalogEntity;
 use Catalog\Model\Catalog;
 
@@ -20,8 +18,10 @@ class CatalogController extends AbstractActionController
      * @var
      */
     protected $em;
-    protected $fullName;
     protected $child = array();
+    private $cache;
+    private $translitService;
+    private $fullNameService;
 
     /**
      * @return ViewModel
@@ -48,13 +48,11 @@ class CatalogController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                // Вызов сервиса транслитерации
-                $translit = $this->getServiceLocator()->get('translitService');
-
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
-                $postData['translit'] = $translit->getTranslit($this->getFullNameCategory($postData['id']));
+                // Вызов сервиса транслитерации
+                $postData['translit'] = $this->translitService->getTranslit($this->fullNameService->getFullNameCategory($postData['id']));
 
                 $catalog->populate($postData);
 
@@ -62,7 +60,7 @@ class CatalogController extends AbstractActionController
                 $this->getEntityManager()->flush();
 
                 // Очистить кэш с параметрами категорий
-                $this->clearCache();
+                $this->cache->removeItem('params');
 
                 // Redirect to list of categories
                 return $this->redirect()->toRoute('category');
@@ -101,13 +99,11 @@ class CatalogController extends AbstractActionController
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
-                // Вызов сервиса транслитерации
-                $translit = $this->getServiceLocator()->get('translitService');
-
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
-                $postData['translit'] = $translit->getTranslit($this->getFullNameCategory($postData['id']));
+                // Вызов сервиса транслитерации
+                $postData['translit'] = $this->translitService->getTranslit($this->fullNameService->getFullNameCategory($postData['id']));
 
                 $catalog->populate($postData);
 
@@ -115,7 +111,7 @@ class CatalogController extends AbstractActionController
                 $this->getEntityManager()->flush();
 
                 // Очистить кэш с параметрами категорий
-                $this->clearCache();
+                $this->cache->removeItem('params');
 
                 // Redirect to list of categories
                 return $this->redirect()->toRoute('category');
@@ -197,19 +193,33 @@ class CatalogController extends AbstractActionController
     }
 
     /**
-     * @return bool
+     * Set cache from factory
+     *
+     * @param $cache
      */
-    protected function clearCache()
+    public function setCache($cache)
     {
-        $cache = $this->getServiceLocator()->get('filesystem');
+        $this->cache = $cache;
+    }
 
-        if ($cache->hasItem('params')) {
-            $cache->removeItem('params');
+    /**
+     * Set translit service
+     *
+     * @param $tanslit
+     */
+    public function setTranslit($tanslit)
+    {
+        $this->translitService = $tanslit;
+    }
 
-            return true;
-        }
-
-        return false;
+    /**
+     * Set fullName service
+     *
+     * @param $fullName
+     */
+    public function setFullName($fullName)
+    {
+        $this->fullNameService = $fullName;
     }
 
     /**
@@ -258,9 +268,9 @@ class CatalogController extends AbstractActionController
         $catalog = $this->setOptionItems();
 
         for ($i = 0, $count = count($catalog); $i < $count; $i++) {
-            $catalog[$i]['name'] = $this->getFullNameCategory($catalog[$i]['id']);
+            $catalog[$i]['name'] = $this->fullNameService->getFullNameCategory($catalog[$i]['id']);
 
-            $this->fullName = null;
+            $this->fullNameService->setFullNameToNull();
         }
 
         if (is_null($param)) {
@@ -298,38 +308,6 @@ class CatalogController extends AbstractActionController
     }
 
     /**
-     * Get full category name with parent category
-     *
-     * @param $id
-     *
-     * @return mixed
-     */
-    protected function getFullNameCategory($id)
-    {
-        $category = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $id);
-        $fullName = $category->getName();
-
-        if (null == $category->getIdParent()) {
-            if (!$this->fullName) {
-                $this->fullName = $fullName;
-            }
-
-            return $this->fullName;
-        } else {
-            $parent = $this->getEntityManager()->find(self::CATEGORY_ENTITY, $category->getIdParent());
-            $parentName = $parent->getName();
-
-            if ($this->fullName) {
-                $this->fullName = $parentName . " :: " . $this->fullName;
-            } else {
-                $this->fullName = $parentName . " :: " . $fullName;
-            }
-
-            return $this->getFullNameCategory($parent->getId());
-        }
-    }
-
-    /**
      * @return \Zend\Form\ElementInterface|\Zend\Form\FieldsetInterface|\Zend\Form\Form|\Zend\Form\FormInterface
      */
     protected function getForm()
@@ -339,14 +317,6 @@ class CatalogController extends AbstractActionController
         $form    = $builder->createForm($entity);
 
         return $form;
-    }
-
-    /**
-     * @param EntityManager $em
-     */
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
     }
 
     /**
