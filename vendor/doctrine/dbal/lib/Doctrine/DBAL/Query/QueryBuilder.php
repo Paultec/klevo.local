@@ -538,7 +538,7 @@ class QueryBuilder
 
     /**
      * Creates and adds a query root corresponding to the table identified by the
-     * given alias, forming a cartesian goods with any existing query roots.
+     * given alias, forming a cartesian product with any existing query roots.
      *
      * <code>
      *     $qb = $conn->createQueryBuilder()

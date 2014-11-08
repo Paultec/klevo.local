@@ -1,25 +1,147 @@
-<h1>Welcome to CART</h1>
-<?php
+<section class="col col-lg-3">
+    <aside class="filter">
+        <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <!-- Accordion -->
+        <?php echo $this->catalog ;?><!-- /Accordion -->
+    </aside>
+</section>
 
-$currentUser = $this->currentUser;
-var_dump($currentUser);
-$cart = $this->cart;
-var_dump($cart);
-$cartTable = $this->cartTable;
-var_dump($cartTable);
-$conteiner = $this->conteiner;
-var_dump($conteiner);
+<section class="col col-lg-9">
+    <h1 class="text-center cart-header">Корзина</h1>
+    <?php if ($this->cart): ?>
+    <form action="<?php echo $this->url('cart');?>" method="post" class="cart-from form-inline" role="form">
+        <div class="cart div-table">
+            <div class="div-row">
+                <div class="div-cell div-cell-header"></div>
+                <div class="div-cell div-cell-header">Название</div>
+                <div class="div-cell div-cell-header">Количество</div>
+                <div class="div-cell div-cell-header">Цена</div>
+                <div class="div-cell div-cell-header"></div>
+            </div>
+            <?php foreach ($this->cart as $cartItem) : ?>
+                <div class="div-row">
+                    <input name="id[]" value="<?php echo $cartItem[0]['id'];?>" type="hidden">
+                    <div class="div-cell">
+                        <?php if ($cartItem[0]['img']): ?>
+                            <img class="img-responsive" src="/img/product/<?php echo $cartItem[0]['img'];?>" width="67" alt="">
+                        <?php else : ?>
+                            <img class="img-responsive" src="/img/product/noimage.png" width="67" alt="">
+                        <?php endif; ?>
+                    </div>
+                    <div class="div-cell">
+                        <?php echo $cartItem[0]['name'];?>
+                    </div>
+                    <div class="div-cell cart-product-qty">
+                        <input name="qty[]" class="form-control cart-product-qty" type="number" min="1" step="1" max="<?php echo $cartItem['quantity'];?>" value="1" data-toggle="tooltip" data-placement="top" title="Укажите желаемое к-во" required>
+                    </div>
+                    <div class="div-cell product-price cart-product-price" data-price="<?php echo $cartItem[0]['price'];?>">
+                        <?php echo $cartItem[0]['price']  / 100 ;?>
+                    </div>
+                    <div class="div-cell">
+                        <button type="submit" name="removeItem" value="<?php echo $cartItem[0]['id'];?>" class="cart-item-remove close" data-toggle="tooltip" data-placement="top" title="Удалить"><span aria-hidden="true">&times;</span><span class="sr-only">Закрыть</span></button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <div class="div-row">
+                <div class="div-cell"></div>
+                <div class="div-cell"></div>
+                <div class="div-cell div-cell-footer">Итого</div>
+                <div class="div-cell div-cell-footer total-sum"></div>
+                <div class="div-cell"></div>
+            </div>
+        </div>
+        <div class="cart-control-buttons">
+            <a href="<?php echo $this->continue; ?>" class="btn btn-info">Продолжить</a>
+            <input type="button" class="btn btn-primary md-trigger" data-modal="modal-2" value="Оформить">
+            <input type="button" class="btn btn-success md-trigger" data-modal="modal-1" value="Купить" data-toggle="tooltip" data-placement="top" title="В 1 клик">
+            <input type="submit" class="btn btn-danger remove-all" value="Удалить все" name="removeAll">
 
-?>
+            <div class="md-modal md-effect-1" id="modal-1">
+                <div class="md-content">
+                    <h3>Купить выбранные товары</h3>
+                    <div>
+                        <p>Для подтверждения заказа, укажите свой <strong>номер телефона</strong>:</p>
+                        <div class="one-click-buy">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon form-addon">+380</div>
+                                    <input name="phone" class="form-control one-click-buy-input one-click-buy-input-from-cart" type="tel" value="<?php echo $this->userInfo['phone'] ;?>"  placeholder="Ваш номер" data-toggle="tooltip" data-placement="top" title="Укажите Ваш номер телефона" required>
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-success one-click-buy-submit one-click-buy-submit-from-cart" name="oneClickBuy" value="Готово">
+                        </div>
+                        <?php if (!$this->zfcUserIdentity()): ?>
+                            <p class="bg-info">Так же, вы можете войти в систему используя свои данные: <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Вход</a></p>
+                        <?php endif ?>
+                        <button type="button" class="close md-close"><span aria-hidden="true">&times;</span><span class="sr-only">Закрыть</span></button>
+                    </div>
+                </div>
+            </div>
 
-<h2>CART</h2>
+            <div class="md-modal md-effect-1" id="modal-2">
+                <div class="md-content">
+                    <h3>Купить выбранные товары</h3>
+                    <div>
+                        <div class="checkout">
+                            <div class="btn-group btn-breadcrumb center-block">
+                                <span class="btn btn-primary breadcrumb-elem hover" data-step="step-1">Доставка</span>
+                                <span class="btn btn-primary breadcrumb-elem" data-step="step-2">Оплата</span>
+                                <span class="btn btn-primary breadcrumb-elem final" data-step="step-3">Заказ</span>
+                            </div>
+                            <div class="step step-1 center-block">
+                                <label for="delivery">Укажите способ доставки:</label>
+                                <select name="delivery" id="delivery" class="form-control">
+                                    <?php
+                                    foreach ($this->delivery as $delivery) {
+                                        if (is_null($delivery->getIdStatus()) || $delivery->getIdStatus()->getId() == 3) {
+                                            echo '<option value="' . $delivery->getId() . '">' . $delivery->getName() . '</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                                <button type="button" class="next-step btn btn-success">Далее</button>
+                            </div>
+                            <div class="step step-2 center-block">
+                                <label for="payment">Укажите способ оплаты:</label>
+                                <select name="payment" id="payment" class="form-control">
+                                    <?php
+                                    foreach ($this->payment as $payment) {
+                                        if (is_null($payment->getIdStatus()) || $payment->getIdStatus()->getId() == 3) {
+                                            echo '<option value="' . $payment->getId() . '">' . $payment->getName() . '</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                                <button type="button" class="next-step btn btn-success">Далее</button>
+                            </div>
+                            <div class="step step-3 final center-block">
+                                <p><strong>Укажите номер телефона:</strong></p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon form-addon form-address-addon"><i class=" glyphicon glyphicon glyphicon-road"></i></div>
+                                        <input name="address" class="form-control address-buy-input" type="text" value="<?php echo $this->userInfo['address'] ;?>" placeholder="Ваш адрес" data-toggle="tooltip" data-placement="top" title="Укажите адрес доставки" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-addon form-addon">+380</div>
+                                        <input name="phone" class="form-control checkout-click-buy-input" type="tel" value="<?php echo $this->userInfo['phone'] ;?>" placeholder="Ваш номер" data-toggle="tooltip" data-placement="top" title="Укажите Ваш номер телефона" required>
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-success checkout-click-buy-submit" name="checkout" value="Готово">
+                            </div>
+                        </div>
+                        <?php if (!$this->zfcUserIdentity()): ?>
+                            <p class="bg-info">Так же, вы можете войти в систему используя свои данные: <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Вход</a></p>
+                        <?php endif ?>
+                        <button type="button" class="close md-close"><span aria-hidden="true">&times;</span><span class="sr-only">Закрыть</span></button>
+                    </div>
+                </div>
+            </div>
+            <div class="md-overlay"></div>
 
-<?php
-
-//foreach ($cart as $key) {
-//    var_dump($key);
-//    $id = $key->getId;
-//    var_dump($id);
-//}
-
-?>
+        </div>
+    </form>
+    <?php else : ?>
+        <h3 class="text-center">Корзина пуста ;(</h3>
+        <p>Для выбора необходимого вам товара - воспользуйтесь меню выбора по-категории или производителю, либо используйте поиск.</p>
+    <?php endif; ?>
+</section>

@@ -165,7 +165,7 @@
 
                             <div class="form-group">
                                 <label class="add">
-                                    <input class="btn btn-default hide" type="submit" value="Добавить">
+                                    <input class="btn btn-default hide add-button" type="submit" value="Добавить">
                                     <i class="glyphicon glyphicon-circle-arrow-up" data-toggle="tooltip" data-placement="top" title="Добавить"></i>
                                 </label>
                             </div>
@@ -183,5 +183,22 @@
     // Выделить содержимое по клику
     $('.price').on('click', function() {
         $(this).select();
+    });
+
+    $('.add-button').on('click', function(e) {
+        var qty     = $(this).parent().parent().siblings().find('.qty');
+        var price   = $(this).parent().parent().siblings().find('.price');
+
+        if (qty.val() == '') {
+            qty.css('border', '1px solid red');
+
+            e.preventDefault();
+        }
+
+        if (price.val() < 0) {
+            price.css('border', '1px solid red');
+
+            e.preventDefault();
+        }
     });
 </script>

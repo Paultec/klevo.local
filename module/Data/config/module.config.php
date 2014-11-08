@@ -3,7 +3,7 @@ return array(
     'router' => array(
         'routes' => array(
             'data' => array(
-                'type' => 'segment',
+                'type' => 'literal',
                 'options' => array(
                     'route'    => '/data',
                     'defaults' => array(
@@ -39,10 +39,10 @@ return array(
                             ),
                         ),
                     ),
-                    'paymentType' => array(
+                    'payment-type' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/paymentType[/:action]',
+                            'route'    => '/payment-type[/:action]',
                             'constraints' => array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
@@ -75,6 +75,34 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Data\Controller\Store',
+                                'action'     => 'index',
+                            ),
+                        ),
+                    ),
+                    'delivery-method' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/delivery-method[/:action[/:id]]',
+                            'constraints' => array(
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'     => '[0-9]+',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Data\Controller\DeliveryMethod',
+                                'action'     => 'index',
+                            ),
+                        ),
+                    ),
+                    'payment-method' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/payment-method[/:action[/:id]]',
+                            'constraints' => array(
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'     => '[0-9]+',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Data\Controller\PaymentMethod',
                                 'action'     => 'index',
                             ),
                         ),
@@ -115,7 +143,16 @@ return array(
                 'cache' => 'array',
                 'paths' => array(__DIR__ . '/../src/Data/Entity'),
             ),
-
+            'deliveryMethod_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Data/Entity'),
+            ),
+            'paymentMethod_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Data/Entity'),
+            ),
             'orm_default' => array(
                 'drivers' => array(
                     'Data\Entity' => 'attribute_entity',

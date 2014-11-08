@@ -173,10 +173,9 @@ class CartTable
     public function populate($data = array())
     {
         $this->id           = $data['id'];
-        $this->qty          = $data['modified'];
+        $this->qty          = $data['qty'];
         $this->price        = $data['price'];
         $this->idCartEntity = $data['idCartEntity'];
         $this->idProduct    = $data['idProduct'];
-
     }
 }

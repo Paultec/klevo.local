@@ -35,8 +35,8 @@
         <div class="container">
             <div class="content row">
                 <div class="col col-lg-2">
-                    <section id="branding" class="text-center">
-                        <a href="/" class="brand wobble-vertical">Klevo</a>
+                    <section id="branding">
+                        <a href="/" class="brand"></a>
                     </section>
                 </div>
                 <div class="col col-lg-8">
@@ -108,7 +108,7 @@
                     </form>
                 </div>
                 <div class="col col-lg-3">
-                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span> (товаров: 0)</a>
+                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><span class="fa fa-shopping-cart fa-3x fa-fw"></span> (товаров: <strong><?php echo $this->itemsInCart; ?></strong>)</a>
                 </div>
             </div><!-- /Search and Cart -->
             <?php echo $this->content; ?>

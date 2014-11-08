@@ -14,9 +14,10 @@ use GoSession;
 
 class IndexController extends AbstractActionController
 {
-    const PRODUCT_ENTITY  = 'Product\Entity\Product';
-    const BRAND_ENTITY    = 'Catalog\Entity\Brand';
-    const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
+    const PRODUCT_ENTITY        = 'Product\Entity\Product';
+    const PRODUCT_ENTITY_QTY    = 'Product\Entity\ProductCurrentQty';
+    const BRAND_ENTITY          = 'Catalog\Entity\Brand';
+    const CATEGORY_ENTITY       = 'Catalog\Entity\Catalog';
 
     /**
      * @var
@@ -63,8 +64,13 @@ class IndexController extends AbstractActionController
         // Формирование запроса, в зависимости от к-ва параметров
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qs = $qb->select('p')
+        $qs = $qb
+            ->select(array('p', 'q.qty as quantity'))
             ->from(self::PRODUCT_ENTITY, 'p')
+            ->join(
+                self::PRODUCT_ENTITY_QTY, 'q',
+                'WITH', 'p.id = q.idProduct'
+            )
             ->where('p.price != 0')
             ->andWhere(
                 $qb->expr()->orX('p.idStatus != 4', 'p.idStatus IS NULL')
@@ -84,17 +90,26 @@ class IndexController extends AbstractActionController
         $matches = $this->getEvent()->getRouteMatch();
         $page    = $matches->getParam('page', 1);
 
-        $adapter   = new DoctrineAdapter(new ORMPaginator($qs));
+        $adapter   = new DoctrineAdapter(new ORMPaginator($qs, false));
         $paginator = new Paginator($adapter);
 
         $paginator
             ->setCurrentPageNumber($page)
             ->setItemCountPerPage(24);
 
+        // id товаров, которые уже в корзине
+        $inCart = isset($this->currentSession->cart) ? $this->currentSession->cart : array();
+
+        // данные пользователя
+        $userInfo = $this->forward()->dispatch('Data/Controller/CartUserHelp',
+            array('action' => 'user'))->getVariables();
+
         $res = new ViewModel(array(
             'paginator'    => $paginator,
             'seoUrlParams' => $this->currentSession->seoUrlParams,
             'breadcrumbs'  => $breadcrumbs ?: null,
+            'userInfo'     => $userInfo,
+            'inCart'       => $inCart
         ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
@@ -115,13 +130,34 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute('product');
         }
 
-        $product = $this->getEntityManager()
-            ->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('translit' => $name));
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qs =  $qb
+            ->select(array('p', 'q.qty as quantity'))
+            ->from(self::PRODUCT_ENTITY, 'p')
+            ->join(
+                self::PRODUCT_ENTITY_QTY, 'q',
+                'WITH', 'p.id = q.idProduct'
+            )
+            ->where('p.translit = ?1')
+            ->setParameter(1, $name)
+            ->getQuery();
+        $qs->execute();
+
+        $qr = $qs->getSingleResult();
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 
+        // id товаров, которые уже в корзине
+        $inCart = isset($this->currentSession->cart) ? $this->currentSession->cart : array();
+
+        // данные пользователя
+        $userInfo = $this->forward()->dispatch('Data/Controller/CartUserHelp',
+            array('action' => 'user'))->getVariables();
+
         $res = new ViewModel(array(
-            'product' => $product
+            'product'   => $qr,
+            'userInfo'  => $userInfo,
+            'inCart'    => $inCart
         ));
 
         $res->addChild($catalog, 'catalog');

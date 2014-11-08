@@ -24,35 +24,41 @@
 
 <section class="col col-lg-9 product-holder">
     <?php if ($this->paginator->count() > 0): ?>
-        <?php foreach($this->paginator as $item): ?>
-            <?php if (is_null($item->getIdStatus()) || ($item->getIdStatus()->getId() == 3)): ?>
+        <?php foreach ($this->paginator as $item): ?>
+            <?php if (is_null($item[0]->getIdStatus()) || ($item[0]->getIdStatus()->getId() == 3)): ?>
             <section class="product row">
                 <div class="col col-md-4">
-                    <?php if ($item->getImg()): ?>
-                        <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>">
-                            <img class="lazy img-responsive" data-original="/img/product/<?php echo $item->getImg()?>" alt="">
+                    <?php if ($item[0]->getImg()): ?>
+                        <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
+                            <img class="lazy img-responsive" data-original="/img/product/<?php echo $item[0]->getImg();?>" width="270" alt="">
                         </a>
-                    <?php else:?>
-                    <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>">
+                    <?php else : ?>
+                    <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
                         <img class="lazy" data-original="/img/product/noimage.png" width="270" alt="">
                     </a>
                     <?php endif; ?>
                 </div>
-                <div class="col col-md-6">
-                    <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item->getTranslit()));?>"><?php echo $item->getName(); ?></a></h5>
-                    <p><?php echo $item->getDescription(); ?></p>
-                    <?php if ($item->getPrice() !== 0):?>
-                        <p class="product-price"><?php echo $item->getPrice() / 100; ?></p>
-                    <?php endif ?>
+                <div class="col col-md-8">
+                    <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>"><?php echo $item[0]->getName(); ?></a></h5>
+                    <p><?php echo $item[0]->getDescription(); ?></p>
+                    <?php if ($item[0]->getPrice() !== 0) : ?>
+                        <p class="product-price"><?php echo $item[0]->getPrice() / 100; ?></p>
+                    <?php endif; ?>
                 </div>
-                <div class="col col-md-2">
-                    <form action="" method="post">
-                        <input type="hidden" value="<?php echo $item->getId(); ?>">
-                        <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary">
+                <div class="cart-form">
+                    <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
+                        <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
+                        <input type="hidden" class="continue" name="continue">
+                        <?php if (!in_array($item[0]->getId(), $this->inCart)) : ?>
+                            <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
+                        <?php else : ?>
+                            <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
+                        <?php endif; ?>
                     </form>
-                    <form action="" method="post">
-                        <input type="hidden" value="<?php echo $item->getId(); ?>">
-                        <input type="submit" value="Купить" name="oneClickBuy" class="btn btn-default">
+                    <form class="form-inline">
+                        <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
+                        <input type="hidden" class="qty" name="qty" value="<?php echo $item['quantity']; ?>">
+                        <input type="button" value="Купить" name="oneClickBuy" class="btn btn-success one-click-buy md-trigger" data-modal="modal-1" data-toggle="tooltip" data-placement="top" title="в 1 клик">
                     </form>
                 </div>
             </section>
@@ -63,6 +69,36 @@
             Вы можете воспользоваться поиском или изменить критерии выбора.</h3>
     <?php endif ?>
 </section>
+
+<div class="md-modal md-effect-1" id="modal-1">
+    <div class="md-content">
+        <h3>Купить товар</h3>
+        <div>
+            <p>Для подтверждения заказа, укажите свой <strong>номер телефона</strong> и желаемое <strong>количество</strong> в поле ввода:</p>
+            <div class="one-click-buy-form">
+                <form action="<?php echo $this->url('cart');?>" method="post" class="form-inline" role="form">
+                    <input name="id[]" type="hidden" class="one-click-buy-product-input-id">
+                    <div class="products-buy">
+                        <div class="one-click-buy-product-name"></div>
+                        <input name="qty[]" class="form-control one-click-buy-number" type="number" min="1" step="1" value="1" data-toggle="tooltip" data-placement="top" title="Укажите желаемое к-во">
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon form-addon">+380</div>
+                            <input name="phone" class="form-control one-click-buy-input" type="tel" value="<?php echo $this->userInfo['phone'] ;?>" placeholder="Ваш номер" data-toggle="tooltip" data-placement="top" title="Укажите Ваш номер телефона" required>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-success one-click-buy-submit" name="oneClickBuy" value="Готово">
+                </form>
+            </div>
+            <?php if (!$this->zfcUserIdentity()): ?>
+            <p class="bg-info">Так же, вы можете войти в систему используя свои данные: <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Вход</a></p>
+            <?php endif ?>
+            <button type="button" class="close md-close"><span aria-hidden="true">&times;</span><span class="sr-only">Закрыть</span></button>
+        </div>
+    </div>
+</div>
+<div class="md-overlay"></div>
 
 <section class="col col-lg-9 col-lg-offset-3 text-center paginator-holder">
     <div class="delim"></div>

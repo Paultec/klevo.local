@@ -216,7 +216,9 @@ class RegisterTableController extends AbstractActionController
         unset($currentSession->idRegister);
         unset($currentSession->productList);
 
-        return new ViewModel();
+        return $this->redirect()->toRoute('register');
+
+//        return new ViewModel();
     }
 
     /**

@@ -1,4 +1,3 @@
-<div style="float:left; padding-right:16px;"><?php echo $this->gravatar($this->zfcUserIdentity()->getEmail()) ?></div>
-<h3><?php echo $this->translate('Hello'); ?>, <?php echo $this->zfcUserDisplayName() ?>!</h3>
-<a href="<?php echo $this->url('zfcuser/logout') ?>">[<?php echo $this->translate('Sign Out'); ?>]</a>
-<div style="clear:both;"></div>
+<h1>Пользователь <strong><?php echo $this->zfcUserIdentity()->getEmail() ?></strong> успешно зарегистрирован!</h1>
+<p><a href="<?php echo $this->url('home') ?>">На главную</a></p>
+<p><a href="<?php echo $this->url('zfcuser/logout') ?>">Выйти</a></p>

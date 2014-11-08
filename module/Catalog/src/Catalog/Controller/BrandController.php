@@ -50,15 +50,22 @@ class BrandController extends AbstractActionController
             if ($form->isValid()) {
                 // Вызов сервиса транслитерации
                 $postData = $form->getData();
-                $postData['translit'] = $this->translitService->getTranslit($postData['name']);
 
-                $brand->populate($postData);
+                // проверить, нет ли уже такого производителя
+                $currentBrands      = $this->getEntityManager()->getRepository(self::BRAND_ENTITY)->findAll();
+                $currentBrandsArray = $this->getCurrentBrandsName($currentBrands);
 
-                $this->getEntityManager()->persist($brand);
-                $this->getEntityManager()->flush();
+                if (!isset($currentBrandsArray[strtolower($postData['name'])])) {
+                    $postData['translit'] = $this->translitService->getTranslit($postData['name']);
 
-                // Очистить кэш с параметрами производителей
-                $this->cache->removeItem('params');
+                    $brand->populate($postData);
+
+                    $this->getEntityManager()->persist($brand);
+                    $this->getEntityManager()->flush();
+
+                    // Очистить кэш с параметрами производителей
+                    $this->cache->removeItem('params');
+                }
 
                 // Redirect to list of brands
                 return $this->redirect()->toRoute('brand');
@@ -198,6 +205,22 @@ class BrandController extends AbstractActionController
     public function setTranslit($tanslit)
     {
         $this->translitService = $tanslit;
+    }
+
+    /**
+     * @param array $brands
+     *
+     * @return array
+     */
+    protected function getCurrentBrandsName(array $brands)
+    {
+        $resultArr = array();
+
+        foreach ($brands as $brand) {
+            $resultArr[strtolower($brand->getName())] = true;
+        }
+
+        return $resultArr;
     }
 
     /**

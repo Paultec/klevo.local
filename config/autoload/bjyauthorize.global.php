@@ -30,7 +30,7 @@ return array(
                 ),
                 array(
                     'controller' => 'Cart\Controller\Cart',
-                    'action'     => array('index', 'add'),
+                    'action'     => array('index', 'add', 'one-click-buy', 'success'),
                     'roles'      => array(),
                 ),
                 array(
@@ -73,6 +73,8 @@ return array(
                         'Data\Controller\PaymentType',
                         'Data\Controller\Status',
                         'Data\Controller\Store',
+                        'Data\Controller\DeliveryMethod',
+                        'Data\Controller\PaymentMethod',
                         'Product\Controller\Edit',
                         'Product\Controller\Index',
                         'Product\Controller\Parse',

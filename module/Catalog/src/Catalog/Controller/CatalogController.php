@@ -51,12 +51,14 @@ class CatalogController extends AbstractActionController
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
-                // Вызов сервиса транслитерации
-                $postData['translit'] = $this->translitService->getTranslit($this->fullNameService->getFullNameCategory($postData['id']));
 
                 $catalog->populate($postData);
 
                 $this->getEntityManager()->persist($catalog);
+                $this->getEntityManager()->flush();
+
+                // Вызов сервиса транслитерации
+                $catalog->setTranslit($this->translitService->getTranslit($this->fullNameService->getFullNameCategory($catalog->getId())));
                 $this->getEntityManager()->flush();
 
                 // Очистить кэш с параметрами категорий
@@ -102,12 +104,14 @@ class CatalogController extends AbstractActionController
                 $postData = $form->getData();
                 $postData['idParent'] = $this->getEntityManager()->
                     find(self::CATEGORY_ENTITY, $postData['idParent']);
-                // Вызов сервиса транслитерации
-                $postData['translit'] = $this->translitService->getTranslit($this->fullNameService->getFullNameCategory($postData['id']));
 
                 $catalog->populate($postData);
 
                 $this->getEntityManager()->persist($catalog);
+                $this->getEntityManager()->flush();
+
+                // Вызов сервиса транслитерации
+                $catalog->setTranslit($this->translitService->getTranslit($this->fullNameService->getFullNameCategory($catalog->getId())));
                 $this->getEntityManager()->flush();
 
                 // Очистить кэш с параметрами категорий

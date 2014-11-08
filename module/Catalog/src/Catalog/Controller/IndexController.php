@@ -52,6 +52,11 @@ class IndexController extends AbstractActionController
             $brandList = $this->getLoop(self::BRAND_ENTITY);
         }
 
+        // сортируем список брендов по алфавиту
+        usort($brandList, function($a, $b) {
+                return strcmp(ucfirst($a['name']), ucfirst($b['name']));
+            });
+
         return new ViewModel(array(
             'brandList'    => $brandList,
             'categoryList' => $categoryList,
@@ -152,7 +157,6 @@ class IndexController extends AbstractActionController
         return $actualBrandList;
     }
 
-
     /**
      * @param $category
      */
@@ -168,7 +172,12 @@ class IndexController extends AbstractActionController
 
         // рекурсивно проходим по дереву категорий до самого верхнего родителя 
         if ($idParent == null) {
-            $this->actualCatalogList[] = $category->getArrayCopy();
+            if (is_object($category)) {
+                $this->actualCatalogList[] = $category->getArrayCopy();
+            } else {
+                $this->actualCatalogList[] = $category;
+            }
+
             return;
         } else {
             if (is_object($category)) {

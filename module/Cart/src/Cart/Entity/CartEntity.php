@@ -2,32 +2,60 @@
 
 namespace Cart\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * CartEntity
+ *
+ * @ORM\Table(name="cart_entity", indexes={@ORM\Index(name="idUser", columns={"idUser"}), @ORM\Index(name="deliveryMethod", columns={"deliveryMethod"}), @ORM\Index(name="paymentMethod", columns={"paymentMethod"})})
  * @ORM\Entity
- * @ORM\Table(name="cart_entity")
  */
-
 class CartEntity
 {
     /**
-     * @var int
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=true)
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date", nullable=false)
      */
-    protected $idUser;
+    private $date;
 
     /**
-     * @return int
+     * @var integer
+     *
+     * @ORM\Column(name="deliveryMethod", type="integer", nullable=true)
+     */
+    private $deliveryMethod;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="paymentMethod", type="integer", nullable=true)
+     */
+    private $paymentMethod;
+
+    /**
+     * @var \User\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="User\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idUser", referencedColumnName="id")
+     * })
+     */
+    private $idUser;
+
+    /**
+     * Get id
+     *
+     * @return integer
      */
     public function getId()
     {
@@ -35,17 +63,91 @@ class CartEntity
     }
 
     /**
-     * @param int $id
+     * Set date
      *
-     * @return void
+     * @param \DateTime $date
+     * @return CartEntity
      */
-    public function setId($id)
+    public function setDate($date)
     {
-        $this->id = $id;
+        $this->date = $date;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set deliveryMethod
+     *
+     * @param integer $deliveryMethod
+     * @return CartEntity
+     */
+    public function setDeliveryMethod($deliveryMethod)
+    {
+        $this->deliveryMethod = $deliveryMethod;
+
+        return $this;
+    }
+
+    /**
+     * Get deliveryMethod
+     *
+     * @return integer
+     */
+    public function getDeliveryMethod()
+    {
+        return $this->deliveryMethod;
+    }
+
+    /**
+     * Set paymentMethod
+     *
+     * @param integer $paymentMethod
+     * @return CartEntity
+     */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentMethod
+     *
+     * @return integer
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
+     * Set idUser
+     *
+     * @param \User\Entity\User $idUser
+     * @return CartEntity
+     */
+    public function setIdUser(\User\Entity\User $idUser = null)
+    {
+        $this->idUser = $idUser;
+
+        return $this;
+    }
+
+    /**
+     * Get idUser
+     *
+     * @return \User\Entity\User
      */
     public function getIdUser()
     {
@@ -53,14 +155,24 @@ class CartEntity
     }
 
     /**
-     * @param int $idUser
-     *
-     * @return void
+     * @return array
      */
-    public function setIdUser($idUser)
+    public function getArrayCopy()
     {
-        $this->idUser = $idUser;
+        return get_object_vars($this);
     }
 
+    /**
+     * Populate from an array.
+     *
+     * @param array $data
+     */
+    public function populate($data = array())
+    {
+        $this->id               = $data['id'];
+        $this->date             = $data['date'];
+        $this->idUser           = $data['idUser'];
+        $this->deliveryMethod   = $data['deliveryMethod'];
+        $this->paymentMethod    = $data['paymentMethod'];
+    }
 }
-

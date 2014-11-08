@@ -21,6 +21,7 @@ class Register
      * @Annotation\Type("Zend\Form\Element\Date")
      * @Annotation\Required({"required":"true" })
      * @Annotation\Options({"label":"Дата:"})
+     * @Annotation\Attributes({"min":"2014-01-01","step":"1"})
      */
     public $date;
 

@@ -3,15 +3,28 @@ return array(
     'router' => array(
         'routes' => array(
             'cart' => array(
-                'type' => 'segment',
+                'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/cart[/][:action]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ),
+                    'route'    => '/cart',
                     'defaults' => array(
-                        'controller' => 'Cart\Controller\Cart',
-                        'action'     => 'index',
+                        '__NAMESPACE__' => 'Cart\Controller',
+                        'controller'    => 'cart',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '[/:action]',
+                            'constraints' => array(
+                                'action'  => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'action'  => 'index',
+                            ),
+                        ),
                     ),
                 ),
             ),

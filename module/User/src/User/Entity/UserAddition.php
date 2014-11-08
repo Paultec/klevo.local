@@ -1,6 +1,6 @@
 <?php
 
-namespace DoctrineTest\Entity;
+namespace User\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +34,20 @@ class UserAddition
      * @ORM\Column(name="totalBuy", type="integer", nullable=false)
      */
     private $totalBuy;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
+     */
+    private $address;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="checked", type="boolean", nullable=false)
+     */
+    private $checked = '0';
 
     /**
      * @var \Data\Entity\Store
@@ -112,6 +126,52 @@ class UserAddition
     }
 
     /**
+     * Set address
+     *
+     * @param string $address
+     * @return UserAddition
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Set checked
+     *
+     * @param boolean $checked
+     * @return UserAddition
+     */
+    public function setChecked($checked)
+    {
+        $this->checked = $checked;
+
+        return $this;
+    }
+
+    /**
+     * Get checked
+     *
+     * @return boolean
+     */
+    public function getChecked()
+    {
+        return $this->checked;
+    }
+
+    /**
      * Set idStore
      *
      * @param \Data\Entity\Store $idStore
@@ -177,5 +237,7 @@ class UserAddition
         $this->totalBuy = $data['totalBuy'];
         $this->idStore  = $data['idStore'];
         $this->idUser   = $data['idUser'];
+        $this->address  = $data['address'];
+        $this->checked  = $data['checked'];
     }
 }
