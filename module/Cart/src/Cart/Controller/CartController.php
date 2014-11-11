@@ -115,15 +115,25 @@ class CartController extends AbstractActionController
                     ->setParameter(2, $user['changeIdUserInCart']['from'])
                     ->getQuery();
                 $qu->execute();
+
+                /*
+                 * @todo придумать другое решение
+                 */
+                $this->forward()->dispatch('Data/Controller/CartUserHelp',
+                    array('action' => 'remove-tmp-user', 'postData' => $user['changeIdUserInCart']['from']));
             }
 
             // запись данных в Cart Table
             $cartEntity = new CartEntity();
 
+            // способ оплаты и доставки (при покупке через корзину)
+            $currentDeliveryMethod = $this->getEntityManager()->getRepository(self::DELIVERY_METHOD)->findOneBy(array('id' => (int)$postData['delivery']));
+            $currentPaymentMethod  = $this->getEntityManager()->getRepository(self::PAYMENT_METHOD)->findOneBy(array('id' => (int)$postData['payment']));
+
             $cartEntity->setDate(new \DateTime());
             $cartEntity->setIdUser($user['user']);
-            $cartEntity->setDeliveryMethod((int)$postData['delivery']);
-            $cartEntity->setPaymentMethod((int)$postData['payment']);
+            $cartEntity->setDeliveryMethod($currentDeliveryMethod);
+            $cartEntity->setPaymentMethod($currentPaymentMethod);
 
             $this->getEntityManager()->persist($cartEntity);
 

@@ -851,31 +851,35 @@ $(function(){
                 });
         });
 
-        var $form = $('.one-click-buy-form').find('form');
-
-        $form.on('submit', function(e) {
-            var curQty = $('.one-click-buy-number').val();
-            var curLen = $('.one-click-buy-input').val().length;
-
-            if (curQty > qty || curQty <= 0) {
-                if ($('#informer').length == 0) {
-                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
-                }
-
-                e.preventDefault();
-            } else if (curLen == 0 || curLen != length) {
-                if ($('#informer').length == 0) {
-                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
-                }
-
-                e.preventDefault();
-            }
-        });
-
-        $('.one-click-buy-submit-from-cart').on('click', function() {
-            $('.address-buy-input').removeAttr('name');
-            $('.checkout-click-buy-input').removeAttr('name');
-        });
+        //var $form = $('.one-click-buy-form').find('form');
+        //
+        //$form.on('submit', function(e) {
+        //    //e.preventDefault();
+        //
+        //    var curQty = $('.one-click-buy-number').val();
+        //    var curLen = $('.one-click-buy-input').val().length;
+        //
+        //    //$(this).css('border', '1px solid red');
+        //
+        //    if (curQty > qty || curQty <= 0) {
+        //        if ($('#informer').length == 0) {
+        //            $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+        //        }
+        //
+        //        e.preventDefault();
+        //    } else if (curLen == 0 || curLen != length) {
+        //        if ($('#informer').length == 0) {
+        //            $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+        //        }
+        //
+        //        e.preventDefault();
+        //    }
+        //});
+        //
+        //$('.one-click-buy-submit-from-cart').on('click', function() {
+        //    $('.address-buy-input').removeAttr('name');
+        //    $('.checkout-click-buy-input').removeAttr('name');
+        //});
     })();
 
     /******************************************************************************

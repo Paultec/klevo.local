@@ -65,7 +65,7 @@ class CartUserHelpController extends AbstractActionController
             $tmpUserAddition = $this->getEntityManager()->getRepository(self::USER_ADDITION_ENTITY)->findOneBy(array('phone' => $postData['phone']));
 
             if (!is_null($tmpUserAddition)) {
-                $tmpUser = $this->getEntityManager()->find(self::USER_ENTITY, $tmpUserAddition->getId());
+//                $tmpUser = $this->getEntityManager()->find(self::USER_ENTITY, $tmpUserAddition->getId());
 
                 // Обновить данные
                 $userAddition->setPhone($tmpUserAddition->getPhone());
@@ -77,8 +77,8 @@ class CartUserHelpController extends AbstractActionController
                 $changeIdUserInCart['to']   = $userAddition->getId();
 
                 $this->getEntityManager()->persist($userAddition);
-                $this->getEntityManager()->remove($tmpUserAddition);
-                $this->getEntityManager()->remove($tmpUser);
+//                $this->getEntityManager()->remove($tmpUserAddition);
+//                $this->getEntityManager()->remove($tmpUser);
             }
 
             $userAddition->setChecked(true);
@@ -111,6 +111,20 @@ class CartUserHelpController extends AbstractActionController
         );
 
         return $userArray;
+    }
+
+    /**
+     * Remove temp user
+     */
+    public function removeTmpUserAction()
+    {
+        // удалить временно пользователя
+        $userId = $this->params('postData');
+
+        $tmpUser = $this->getEntityManager()->find(self::USER_ENTITY, $userId);
+
+        $this->getEntityManager()->remove($tmpUser);
+        $this->getEntityManager()->flush();
     }
 
     /**

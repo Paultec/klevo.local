@@ -29,16 +29,22 @@ class CartEntity
     private $date;
 
     /**
-     * @var integer
+     * @var \Data\Entity\DeliveryMethod
      *
-     * @ORM\Column(name="deliveryMethod", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Data\Entity\DeliveryMethod")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="deliveryMethod", referencedColumnName="id")
+     * })
      */
     private $deliveryMethod;
 
     /**
-     * @var integer
+     * @var \Data\Entity\PaymentMethod
      *
-     * @ORM\Column(name="paymentMethod", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Data\Entity\PaymentMethod")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="paymentMethod", referencedColumnName="id")
+     * })
      */
     private $paymentMethod;
 
@@ -88,10 +94,10 @@ class CartEntity
     /**
      * Set deliveryMethod
      *
-     * @param integer $deliveryMethod
+     * @param \Data\Entity\deliveryMethod $deliveryMethod
      * @return CartEntity
      */
-    public function setDeliveryMethod($deliveryMethod)
+    public function setDeliveryMethod(\Data\Entity\deliveryMethod $deliveryMethod = null)
     {
         $this->deliveryMethod = $deliveryMethod;
 
@@ -101,7 +107,7 @@ class CartEntity
     /**
      * Get deliveryMethod
      *
-     * @return integer
+     * @return \Data\Entity\deliveryMethod
      */
     public function getDeliveryMethod()
     {
@@ -111,10 +117,10 @@ class CartEntity
     /**
      * Set paymentMethod
      *
-     * @param integer $paymentMethod
+     * @param \Data\Entity\paymentMethod $paymentMethod
      * @return CartEntity
      */
-    public function setPaymentMethod($paymentMethod)
+    public function setPaymentMethod(\Data\Entity\paymentMethod $paymentMethod = null)
     {
         $this->paymentMethod = $paymentMethod;
 
@@ -124,7 +130,7 @@ class CartEntity
     /**
      * Get paymentMethod
      *
-     * @return integer
+     * @return \Data\Entity\paymentMethod
      */
     public function getPaymentMethod()
     {
