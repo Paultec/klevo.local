@@ -71,7 +71,7 @@ class CartUserHelpController extends AbstractActionController
                 $userAddition->setPhone($tmpUserAddition->getPhone());
                 $userAddition->setTotalBuy($tmpUserAddition->getTotalBuy());
                 $userAddition->setAddress($tmpUserAddition->getAddress());
-                $userAddition->setChecked(1);
+//                $userAddition->setChecked(true);
 
                 $changeIdUserInCart['from'] = $tmpUserAddition->getId();
                 $changeIdUserInCart['to']   = $userAddition->getId();

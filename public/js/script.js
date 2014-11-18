@@ -147,7 +147,6 @@ $(function(){
      validate auth data
      *******************************************************************************/
     var auth_btn = $('#auth_btn');
-//    auth_btn.attr('disabled', true);
 
     var email_reg    = /^[\w\.=-]+@[\w\.-]+\.[\w]{2,6}$/i,
         password_reg = /^[a-zA-z][a-zA-Z1-9]{7,20}$/i;
@@ -181,17 +180,7 @@ $(function(){
         } else {
             $(this).css('border', '1px solid red');
         }
-
-//        setAuthActive();
     });
-
-//    function setAuthActive() {
-//        if (identity_flag == true && credential_flag == true) {
-//            auth_btn.attr('disabled', false);
-//        } else {
-//            auth_btn.attr('disabled', true);
-//        }
-//    }
 
     /******************************************************************************
      validate register data
@@ -213,7 +202,6 @@ $(function(){
                                         'placeholder': 'Повторите Пароль'});
 
     var reg_btn = reg_form.find('button');
-    reg_btn.attr('disabled', true);
 
     var email_flag = false, pass_flag = false;
 
@@ -229,8 +217,6 @@ $(function(){
         } else {
             $(this).css('border', '1px solid red');
         }
-
-        setRegActive();
     });
 
     password.on('keyup', function(){
@@ -242,8 +228,6 @@ $(function(){
         } else {
             $(this).css('border', '1px solid red');
         }
-
-        setRegActive();
     });
 
     passwordVerify.on('keyup', function(){
@@ -254,19 +238,7 @@ $(function(){
             $(this).css('border', '1px solid red');
             password.css('border', '1px solid red');
         }
-
-        setRegActive();
     });
-
-    function setRegActive() {
-        if (email_flag == true && pass_flag == true &&
-            password.val() == passwordVerify.val()) {
-
-            reg_btn.attr('disabled', false);
-        } else {
-            reg_btn.attr('disabled', true);
-        }
-    }
 
     /******************************************************************************
      validate change email data
@@ -289,7 +261,6 @@ $(function(){
             'placeholder': 'Введите Пароль'});
 
     var changem_btn = $('#change_email');
-    changem_btn.attr('disabled', true);
 
     var change_email_flag = false, change_email_pass_flag = false;
 
@@ -305,8 +276,6 @@ $(function(){
         } else {
             $(this).css('border', '1px solid red');
         }
-
-        setChangeEmailActive();
     });
 
     emailVerify.on('keyup', function(){
@@ -317,8 +286,6 @@ $(function(){
             $(this).css('border', '1px solid red');
             newEmail.css('border', '1px solid red');
         }
-
-        setChangeEmailActive();
     });
 
     $('#password').on('keyup', function(){
@@ -330,19 +297,7 @@ $(function(){
         } else {
             $(this).css('border', '1px solid red');
         }
-
-        setChangeEmailActive();
     });
-
-    function setChangeEmailActive() {
-        if (change_email_flag == true && change_email_pass_flag == true &&
-            newEmail.val() == emailVerify.val()) {
-
-            changem_btn.attr('disabled', false);
-        } else {
-            changem_btn.attr('disabled', true);
-        }
-    }
 
     /******************************************************************************
      validate change password data
@@ -365,7 +320,6 @@ $(function(){
             'placeholder': 'Повторите пароль'});
 
     var changep_btn = $('#change_pass');
-    changep_btn.attr('disabled', true);
 
     var change_new_pass_flag = false, change_old_pass_flag = false;
 
@@ -381,8 +335,6 @@ $(function(){
         } else {
             $(this).css('border', '1px solid red');
         }
-
-        setChangePasswordActive();
     });
 
     passVerify.on('keyup', function(){
@@ -406,19 +358,7 @@ $(function(){
         } else {
             $(this).css('border', '1px solid red');
         }
-
-        setChangePasswordActive();
     });
-
-    function setChangePasswordActive() {
-        if (change_new_pass_flag == true && change_old_pass_flag == true &&
-            newPass.val() == passVerify.val()) {
-
-            changep_btn.attr('disabled', false);
-        } else {
-            changep_btn.attr('disabled', true);
-        }
-    }
 
     /******************************************************************************
      Errors in form
@@ -466,10 +406,6 @@ $(function(){
     options.each(function(index){
         if (state == $(this).val()) {
             $(this).css('color', '#428BCA').attr('selected', true);
-        }
-
-        if (name_input == $(this).text()) {
-            $(this).attr('disabled', true);
         }
     });
 
@@ -583,7 +519,7 @@ $(function(){
      show all products
      *******************************************************************************/
     $('.product-list').on('click', function(e) {
-        window.location = '/product'
+        window.location = '/product';
 
         e.preventDefault();
     });
@@ -685,30 +621,41 @@ $(function(){
     /******************************************************************************
      product image
      *******************************************************************************/
-    var $zoom = $('.zoom');
+    (function() {
+        var $zoom           = $('.zoom'),
+            $product_image  = $('.product-image').find('img');
 
-    $('.product-image').find('img').hover(function() {
-        $zoom.stop(true, true).animate({
-            'top'   : '20px',
-            'left'  : '20px',
-            'font-size' : '48px'
-        });
-    }, function() {
-        $zoom.stop(true, true).animate({
-            'top'   : '5px',
-            'left'  : '5px',
-            'font-size' : '28px'
+        $product_image.hover(function() {
+            $zoom.stop(true, true).animate({
+                'top'   : '20px',
+                'left'  : '20px',
+                'font-size' : '48px'
+            });
         }, function() {
-            $zoom.removeAttr('style');
+            $zoom.stop(true, true).animate({
+                'top'   : '5px',
+                'left'  : '5px',
+                'font-size' : '28px'
+            }, function() {
+                $zoom.removeAttr('style');
+            });
         });
-    });
+
+        $zoom.on('mouseenter', function() {
+            $(this).stop();
+        })
+            .on('click', function() {
+                $product_image.trigger('mouseleave');
+            });
+    })();
 
     /******************************************************************************
      modal window
      *******************************************************************************/
     var $this = new Object();
+
     var methods = {
-        init : function( options ) {
+        init : function(options) {
             $this =  $.extend({}, this, methods);
             $this.searching = false;
             $this.o = new Object();
@@ -826,6 +773,7 @@ $(function(){
      *******************************************************************************/
     (function() {
         var length = 9, qty;
+        var curQty = 0, curLen = 0;
 
         $('.one-click-buy').on('click', function() {
             var text    = $(this).parents('.product').find('h5').text();
@@ -851,35 +799,31 @@ $(function(){
                 });
         });
 
-        //var $form = $('.one-click-buy-form').find('form');
-        //
-        //$form.on('submit', function(e) {
-        //    //e.preventDefault();
-        //
-        //    var curQty = $('.one-click-buy-number').val();
-        //    var curLen = $('.one-click-buy-input').val().length;
-        //
-        //    //$(this).css('border', '1px solid red');
-        //
-        //    if (curQty > qty || curQty <= 0) {
-        //        if ($('#informer').length == 0) {
-        //            $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
-        //        }
-        //
-        //        e.preventDefault();
-        //    } else if (curLen == 0 || curLen != length) {
-        //        if ($('#informer').length == 0) {
-        //            $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
-        //        }
-        //
-        //        e.preventDefault();
-        //    }
-        //});
-        //
-        //$('.one-click-buy-submit-from-cart').on('click', function() {
-        //    $('.address-buy-input').removeAttr('name');
-        //    $('.checkout-click-buy-input').removeAttr('name');
-        //});
+        var $form = $('.one-click-buy-form').find('form');
+
+        $form.on('submit', function(e) {
+            curQty = $('.one-click-buy-number').val();
+            curLen = $('.one-click-buy-input').val().length;
+
+            if (curQty > qty || curQty <= 0) {
+                if ($('#informer').length == 0) {
+                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            } else if (curLen == 0 || curLen != length) {
+                if ($('#informer').length == 0) {
+                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            }
+        });
+
+        $('.one-click-buy-submit-from-cart').on('click', function() {
+            $('.address-buy-input').removeAttr('name');
+            $('.checkout-click-buy-input').removeAttr('name');
+        });
     })();
 
     /******************************************************************************
