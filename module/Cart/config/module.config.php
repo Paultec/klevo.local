@@ -17,9 +17,10 @@ return array(
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '[/:action]',
+                            'route'    => '[/:action[/:translit]]',
                             'constraints' => array(
-                                'action'  => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'   => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'translit' => '[a-zA-Z0-9_-]*'
                             ),
                             'defaults' => array(
                                 'action'  => 'index',

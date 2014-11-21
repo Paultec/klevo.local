@@ -65,7 +65,7 @@ class IndexController extends AbstractActionController
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qs = $qb
-            ->select(array('p', 'q.qty as quantity'))
+            ->select(array('p', 'q.qty as quantity', 'q.virtualQty'))
             ->from(self::PRODUCT_ENTITY, 'p')
             ->join(
                 self::PRODUCT_ENTITY_QTY, 'q',
@@ -132,7 +132,7 @@ class IndexController extends AbstractActionController
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qs =  $qb
-            ->select(array('p', 'q.qty as quantity'))
+            ->select(array('p', 'q.qty as quantity', 'q.virtualQty'))
             ->from(self::PRODUCT_ENTITY, 'p')
             ->join(
                 self::PRODUCT_ENTITY_QTY, 'q',

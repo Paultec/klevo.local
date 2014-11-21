@@ -48,6 +48,10 @@ class CartController extends AbstractActionController
             } elseif (isset($postData['removeItem'])) {
                 $this->removeItem($postData);
 
+                if (empty($this->currentSession->cart)) {
+                    return $this->redirect()->toRoute('home');
+                }
+
                 return $this->redirect()->toRoute('cart');
             }
 
@@ -68,7 +72,7 @@ class CartController extends AbstractActionController
             // выбираем продукты из корзины
             $qb = $this->getEntityManager()->createQueryBuilder();
             $qs =  $qb
-                ->select(array('p', 'q.qty as quantity'))
+                ->select(array('p', 'q.qty as quantity', 'q.virtualQty'))
                 ->from(self::PRODUCT_ENTITY, 'p')
                 ->join(
                     self::PRODUCT_ENTITY_QTY, 'q',
@@ -90,6 +94,10 @@ class CartController extends AbstractActionController
             $selectedQty = $postData['qty']; // к-во выбранных пользователем товаров
 
             for ($i = 0, $count = count($selectedQty); $i < $count; $i++) {
+                if ($qr[$i]['quantity'] == 0) {
+                    $qr[$i]['quantity'] = $qr[$i]['virtualQty'];
+                }
+
                 if ((int)$selectedQty[$i] > $qr[$i]['quantity']) {
                     var_dump('error'); // выбрано много товаров
                 } else {
@@ -127,13 +135,14 @@ class CartController extends AbstractActionController
             $cartEntity = new CartEntity();
 
             // способ оплаты и доставки (при покупке через корзину)
-            $currentDeliveryMethod = $this->getEntityManager()->getRepository(self::DELIVERY_METHOD)->findOneBy(array('id' => (int)$postData['delivery']));
-            $currentPaymentMethod  = $this->getEntityManager()->getRepository(self::PAYMENT_METHOD)->findOneBy(array('id' => (int)$postData['payment']));
+            $currentDeliveryMethod = $this->getEntityManager()->getRepository(self::DELIVERY_METHOD)->findOneBy(array('id'  => (int)$postData['delivery']));
+            $currentPaymentMethod  = $this->getEntityManager()->getRepository(self::PAYMENT_METHOD)->findOneBy(array('id'   => (int)$postData['payment']));
 
             $cartEntity->setDate(new \DateTime());
             $cartEntity->setIdUser($user['user']);
             $cartEntity->setDeliveryMethod($currentDeliveryMethod);
             $cartEntity->setPaymentMethod($currentPaymentMethod);
+            $cartEntity->setComment($postData['comment']);
 
             $this->getEntityManager()->persist($cartEntity);
 
@@ -187,10 +196,10 @@ class CartController extends AbstractActionController
 
         $viewModel = new ViewModel(array(
                 'cart'      => $cart,
-                'delivery'  => $delivery,
-                'payment'   => $payment,
+                'delivery'  => array_reverse($delivery),
+                'payment'   => array_reverse($payment),
                 'userInfo'  => $userInfo,
-                'continue'  => $this->currentSession->continue
+//                'continue'  => $this->currentSession->continue // при использовании кнопки "продолжить" в корзине
             ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
@@ -220,13 +229,61 @@ class CartController extends AbstractActionController
                 }
             }
 
-            // от куда добавил в корзину
-            $this->currentSession->continue = $postData['continue'];
+            // откуда добавил в корзину
+            // при использовании кнопки "Продолжить"
+//            $this->currentSession->continue = $postData['continue'];
+//
+//            return $this->prg('/cart', true);
 
-            return $this->prg('/cart', true);
+            // когда не используем кнопку "Продолжить"
+            return $this->prg($postData['continue'], true);
         }
 
         return $this->redirect()->toRoute('cart');
+    }
+
+    public function orderAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $postData = $request->getPost();
+
+            var_dump($postData); exit;
+
+//            $id = 9999999999999;
+
+            if ((int)$postData['id'] < 1) {
+                return $this->redirect()->toRoute('home');
+            }
+
+            $product = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('id' => (int)$postData['id']));
+
+            var_dump($product); exit;
+        }
+
+        $translit = $this->params()->fromRoute('translit', null);
+
+        $product = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('translit' => $translit));
+
+        if (is_null($product)) {
+            var_dump('error');
+        }
+
+        // данные пользователя
+        $userInfo = $this->forward()->dispatch('Data/Controller/CartUserHelp',
+            array('action' => 'user'))->getVariables();
+
+        $viewModel = new ViewModel(array(
+                'name'  => $product->getName(),
+                'id'    => $product->getId(),
+                'user'  => $userInfo
+            ));
+
+        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+        $viewModel->addChild($catalog, 'catalog');
+
+        return $viewModel;
     }
 
     public function successAction()
@@ -296,7 +353,7 @@ class CartController extends AbstractActionController
         // Выбор товаров из корзины
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qs = $qb
-            ->select(array('p', 'q.qty as quantity'))
+            ->select(array('p', 'q.qty as quantity', 'q.virtualQty'))
             ->from(self::PRODUCT_ENTITY, 'p')
             ->join(
                 self::PRODUCT_ENTITY_QTY, 'q',

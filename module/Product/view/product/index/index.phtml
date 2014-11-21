@@ -41,33 +41,51 @@
                 <div class="col col-md-8">
                     <h5><a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>"><?php echo $item[0]->getName(); ?></a></h5>
                     <p><?php echo $item[0]->getDescription(); ?></p>
+                    <?php if ($item['quantity'] === 0 &&  $item['virtualQty'] > 0) : ?>
+                        <p class="product-delivery">Доставка в течении 2-3 дней</p>
+                    <?php endif; ?>
                     <?php if ($item[0]->getPrice() !== 0) : ?>
                         <p class="product-price"><?php echo $item[0]->getPrice() / 100; ?></p>
                     <?php endif; ?>
                 </div>
-                <div class="cart-form">
-                    <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
-                        <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
-                        <input type="hidden" class="continue" name="continue">
-                        <?php if (!in_array($item[0]->getId(), $this->inCart)) : ?>
-                            <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
-                        <?php else : ?>
-                            <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
+                <?php if ($item['quantity'] < 1 && $item['virtualQty'] < 1): ?>
+                    <!-- Order -->
+                    <div class="cart-form">
+                        <a href="/cart/order/<?php echo $item[0]->getTranslit();?>" class="btn btn-warning">Заказать</a>
+                    </div><!-- /Order -->
+                <?php else : ?>
+                    <div class="cart-form">
+                        <!-- Add to cart -->
+                        <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
+                            <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
+                            <input type="hidden" class="continue" name="continue">
+                            <?php if (!in_array($item[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
+                                <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
+                            <?php else : ?>
+                                <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
+                            <?php endif; ?>
+                        </form><!-- /Add to cart -->
+                        <?php if (!in_array($item[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
+                            <form class="form-inline">
+                                <!-- One click buy -->
+                                <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
+                                <?php if ($item['quantity'] === 0 &&  $item['virtualQty'] > 0) : ?>
+                                    <input type="hidden" class="qty" name="qty" value="<?php echo $item['virtualQty']; ?>">
+                                <?php else : ?>
+                                    <input type="hidden" class="qty" name="qty" value="<?php echo $item['quantity']; ?>">
+                                <?php endif; ?>
+                                <input type="button" value="Купить" name="oneClickBuy" class="btn btn-success one-click-buy md-trigger" data-modal="modal-1" data-toggle="tooltip" data-placement="top" title="в 1 клик">
+                            </form><!-- /One click buy -->
                         <?php endif; ?>
-                    </form>
-                    <form class="form-inline">
-                        <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
-                        <input type="hidden" class="qty" name="qty" value="<?php echo $item['quantity']; ?>">
-                        <input type="button" value="Купить" name="oneClickBuy" class="btn btn-success one-click-buy md-trigger" data-modal="modal-1" data-toggle="tooltip" data-placement="top" title="в 1 клик">
-                    </form>
-                </div>
+                    </div>
+                <?php endif; ?>
             </section>
             <?php endif; ?>
         <?php endforeach; ?>
-    <?php else: ?>
+    <?php else : ?>
         <h3>Извините, такого товара нет в магазине. <br>
             Вы можете воспользоваться поиском или изменить критерии выбора.</h3>
-    <?php endif ?>
+    <?php endif; ?>
 </section>
 
 <div class="md-modal md-effect-1" id="modal-1">

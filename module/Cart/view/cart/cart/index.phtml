@@ -32,7 +32,11 @@
                         <?php echo $cartItem[0]['name'];?>
                     </div>
                     <div class="div-cell cart-product-qty">
+                    <?php if ($cartItem['quantity'] > 0): ?>
                         <input name="qty[]" class="form-control cart-product-qty" type="number" min="1" step="1" max="<?php echo $cartItem['quantity'];?>" value="1" data-toggle="tooltip" data-placement="top" title="Укажите желаемое к-во" required>
+                    <?php else : ?>
+                        <input name="qty[]" class="form-control cart-product-qty" type="number" min="1" step="1" max="<?php echo $cartItem['virtualQty'];?>" value="1" data-toggle="tooltip" data-placement="top" title="Укажите желаемое к-во" required>
+                    <?php endif; ?>
                     </div>
                     <div class="div-cell product-price cart-product-price" data-price="<?php echo $cartItem[0]['price'];?>">
                         <?php echo $cartItem[0]['price']  / 100 ;?>
@@ -51,7 +55,9 @@
             </div>
         </div>
         <div class="cart-control-buttons">
-            <a href="<?php echo $this->continue; ?>" class="btn btn-info">Продолжить</a>
+            <?php if (!is_null($this->continue)) :?>
+                <a href="<?php echo $this->continue; ?>" class="btn btn-info">Продолжить</a>
+            <?php endif; ?>
             <input type="button" class="btn btn-primary md-trigger" data-modal="modal-2" value="Оформить">
             <input type="button" class="btn btn-success md-trigger" data-modal="modal-1" value="Купить" data-toggle="tooltip" data-placement="top" title="В 1 клик">
             <input type="submit" class="btn btn-danger remove-all" value="Удалить все" name="removeAll">
@@ -115,7 +121,7 @@
                                 <button type="button" class="next-step btn btn-success">Далее</button>
                             </div>
                             <div class="step step-3 final center-block">
-                                <p><strong>Укажите номер телефона:</strong></p>
+                                <p><strong>Укажите контактные данные:</strong></p>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon form-addon form-address-addon"><i class=" glyphicon glyphicon glyphicon-road"></i></div>
@@ -124,6 +130,10 @@
                                     <div class="input-group">
                                         <div class="input-group-addon form-addon">+380</div>
                                         <input name="phone" class="form-control checkout-click-buy-input" type="tel" value="<?php echo $this->userInfo['phone'] ;?>" placeholder="Ваш номер" data-toggle="tooltip" data-placement="top" title="Укажите Ваш номер телефона" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="comment">Комментарий <small>(не обязательно)</small>:</label>
+                                        <textarea name="comment" id="comment" class="form-control comment-textarea" placeholder="Например, укажите желаемый способ доставки, либо отделение Новой почты" data-toggle="tooltip" data-placement="bottom" title="До 255 символов"></textarea>
                                     </div>
                                 </div>
                                 <input type="submit" class="btn btn-success checkout-click-buy-submit" name="checkout" value="Готово">

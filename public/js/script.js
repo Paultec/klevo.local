@@ -947,7 +947,7 @@ $(function(){
             step    = $('.step.hover'),
             data    = 'step-1';
 
-        var length     = 9;
+        var length  = 9;
 
         bcb.find('.btn').on('click', function() {
             bcb.find('.btn').removeClass('hover');
@@ -1011,8 +1011,49 @@ $(function(){
      checkout
      *******************************************************************************/
     (function() {
+        var length  = 255;
+
+        $('.comment-textarea').on('keyup', function() {
+            var $this = $(this);
+
+            if ($this.val().length > length) {
+                $this.val($this.val().substr(0, length));
+            }
+        });
+    })();
+
+    (function() {
         $('.checkout-click-buy-submit').on('click', function() {
             $('.one-click-buy-input').prop('required', false);
+        });
+    })();
+
+    /******************************************************************************
+     order
+     *******************************************************************************/
+    (function() {
+        var length  = 9;
+        var $form   = $('.order-form'),
+            $phone  = $('.order-phone');
+
+        $phone.on('keyup', function() {
+            var $this = $(this);
+
+            if ($this.val().length > length) {
+                $this.val($this.val().substr(0, length));
+            }
+        });
+
+        $form.on('submit', function(e) {
+            var curLen = $phone.val().length;
+
+            if (curLen == 0 || curLen != length) {
+                if ($('#informer').length == 0) {
+                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            }
         });
     })();
 });

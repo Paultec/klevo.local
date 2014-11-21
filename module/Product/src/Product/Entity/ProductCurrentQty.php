@@ -29,6 +29,13 @@ class ProductCurrentQty
     private $qty;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="virtualQty", type="integer", nullable=false)
+     */
+    private $virtualQty = '0';
+
+    /**
      * @var \Product\Entity\Product
      *
      * @ORM\ManyToOne(targetEntity="Product\Entity\Product")
@@ -72,6 +79,29 @@ class ProductCurrentQty
     }
 
     /**
+     * Set virtualQty
+     *
+     * @param integer $virtualQty
+     * @return ProductCurrentQty
+     */
+    public function setVirtualQty($virtualQty)
+    {
+        $this->virtualQty = $virtualQty;
+
+        return $this;
+    }
+
+    /**
+     * Get virtualQty
+     *
+     * @return integer
+     */
+    public function getVirtualQty()
+    {
+        return $this->virtualQty;
+    }
+
+    /**
      * Set idProduct
      *
      * @param \Product\Entity\Product $idProduct
@@ -109,8 +139,9 @@ class ProductCurrentQty
      */
     public function populate($data = array())
     {
-        $this->id        = $data['id'];
-        $this->qty       = $data['qty'];
-        $this->idProduct = $data['idProduct'];
+        $this->id           = $data['id'];
+        $this->qty          = $data['qty'];
+        $this->virtualQty   = $data['virtualQty'];
+        $this->idProduct    = $data['idProduct'];
     }
 }

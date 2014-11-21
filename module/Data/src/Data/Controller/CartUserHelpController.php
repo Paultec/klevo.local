@@ -152,7 +152,8 @@ class CartUserHelpController extends AbstractActionController
 
             $userInfo = array(
                 'phone'     => $qr[1]['phone'],
-                'address'   => $qr[1]['address']
+                'address'   => $qr[1]['address'],
+                'email'     => $qr[1]['email']
             );
 
             return $userInfo;

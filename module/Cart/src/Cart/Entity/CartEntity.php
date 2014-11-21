@@ -29,6 +29,20 @@ class CartEntity
     private $date;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="string", length=255, nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="type", type="boolean", nullable=false)
+     */
+    private $type = '0';
+
+    /**
      * @var \Data\Entity\DeliveryMethod
      *
      * @ORM\ManyToOne(targetEntity="Data\Entity\DeliveryMethod")
@@ -89,6 +103,52 @@ class CartEntity
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set comment
+     *
+     * @param string $comment
+     * @return CartEntity
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set type
+     *
+     * @param boolean $type
+     * @return CartEntity
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return boolean
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -178,6 +238,8 @@ class CartEntity
         $this->id               = $data['id'];
         $this->date             = $data['date'];
         $this->idUser           = $data['idUser'];
+        $this->comment          = $data['comment'];
+        $this->type             = $data['type'];
         $this->deliveryMethod   = $data['deliveryMethod'];
         $this->paymentMethod    = $data['paymentMethod'];
     }
