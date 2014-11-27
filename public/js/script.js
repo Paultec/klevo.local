@@ -403,7 +403,7 @@ $(function(){
         options    = $('.category_select').find('option'),
         name_input = $('.name_input').val();
 
-    options.each(function(index){
+    options.each(function(){
         if (state == $(this).val()) {
             $(this).css('color', '#428BCA').attr('selected', true);
         }
@@ -782,7 +782,7 @@ $(function(){
 
             $('.one-click-buy-product-name').text(text);
             $('.one-click-buy-product-input-id').val(id);
-            $('.one-click-buy-number').prop('max', qty)
+            $('.one-click-buy-number').prop('max', qty)/*.removeClass('hide')*/
                 .on('change scroll', function() {
                     $('.one-click-buy-product-input-qty').val($(this).val());
                 });
@@ -820,9 +820,54 @@ $(function(){
             }
         });
 
-        $('.one-click-buy-submit-from-cart').on('click', function() {
-            $('.address-buy-input').removeAttr('name');
-            $('.checkout-click-buy-input').removeAttr('name');
+        $('.one-click-buy-submit-from-cart').on('click', function(e) {
+            $('.address-buy-input').remove();
+            $('.checkout-click-buy-input').remove();
+
+            curLen = $('.one-click-buy-input-from-cart').val().length;
+
+            if (curLen == 0 || curLen != length) {
+                if ($('#informer').length == 0) {
+                    $('.one-click-buy').before('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            }
+        });
+    })();
+
+    /******************************************************************************
+     order
+     *******************************************************************************/
+    (function() {
+        var length = 9 ,curLen = 0;
+
+        $('.order-product').on('click', function(e) {
+            var id   = $(this).prev().prev('.id').val();
+            var text = $(this).parents('.product').find('h5').text() || $('.product-name').text();
+
+            $('.order-product-name').text(text);
+            $('.order-product-input-id').val(id);
+
+            $('.order-input').on('keyup', function() {
+                var $this = $(this);
+
+                if ($this.val().length > length) {
+                    $this.val($this.val().substr(0, length));
+                }
+            });
+
+            $('.order-submit').on('click', function(e) {
+                curLen = $('.order-input').val().length;
+
+                if (curLen == 0 || curLen != length) {
+                    if ($('#informer').length == 0) {
+                        $('.order-info').after('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                    }
+
+                    e.preventDefault();
+                }
+            });
         });
     })();
 
@@ -971,6 +1016,20 @@ $(function(){
             }
         });
 
+        var curLen  = 0;
+
+        $('.checkout-click-buy-submit').on('click', function(e) {
+            curLen = $('.checkout-click-buy-input').val().length;
+
+            if (curLen == 0 || curLen != length) {
+                if ($('#informer').length == 0) {
+                    $('.btn-breadcrumb').after('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            }
+        });
+
         $('.next-step').on('click', function() {
             //bcb.find('.btn.hover').each(function() {
             //    var current = $(this).removeClass('hover');
@@ -1031,29 +1090,29 @@ $(function(){
     /******************************************************************************
      order
      *******************************************************************************/
-    (function() {
-        var length  = 9;
-        var $form   = $('.order-form'),
-            $phone  = $('.order-phone');
-
-        $phone.on('keyup', function() {
-            var $this = $(this);
-
-            if ($this.val().length > length) {
-                $this.val($this.val().substr(0, length));
-            }
-        });
-
-        $form.on('submit', function(e) {
-            var curLen = $phone.val().length;
-
-            if (curLen == 0 || curLen != length) {
-                if ($('#informer').length == 0) {
-                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
-                }
-
-                e.preventDefault();
-            }
-        });
-    })();
+    //(function() {
+    //    var length  = 9;
+    //    var $form   = $('.order-form'),
+    //        $phone  = $('.order-phone');
+    //
+    //    $phone.on('keyup', function() {
+    //        var $this = $(this);
+    //
+    //        if ($this.val().length > length) {
+    //            $this.val($this.val().substr(0, length));
+    //        }
+    //    });
+    //
+    //    $form.on('submit', function(e) {
+    //        var curLen = $phone.val().length;
+    //
+    //        if (curLen == 0 || curLen != length) {
+    //            if ($('#informer').length == 0) {
+    //                $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+    //            }
+    //
+    //            e.preventDefault();
+    //        }
+    //    });
+    //})();
 });

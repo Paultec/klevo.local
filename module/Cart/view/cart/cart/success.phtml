@@ -1,6 +1,10 @@
 <?php
 $result = $this->result;
-$total  = array_pop($result);
+$total  = null;
+
+if (isset($result['total'])) {
+    $total  = array_pop($result);
+}
 ?>
 <section class="col col-lg-3">
     <aside class="filter">
@@ -34,19 +38,21 @@ $total  = array_pop($result);
                         <?php echo $product['name'];?>
                     </div>
                     <div class="div-cell success-product-qty">
-                        <div class="form-control success-product-qty"><?php echo $product['quantity'];?></div>
+                        <div class="form-control success-product-qty"><?php echo $product['quantity'] == 0 ? 'Уточним' : $product['quantity'];?></div>
                     </div>
                     <div class="div-cell product-price success-product-price" data-price="<?php echo $product['price'];?>">
                         <?php echo $product['price']  / 100 ;?>
                     </div>
                 </div>
             <?php endforeach; ?>
+            <?php if (!is_null($total)) : ?>
             <div class="div-row">
                 <div class="div-cell"></div>
                 <div class="div-cell"></div>
                 <div class="div-cell div-cell-footer">Итого</div>
-                <div class="div-cell div-cell-footer product-price"> <?php echo $total  / 100 ;?></div>
+                <div class="div-cell div-cell-footer product-price"><?php echo $total  / 100 ;?></div>
                 <div class="div-cell"></div>
             </div>
+            <?php endif; ?>
         </div>
 </section>

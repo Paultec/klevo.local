@@ -40,36 +40,33 @@
         <?php echo $this->product[0]->getPrice() / 100; ?>
     </h3>
     <div class="cart-form-single-product">
-        <?php if ($this->product['quantity'] < 1 && $this->product['virtualQty'] < 1): ?>
-            <!-- Order -->
-            <div class="cart-form-single-product">
-                <a href="/cart/order/<?php echo $this->product[0]->getTranslit();?>" class="btn btn-warning">Заказать</a>
-            </div><!-- /Order -->
-        <?php else : ?>
-            <div class="cart-form-single-product">
-                <!-- Add to cart -->
-                <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
-                    <input type="hidden" class="id" name="id" value="<?php echo $this->product[0]->getId(); ?>">
-                    <input type="hidden" class="continue" name="continue">
-                    <?php if (!in_array($this->product[0]->getId(), $this->inCart)) : ?>
-                        <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
-                    <?php else : ?>
-                        <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
-                    <?php endif; ?>
-                </form><!-- /Add to cart -->
-                <?php if (!in_array($this->product[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
-                    <form class="form-inline">
-                        <!-- One click buy -->
-                        <input type="hidden" class="id" name="id" value="<?php echo $this->product[0]->getId(); ?>">
-                        <?php if ($this->product['quantity'] === 0 &&  $this->product['virtualQty'] > 0) : ?>
-                            <input type="hidden" class="qty" name="qty" value="<?php echo $this->product['virtualQty']; ?>">
-                        <?php else : ?>
-                            <input type="hidden" class="qty" name="qty" value="<?php echo $this->product['quantity']; ?>">
-                        <?php endif; ?>
-                        <input type="button" value="Купить" name="oneClickBuy" class="btn btn-success one-click-buy md-trigger" data-modal="modal-1" data-toggle="tooltip" data-placement="top" title="в 1 клик">
-                    </form><!-- /One click buy -->
+        <?php if ($this->product['quantity'] > 0 || $this->product['virtualQty'] > 0) : ?>
+            <!-- Add to cart -->
+            <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
+                <input type="hidden" class="id" name="id" value="<?php echo $this->product[0]->getId(); ?>">
+                <input type="hidden" class="continue" name="continue">
+                <?php if (!in_array($this->product[0]->getId(), $this->inCart)) : ?>
+                    <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
+                <?php else : ?>
+                    <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
                 <?php endif; ?>
-            </div>
+            </form><!-- /Add to cart -->
+        <?php endif; ?>
+        <?php if (!in_array($this->product[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
+            <form class="form-inline">
+                <!-- One click buy -->
+                <input type="hidden" class="id" name="id" value="<?php echo $this->product[0]->getId(); ?>">
+                <?php if ($this->product['quantity'] === 0 &&  $this->product['virtualQty'] > 0) : ?>
+                    <input type="hidden" class="qty" name="qty" value="<?php echo $this->product['virtualQty']; ?>">
+                <?php else : ?>
+                    <input type="hidden" class="qty" name="qty" value="<?php echo $this->product['quantity']; ?>">
+                <?php endif; ?>
+                <?php if ($this->product['quantity'] < 1 && $this->product['virtualQty'] < 1) : ?>
+                    <input type="button" value="Заказать" name="order" class="btn btn-warning order-product md-trigger" data-modal="modal-3" data-toggle="tooltip" data-placement="top" title="Заказ товара">
+                <?php else : ?>
+                    <input type="button" value="Купить" name="oneClickBuy" class="btn btn-success one-click-buy md-trigger" data-modal="modal-1" data-toggle="tooltip" data-placement="top" title="в 1 клик">
+                <?php endif; ?>
+            </form><!-- /One click buy -->
         <?php endif; ?>
     </div>
 </section>
@@ -105,6 +102,35 @@
         </div>
     </div>
 </div>
+
+<div class="md-modal md-effect-1" id="modal-3">
+    <div class="md-content">
+        <h3 class="order-info-header">Заказать товар</h3>
+        <div>
+            <p class="order-info">Для подтверждения заказа, укажите свой <strong>номер телефона</strong> в поле ввода:</p>
+            <div class="order-form">
+                <form action="<?php echo $this->url('cart');?>" method="post" class="form-inline" role="form">
+                    <input name="id[]" type="hidden" class="order-product-input-id">
+                    <div class="products-buy">
+                        <div class="order-product-name"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon form-addon">+380</div>
+                            <input name="phone" class="form-control order-input" type="tel" value="<?php echo $this->userInfo['phone'] ;?>" placeholder="Ваш номер" data-toggle="tooltip" data-placement="top" title="Укажите Ваш номер телефона" required>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-success order-submit" name="order" value="Готово">
+                </form>
+            </div>
+            <?php if (!$this->zfcUserIdentity()): ?>
+                <p class="bg-info">Так же, вы можете войти в систему используя свои данные: <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Вход</a></p>
+            <?php endif ?>
+            <button type="button" class="close md-close"><span aria-hidden="true">&times;</span><span class="sr-only">Закрыть</span></button>
+        </div>
+    </div>
+</div>
 <div class="md-overlay"></div>
+
 
 <script src="/lightbox/lightbox.min.js"></script>

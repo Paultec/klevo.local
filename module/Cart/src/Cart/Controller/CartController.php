@@ -32,6 +32,9 @@ class CartController extends AbstractActionController
         $this->currentSession = new Container();
     }
 
+    /**
+     * @return ViewModel
+     */
     public function indexAction()
     {
         $request = $this->getRequest();
@@ -55,18 +58,30 @@ class CartController extends AbstractActionController
                 return $this->redirect()->toRoute('cart');
             }
 
-            // если это покупка в 1 клик
+            $isOrder = false;
+
+            // если покупка в 1 клик
             if (isset($postData['oneClickBuy'])) {
                 // убрать данные о способе доставки и способе оплаты
                 unset($postData['delivery']);
                 unset($postData['payment']);
+                unset($postData['comment']);
+            }
+
+            // если заказ
+            if (isset($postData['order'])) {
+                unset($postData['qty']);
+
+                $isOrder = !$isOrder;
             }
 
             // проверить post параметры
-            $checkResult = $this->checkPostData($postData);
+            $checkResult = $this->checkPostData($postData, $isOrder);
 
             if (!$checkResult) {
-                var_dump('error');
+                $this->currentSession->cartError = true;
+
+                return $this->prg('/cart/error', true);
             }
 
             // выбираем продукты из корзины
@@ -82,28 +97,39 @@ class CartController extends AbstractActionController
                     $qb->expr()->in('p.id', $postData['id'])
                 )
                 ->getQuery();
-
             try {
                 $qr = $qs->getArrayResult();
             } catch (\Exception $e) {
-                var_dump('error');
+                $this->currentSession->cartError = true;
+
+                return $this->prg('/cart/error', true);
             }
 
             $result = array();
 
-            $selectedQty = $postData['qty']; // к-во выбранных пользователем товаров
+            if (!$isOrder) {
+                // если это не заказ - проверяем к-во
+                $selectedQty = $postData['qty']; // к-во выбранных пользователем товаров
 
-            for ($i = 0, $count = count($selectedQty); $i < $count; $i++) {
-                if ($qr[$i]['quantity'] == 0) {
-                    $qr[$i]['quantity'] = $qr[$i]['virtualQty'];
-                }
+                for ($i = 0, $count = count($selectedQty); $i < $count; $i++) {
+                    if ($qr[$i]['quantity'] == 0) {
+                        $qr[$i]['quantity'] = $qr[$i]['virtualQty'];
+                    }
 
-                if ((int)$selectedQty[$i] > $qr[$i]['quantity']) {
-                    var_dump('error'); // выбрано много товаров
-                } else {
-                    $result[$i]             = $qr[$i][0];
-                    $result[$i]['quantity'] = (int)$selectedQty[$i];
+                    if ((int)$selectedQty[$i] > $qr[$i]['quantity']) {
+                        // выбрано много товаров
+                        $this->currentSession->cartError = true;
+
+                        return $this->prg('/cart/error', true);
+                    } else {
+                        $result[$i] = $qr[$i][0];
+                        $result[$i]['quantity'] = (int)$selectedQty[$i];
+                    }
                 }
+            } else {
+                // если заказ - записываем данные о товаре в результирующий массив, без проверки к-ва
+                $result[0]              = $qr[0][0];
+                $result[0]['quantity']  = 0;
             }
 
             // данные пользователя
@@ -142,7 +168,9 @@ class CartController extends AbstractActionController
             $cartEntity->setIdUser($user['user']);
             $cartEntity->setDeliveryMethod($currentDeliveryMethod);
             $cartEntity->setPaymentMethod($currentPaymentMethod);
-            $cartEntity->setComment($postData['comment']);
+            $cartEntity->setComment($postData['comment'] ?: null);
+            // Если заказ
+            if ($isOrder) { $cartEntity->setType(true); }
 
             $this->getEntityManager()->persist($cartEntity);
 
@@ -164,21 +192,23 @@ class CartController extends AbstractActionController
                 $this->getEntityManager()->persist($cartTable);
             }
 
-            // Подсчитать общую сумму заказа
-            foreach ($result as $item) {
-                $result['total'] += $item['price'] * $item['quantity'];
-            }
+            // Подсчитать общую сумму заказа, если это не заказ
+            if (!$isOrder) {
+                foreach ($result as $item) {
+                    $result['total'] += $item['price'] * $item['quantity'];
+                }
 
-            // новая общая сумма покупки
-            $totalBuy = (int)$user['userAddition']->getTotalBuy() + $result['total'];
-            $user['userAddition']->setTotalBuy($totalBuy);
+                // новая общая сумма покупки
+                $totalBuy = (int)$user['userAddition']->getTotalBuy() + $result['total'];
+                $user['userAddition']->setTotalBuy($totalBuy);
+            }
 
             $this->getEntityManager()->flush();
 
             // очищаем корзину
             $this->removeAll();
 
-            $this->currentSession->success = $result;
+            $this->currentSession->cartSuccess = $result;
 
             return $this->prg('/cart/success', true);
         }
@@ -208,6 +238,9 @@ class CartController extends AbstractActionController
         return $viewModel;
     }
 
+    /**
+     * @return array|\Zend\Http\Response
+     */
     public function addAction()
     {
         $request = $this->getRequest();
@@ -216,7 +249,9 @@ class CartController extends AbstractActionController
             $postData = $request->getPost();
 
             if (empty($postData['id'])) {
-                var_dump('error');
+                $this->currentSession->cartError = true;
+
+                return $this->prg('/cart/error', true);
             }
 
             if (!isset($this->currentSession->cart)) {
@@ -242,57 +277,16 @@ class CartController extends AbstractActionController
         return $this->redirect()->toRoute('cart');
     }
 
-    public function orderAction()
-    {
-        $request = $this->getRequest();
-
-        if ($request->isPost()) {
-            $postData = $request->getPost();
-
-            var_dump($postData); exit;
-
-//            $id = 9999999999999;
-
-            if ((int)$postData['id'] < 1) {
-                return $this->redirect()->toRoute('home');
-            }
-
-            $product = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('id' => (int)$postData['id']));
-
-            var_dump($product); exit;
-        }
-
-        $translit = $this->params()->fromRoute('translit', null);
-
-        $product = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('translit' => $translit));
-
-        if (is_null($product)) {
-            var_dump('error');
-        }
-
-        // данные пользователя
-        $userInfo = $this->forward()->dispatch('Data/Controller/CartUserHelp',
-            array('action' => 'user'))->getVariables();
-
-        $viewModel = new ViewModel(array(
-                'name'  => $product->getName(),
-                'id'    => $product->getId(),
-                'user'  => $userInfo
-            ));
-
-        $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
-        $viewModel->addChild($catalog, 'catalog');
-
-        return $viewModel;
-    }
-
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function successAction()
     {
-        if (isset($this->currentSession->success)) {
+        if (isset($this->currentSession->cartSuccess)) {
             // Товары, которые заказал пользователь
-            $result = $this->currentSession->success;
+            $result = $this->currentSession->cartSuccess;
 
-            unset($this->currentSession->success);
+            unset($this->currentSession->cartSuccess);
 
             $viewModel = new ViewModel(array(
                     'result' => $result
@@ -307,7 +301,32 @@ class CartController extends AbstractActionController
         return $this->redirect()->toRoute('home');
     }
 
-    protected function checkPostData(array $postData)
+    /**
+     * @return ViewModel
+     */
+    public function errorAction()
+    {
+        if (isset($this->currentSession->cartError)) {
+            unset($this->currentSession->cartError);
+
+            $viewModel = new ViewModel();
+
+            $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
+            $viewModel->addChild($catalog, 'catalog');
+
+            return $viewModel;
+        }
+
+        return $this->redirect()->toRoute('home');
+    }
+
+    /**
+     * @param array $postData
+     * @param       $isOrder
+     *
+     * @return bool
+     */
+    protected function checkPostData(array $postData, $isOrder)
     {
         $flag = true;
 
@@ -321,15 +340,20 @@ class CartController extends AbstractActionController
             }
         }
 
-        foreach ($postData['qty'] as $postQty) {
-            if ($postQty <= 0) {
-                $flag = !$flag;
+        if (!$isOrder) {
+            foreach ($postData['qty'] as $postQty) {
+                if ($postQty <= 0) {
+                    $flag = !$flag;
+                }
             }
         }
 
         return $flag;
     }
 
+    /**
+     * Remove all cart items
+     */
     protected function removeAll()
     {
         if (isset($this->currentSession->cart)) {
@@ -337,6 +361,9 @@ class CartController extends AbstractActionController
         }
     }
 
+    /**
+     * @param $postData
+     */
     protected function removeItem($postData)
     {
         $key = array_search((int)$postData['removeItem'], $this->currentSession->cart);
@@ -346,6 +373,11 @@ class CartController extends AbstractActionController
         }
     }
 
+    /**
+     * @param $cartSession
+     *
+     * @return mixed
+     */
     protected function getCartProducts($cartSession)
     {
         if (empty($cartSession)) { return false; }

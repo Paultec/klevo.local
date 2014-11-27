@@ -39,7 +39,7 @@ class CartUserHelpController extends AbstractActionController
 
             // если пользователя нет - создаем временного
             if (!$userCheck) {
-                $tmpEmail   = 'temp' . md5(microtime() . range(0, 99999) . md5(microtime())) . '@klevo.com.ua';
+                $tmpEmail   = 'temp_' . md5(microtime() . range(0, 99999) . md5(microtime())) . '@klevo.com.ua';
                 $tmpPass    = '$2y$14$t.oX7G/7sCHzao7ieg7ouOoCrlBkw5KTATTzsJuWcNkCr72zaFMdS';
 
                 $tmpUser = new User();

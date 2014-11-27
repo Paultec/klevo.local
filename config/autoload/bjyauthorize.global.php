@@ -30,7 +30,7 @@ return array(
                 ),
                 array(
                     'controller' => 'Cart\Controller\Cart',
-                    'action'     => array('index', 'add', 'order', 'success', 'error'),
+                    'action'     => array('index', 'add', 'success', 'error'),
                     'roles'      => array(),
                 ),
                 array(
