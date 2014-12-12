@@ -30,7 +30,8 @@ class Module
                         'Product\Controller\Upload',
                         'Register\Controller\Index',
                         'Register\Controller\Register',
-                        'Register\Controller\RegisterTable'
+                        'Register\Controller\RegisterTable',
+                        'Article\Controller\Edit'
                     ))) {
                     $controller->layout('admin/layout');
                 }

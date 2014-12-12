@@ -1,0 +1,26 @@
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+
+    <p>Вы действительно хотите Скрыть/Показать
+        <strong>"<?php echo $this->escapeHtml($this->article->getTitle()); ?>"</strong>?
+    </p>
+
+    <?php
+    $url = $this->url('edit-article/default', array(
+            'action' => 'hide',
+            'id'     => $this->id,
+        ));
+    ?>
+
+    <form action="<?php echo $url; ?>" method="post">
+        <div>
+            <input type="hidden" name="id" value="<?php echo (int)$this->id; ?>">
+            <input type="submit" class="btn btn-danger" name="hide" value="Да">
+            <input type="submit" class="btn btn-success" name="hide" value="Нет">
+        </div>
+    </form>
+</section>

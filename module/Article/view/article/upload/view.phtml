@@ -1,0 +1,98 @@
+<style>
+    ol {
+        font-size: 22px;
+    }
+
+    ol ol {
+        margin-left: 20px;
+    }
+
+    .picture-preview, .picture-preview-inner {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    img, .bottom-name {
+        width: 128px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+    }
+</style>
+<div class="content row">
+    <div class="col col-lg-4">
+       <ol class="tree list-unstyled">
+        <?php foreach ($this->result as $itemKey => $itemVal) : ?>
+            <?php if (is_array($itemVal)) : ?>
+                <li><span class="toggle"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;<?php echo $itemKey; ?></span>
+                    <ol class="list-unstyled">
+                        <?php foreach ($itemVal as $fileName) : ?>
+                            <li class="file"><i class="glyphicon glyphicon-picture"></i>&nbsp;<a onclick="selectFile(this)" href="/img/article/<?php echo $itemKey . '/' . $fileName; ?>"><?php echo $fileName; ?></a></li>
+                        <?php endforeach;?>
+                    </ol>
+                </li>
+            <?php else : ?>
+                <li class="file"><i class="glyphicon glyphicon-picture"></i>&nbsp;<a onclick="selectFile(this)" href="/img/article/<?php echo $itemVal; // filename without parent folders ?>"><?php echo $itemVal; ?></a></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </ol>
+    </div>
+    <div class="col col-lg-8">
+        <?php
+        if (empty($this->result)) {
+            echo '<h1>Нет изображений</h1>';
+        }
+        ?>
+        <?php $count = 1; foreach ($this->result as $itemKey => $itemVal) : ?>
+            <?php if (is_array($itemVal)) : ?>
+                <div class="picture-preview"><img src="/img/misc/folder.png" class="folder" data-folder="<?php echo $count;?>"><div class="bottom-name"><?php echo $itemKey; ?></div></div>
+                    <div class="image-in-folder hide folder-<?php echo $count;?>">
+                        <div class="picture-preview-inner">
+                            <a href=""><img src="/img/misc/arrow-back.png" title="Назад"></a>
+                            <div class="bottom-name">Назад</div>
+                        </div>
+                        <?php foreach ($itemVal as $fileName) : ?>
+                            <div class="picture-preview-inner">
+                                <a onclick="selectFile(this)" href="/img/article/<?php echo $itemKey . '/' . $fileName; ?>">
+                                    <img src="/img/article/<?php echo $itemKey . '/' . $fileName; ?>" title="<?php echo $fileName; ?>">
+                                </a>
+                                <div class="bottom-name"><?php echo $fileName; ?></div>
+                            </div>
+                            <?php $count++; ?>
+                        <?php endforeach; ?>
+                    </div>
+            <?php else : ?>
+                <div class="picture-preview">
+                    <a onclick="selectFile(this)" href="/img/article/<?php echo $itemVal; ?>">
+                        <img src="/img/article/<?php echo $itemVal; ?>" title="<?php echo $itemVal; ?>">
+                    </a>
+                    <div class="bottom-name"><?php echo $itemVal; ?></div>
+                </div>
+            <?php endif;?>
+        <?php endforeach;?>
+    </div>
+</div>
+<script>
+    function selectFile(a) {
+        window.opener.CKEDITOR.tools.callFunction(<?php echo $_GET['CKEditorFuncNum']?>, a.href, '');
+        self.close();
+    }
+
+    var $toggle = $('span.toggle');
+
+    $toggle.next().hide();
+    $toggle.css('cursor', 'pointer');
+
+    $toggle.click(function() {
+        $(this).next().toggle(500);
+    });
+
+    $('.folder').on('dblclick', function() {
+        var target = $(this).data('folder');
+
+        $('.image-in-folder').add('.picture-preview').addClass('hide');
+
+        $('.folder-' + target).removeClass('hide');
+    });
+</script>

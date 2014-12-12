@@ -143,7 +143,14 @@ class IndexController extends AbstractActionController
             ->getQuery();
         $qs->execute();
 
-        $qr = $qs->getSingleResult();
+        try {
+            $qr = $qs->getSingleResult();
+        } catch (\Exception $e) {
+            $view = new ViewModel();
+            $view->setTemplate('error/404');
+
+            return $view;
+        }
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
 

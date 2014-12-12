@@ -1,1 +1,36 @@
-<h1 class="text-center">Ожидается</h1>
+<?php
+$title = 'Статьи';
+$this->headTitle($title);
+?>
+<section class="col col-lg-12">
+    <?php if ($this->paginator->count() > 0): ?>
+        <div class="article-holder">
+        <?php foreach ($this->paginator as $item): ?>
+            <?php if (is_null($item->getIdStatus()) || ($item->getIdStatus()->getId() == 3)): ?>
+                <section class="article-item">
+                    <div class="text-muted"><span class="bg-info">Опубликовано: <time class="timeago" datetime="<?php echo $item->getDate()->format('c'); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $item->getDate()->format('d.m.Y H:i:s'); ?>"></time></span></div>
+                    <h3><a href="<?php echo $this->url('article/view', array('name' => $item->getTranslit())); ?>"><?php echo $item->getTitle(); ?></a></h3>
+                    <?php echo $item->getText(); // .article-text ?>
+                    <p class="text-right"><a class="btn btn-default" href="<?php echo $this->url('article/view', array('name' => $item->getTranslit())); ?>">Читать далее &#8594;</a></p>
+                </section>
+            <?php endif;?>
+        <?php endforeach; ?>
+        </div>
+    <?php else : ?>
+        <h3 class="text-center">Извините статей пока нет.</h3>
+    <?php endif;?>
+</section>
+
+<section class="col col-lg-12 text-center paginator-holder">
+    <div class="delim"></div>
+    <?php
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'article/paginator/pagination.phtml') : '';
+    ?>
+</section>
+<script src="/js/clamp.min.js"></script>
+<script src="/js/timeago/timeago.min.js"></script>
+<script src="/js/timeago/timeago.ru.min.js"></script>
+<script>
+    $('.article-text').each(function(ag,ah){$clamp(ah,{clamp:10,useNativeClamp:false})});
+    $('.timeago').timeago();
+</script>

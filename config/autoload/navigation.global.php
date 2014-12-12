@@ -23,7 +23,7 @@ return array(
             ),
             array(
                 'label' => 'Форум',
-                'route' => 'article',
+                'route' => 'contacts',
                 'class' => 'float-shadow',
             ),
             array(

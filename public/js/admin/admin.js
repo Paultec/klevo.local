@@ -1,5 +1,5 @@
 $(function() {
-    $('#productList-table').dataTable({
+    $('#productList-table').add('#articleList-table').dataTable({
         "language": {
             "url": "../../resources/ru_RU.lg"
         }

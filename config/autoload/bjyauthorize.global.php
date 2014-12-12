@@ -38,6 +38,11 @@ return array(
                     'action'     => array('index'),
                     'roles'      => array(),
                 ),
+                array(
+                    'controller' => 'Article\Controller\Index',
+                    'action'     => array('index', 'view'),
+                    'roles'      => array(),
+                ),
                 // конец раздела 1
 
                 // Раздел 2
@@ -83,6 +88,9 @@ return array(
                         'Register\Controller\Register',
                         'Register\Controller\RegisterTable',
                         'Register\Controller\Remains',
+                        'Article\Controller\Index',
+                        'Article\Controller\Edit',
+                        'Article\Controller\Upload',
                     ),
                     'roles'      => array('manager'),
                 ),

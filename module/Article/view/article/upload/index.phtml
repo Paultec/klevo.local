@@ -1,0 +1,54 @@
+<style>
+    .absolute-center {
+        width: 300px;
+        height: 300px;
+        /* Center */
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+</style>
+<?php
+$title = 'Добавить изображение';
+$this->headTitle($title);
+
+echo '<div class="absolute-center">';
+
+$form = $this->form;
+$form->setAttribute('action', $this->url('article-img-upload'));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+echo '<div class="form-group">' .
+    $this->formRow($form->get('image')) .
+    '</div>';
+
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+
+echo '</div>';
+?>
+<script>
+    var $submit = $('input[type="submit"]'),
+        $file   = $('input[type="file"]');
+
+    $submit.attr('disabled', true);
+
+    $file.on('change', function(){
+        if ($(this).val().indexOf('.png')  > 0 ||
+            $(this).val().indexOf('.jpeg') > 0 ||
+            $(this).val().indexOf('.jpg')  > 0) {
+            setImgUploadActive();
+        } else {
+            $submit.attr('disabled', true);
+        }
+    });
+
+    function setImgUploadActive() {
+        $submit.attr('disabled', false);
+    }
+</script>

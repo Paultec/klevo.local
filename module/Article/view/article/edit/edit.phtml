@@ -1,0 +1,11 @@
+<div class="col col-lg-12">
+    <form action="<?php echo $this->url('edit-article/default', array('action' => 'edit', 'id' => $this->id)); ?>" method="POST">
+        <input name="id" type="hidden" value="<?php echo $this->id; ?>">
+        <label>Заголовок: <input type="text" class="form-control" name="title" value="<?php echo $this->title; ?>" placeholder="Заголовок статьи" required="required"></label>
+        <textarea name="text" id="editor" required="required"><?php echo $this->text; ?>
+        </textarea>
+        <input type="submit" class="btn btn-success" value="Сохранить">
+    </form>
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script>CKEDITOR.replace('editor');</script>
+</div>

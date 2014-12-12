@@ -78,8 +78,61 @@
         <a class="left carousel-control" href="#carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
         <a class="right carousel-control" href="#carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
+
+    <div class="delim hidden-sm hidden-xs"></div>
+
+    <h3 class="text-center hidden-sm hidden-xs">Популярные</h3>
+    <div id="carousel-popular" class="carousel carousel-popular slide hidden-sm hidden-xs" data-ride="carousel">
+
+        <ol class="carousel-indicators carousel-popular-indicators">
+            <li data-target="#carousel-popular" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-popular" data-slide-to="1"></li>
+            <li data-target="#carousel-popular" data-slide-to="2"></li>
+        </ol>
+
+        <section class="carousel-inner">
+            <div class="active item">
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+            </div>
+            <div class="item">
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+            </div>
+            <div class="item">
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+                <div class="col col-popular col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt=""></a></div>
+            </div>
+        </section>
+
+        <a class="left carousel-control carousel-popular-control" href="#carousel-popular" data-slide="prev"><span class="fa fa-chevron-left"></span></a>
+        <a class="right carousel-control carousel-popular-control" href="#carousel-popular" data-slide="next"><span class="fa fa-chevron-right"></span></a>
+    </div>
 </section>
 
 <section class="col col-lg-3">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam dolorem incidunt minus perspiciatis quia quis ratione. Ab, corporis ea eius enim ex explicabo facilis ipsum libero nesciunt quia quidem voluptatem?
+    <div class="article">
+        <h3 class="text-center"><a href="<?php echo $this->url('article'); ?>">Новые статьи</a></h3>
+        <div class="delim"></div>
+        <div class="last-articles">
+            <section class="last-article-item">
+                <?php foreach ($this->articles as $item) : ?>
+                    <?php if (is_null($item['idStatus']) || ($item['idStatus']->id == 3)): ?>
+                        <section class="last-article-item">
+                            <h5><a href="<?php echo $this->url('article/view', array('name' => $item['translit'])); ?>"><?php echo $item['title']; ?></a></h5>
+                            <div class="article-text"><?php echo strip_tags($item['text']); ?></div>
+                        </section>
+                    <?php endif;?>
+                <?php endforeach;?>
+            </section>
+        </div>
+    </div>
 </section>
+<script src="/js/clamp.min.js"></script>
+<script>$('.article-text').each(function(ag,ah){$clamp(ah,{clamp:3,useNativeClamp:false})});</script>

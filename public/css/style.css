@@ -259,6 +259,39 @@ Horizontal menu
 }
 
 /******************************************************************************
+article
+*******************************************************************************/
+.article > h3 a:hover {
+    text-decoration: none;
+}
+
+.article > h3 {
+    margin-top: 0;
+}
+
+.article-item > h3 {
+    margin-top: 10px;
+}
+
+.article-holder, .single-article {
+    background: #ffffff;
+    padding: 10px 15px;
+}
+
+.article-item {
+    border-bottom: 1px dashed #563D7C;
+}
+
+.article-item > h3 {
+    text-shadow: 1px 1px 3px #666;
+}
+
+.article-text img {
+    display: block;
+    margin: 0 auto;
+}
+
+/******************************************************************************
 Main search
 *******************************************************************************/
 #main-search {
@@ -293,7 +326,7 @@ Info on carousel
     overflow:hidden;
     width:540px;
     height:350px;
-    background:#111 url(../img/misc/progress.gif) no-repeat center center;
+    background:#111 url("../img/misc/progress.gif") no-repeat center center;
 }
 
 .mosaic-backdrop {
@@ -339,6 +372,46 @@ Info on carousel
 .items p {
     color:#aaa;
     text-shadow:1px 1px 0 rgb(0,0,0);
+}
+
+/******************************************************************************
+Popular carousel
+*******************************************************************************/
+.col-popular {
+    padding: 0;
+}
+
+.carousel-popular {
+    padding: 0 15px;
+}
+
+/* The controls */
+.carousel-popular-control {
+    left: -12px;
+    width: 40px;
+    padding-top: 50px;
+    background: none !important;
+}
+
+.carousel-popular-control.right {
+    right: -12px;
+}
+
+/* The indicators */
+.carousel-popular-indicators {
+    right: 50%;
+    top: auto;
+    bottom: -10px;
+    margin-right: -19px;
+}
+
+/* The colour of the indicators */
+.carousel-popular-indicators li {
+    background: #cecece;
+}
+
+.carousel-popular-indicators .active {
+    background: #428bca;
 }
 
 /******************************************************************************
@@ -959,16 +1032,3 @@ cart breadcrumb
 .next-step {
     margin-top: 5px !important;
 }
-
-/******************************************************************************
- order
- *******************************************************************************/
-/*
-.order-form {
-     max-width: 350px;
- }
-
-.order-form .email-addon {
-    padding-left: 20px;
-    padding-right: 20px;
-}*/

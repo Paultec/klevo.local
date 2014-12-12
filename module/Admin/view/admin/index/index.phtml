@@ -42,5 +42,14 @@
                 <li><a tabindex="-1" href="<?php echo $this->url('search/optimize', array('action' => 'optimize'));?>">Оптимизировать индексы</a></li>
             </ul>
         </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Статьи <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a tabindex="-1" href="<?php echo $this->url('edit-article');?>">Создать/Редактировать статью</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('article-img-upload');?>">Загрузить изображение для статьи</a></li>
+            </ul>
+        </li>
     </ul>
 </div>

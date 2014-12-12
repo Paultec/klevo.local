@@ -1,0 +1,15 @@
+<?php
+$title = $this->article->getTitle();
+$this->headTitle($title);
+?>
+<section class="col col-lg-12">
+    <p><a class="btn btn-default" href="<?php echo $this->url('article'); ?>">&#8592; К статьям</a></p>
+    <div class="single-article">
+        <h1 class="single-article-header"><?php echo $this->article->getTitle();?></h1>
+        <div class="text-muted"><span class="bg-info">Опубликовано: <time class="timeago" datetime="<?php echo $this->article->getDate()->format('c'); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $this->article->getDate()->format('d.m.Y H:i:s'); ?>"></time></span></div>
+        <div class="single-article-text"><?php echo $this->article->getText()?></div>
+    </div>
+</section>
+<script src="/js/timeago/timeago.min.js"></script>
+<script src="/js/timeago/timeago.ru.min.js"></script>
+<script>$('.timeago').timeago();</script>
