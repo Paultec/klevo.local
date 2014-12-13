@@ -21,6 +21,10 @@ echo '<div class="form-group">' .
     $this->formRow($form->get('file')) .
     '</div>';
 
+echo '<div class="form-group">' .
+    $this->formRow($form->get('type')) .
+    '</div>';
+
 echo $this->formSubmit($form->get('submit'));
 echo $this->form()->closeTag();
 ?>

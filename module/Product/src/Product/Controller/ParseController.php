@@ -6,8 +6,11 @@ ini_set('max_execution_time', 7200);
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Http\Response;
+use Zend\Session\Container;
 
 use Product\Entity\Product;
+
+use GoSession;
 
 use PHPExcel_IOFactory;
 use PHPExcel_CachedObjectStorageFactory;
@@ -15,10 +18,11 @@ use PHPExcel_Settings;
 
 class ParseController extends AbstractActionController
 {
-    const PRODUCT_ENTITY  = 'Product\Entity\Product';
-    const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
-    const BRAND_ENTITY    = 'Catalog\Entity\Brand';
-    const STORE_ENTITY    = 'Data\Entity\Store';
+    const PRODUCT_ENTITY     = 'Product\Entity\Product';
+    const PRODUCT_ENTITY_QTY = 'Product\Entity\ProductCurrentQty';
+    const CATEGORY_ENTITY    = 'Catalog\Entity\Catalog';
+    const BRAND_ENTITY       = 'Catalog\Entity\Brand';
+    const STORE_ENTITY       = 'Data\Entity\Store';
 
     /**
      * @var
@@ -33,6 +37,13 @@ class ParseController extends AbstractActionController
     protected $errorRow  = 0;
     protected $errorData = array();
 
+    private $currentSession;
+
+    public function __construct()
+    {
+        $this->currentSession = new Container();
+    }
+
     /**
      * @return ViewModel
      */
@@ -41,7 +52,15 @@ class ParseController extends AbstractActionController
         $this->getFile();
         $this->fileInfo($this->inputFileName);
 
-        $this->insertData();
+        $parseType = $this->currentSession->parseType;
+
+        if ($parseType === 'insert') {
+            // insert
+            $this->insertData();
+        } else {
+            // update
+            $this->updateData();
+        }
 
         return new ViewModel(array(
             'insertRow' => $this->insertRow,
@@ -53,6 +72,8 @@ class ParseController extends AbstractActionController
 
     /**
      * Insert data
+     *
+     * Insert products form Excel into DB
      */
     protected function insertData()
     {
@@ -72,7 +93,7 @@ class ParseController extends AbstractActionController
         $translit = $this->getServiceLocator()->get('translitService');
 
         foreach ($parse as $dataRow) {
-            if (!isset($currentData[strtolower($dataRow[0])])) {
+            if (!isset($currentData[strtolower(trim($dataRow[0]))])) {
                 $product = new Product();
 
                 try {
@@ -113,6 +134,58 @@ class ParseController extends AbstractActionController
     }
 
     /**
+     * Update data
+     *
+     * Update virtual quantity form supplier price
+     */
+    protected function updateData()
+    {
+        $matchProducts  = array();
+        $productIds     = array();
+
+        $currentData = $this->getCurrentData();
+
+        // Удаляем шапку документа
+        $parse = array_slice($this->parseExcel(), 2);
+
+        foreach ($parse as $dataRow) {
+            if (isset($currentData[strtolower(trim($dataRow[0]))])) {
+                try {
+                    if (gettype($dataRow[0]) !== 'string' || gettype($dataRow[1]) !== 'double') {
+                        throw new \Exception('Invalid data type');
+                    }
+                } catch (\Exception $e) {
+                    $this->errorRow++;
+                    $this->errorData[] = $dataRow[0];
+
+                    continue;
+                }
+
+                $matchProducts[0][] = (string)$dataRow[0];
+                $matchProducts[1][] = (int)$dataRow[1];
+
+                $this->insertRow++;
+            } else {
+                $this->skipRow++;
+            }
+        }
+
+        $products = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findBy(array('name' => $matchProducts[0]));
+
+        foreach ($products as $product) {
+            $productIds[] = $product->getId();
+        }
+
+        $productCurrentQty =  $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY_QTY)->findBy(array('id' => $productIds));
+
+        for ($i = 0, $count = count($productIds); $i < $count; $i++) {
+            $productCurrentQty[$i]->setVirtualQty($matchProducts[1][$i]);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * @param $entity
      *
      * @return array
@@ -124,7 +197,7 @@ class ParseController extends AbstractActionController
         $tmpArray = array();
 
         foreach ($items as $item) {
-                $tmpArray[] = $item->getId();
+            $tmpArray[] = $item->getId();
         }
 
         return $tmpArray;

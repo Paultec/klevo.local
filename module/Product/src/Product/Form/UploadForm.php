@@ -25,6 +25,20 @@ class UploadForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'type',
+            'attributes' => array(
+                'value' => 'insert',
+            ),
+            'type' => 'radio',
+            'options' => array(
+                'value_options' => array(
+                    'insert' => 'Добавить товары',
+                    'update' => 'Обновить к-во товаров (поставщика)',
+                ),
+            )
+        ));
+
+        $this->add(array(
             'name' => 'submit',
             'attributes' => array(
                 'class' => 'btn btn-success excel-file-button',

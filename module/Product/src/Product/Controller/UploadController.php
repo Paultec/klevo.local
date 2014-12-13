@@ -3,11 +3,21 @@ namespace Product\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+
+use GoSession;
 
 use Product\Form;
 
 class UploadController extends AbstractActionController
 {
+    private $currentSession;
+
+    public function __construct()
+    {
+        $this->currentSession = new Container();
+    }
+
     /**
      * @return \Zend\Http\Response|ViewModel
      */
@@ -19,7 +29,7 @@ class UploadController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $data = array_merge_recursive(
-//                $this->getRequest()->getPost()->toArray(),
+                $this->getRequest()->getPost()->toArray(),
                 $this->getRequest()->getFiles()->toArray()
             );
 
@@ -40,10 +50,13 @@ class UploadController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response
+     * @param $data
+     *
+     * @return mixed
      */
-    protected function redirectToSuccessPage()
+    protected function redirectToSuccessPage($data)
     {
+        $this->currentSession->parseType = $data['type'];
         $response = $this->redirect()->toRoute('parse');
         $response->setStatusCode(303);
 
