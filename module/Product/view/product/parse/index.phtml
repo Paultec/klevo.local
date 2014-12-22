@@ -3,18 +3,36 @@
 //        '15;URL=/file-upload');
 ?>
 <section class="col col-lg-7 col-lg-offset-2">
-    <h3>Процесс успешно завершен</h3>
-    <p>На страницу <a href="<?php echo $this->url('fileupload'); ?>">Загрузка файла</a></p>
-    <p>Добавлено/Обновлено записей: <strong><?php echo $this->insertRow; ?></strong></strong></p>
-    <p>Пропущено записей: <strong><?php echo $this->skipRow; ?></strong></p>
-    <?php if ($this->errorRow > 0): ?>
-    <p>Неверный формат данных: <strong><?php echo $this->errorRow; ?></strong></p>
-        <table class="table table-striped">
-        <?php foreach ($this->errorData as $errorItem) : ?>
-            <tr>
-                <td><?php echo $errorItem; ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </table>
+    <?php if ($this->update !== false) : ?>
+        <h3>Процесс успешно завершен</h3>
+        <p>На страницу <a href="<?php echo $this->url('fileupload'); ?>">Загрузка файла</a></p>
+        <p>Добавлено/Обновлено записей: <strong><?php echo $this->insertRow; ?></strong></strong></p>
+        <p>Пропущено записей: <strong><?php echo $this->skipRow; ?></strong></p>
+        <?php if ($this->errorRow > 0): ?>
+            <p>Неверный формат данных: <strong><?php echo $this->errorRow; ?></strong></p>
+            <table class="table table-striped">
+                <?php foreach ($this->errorData as $errorItem) : ?>
+                    <tr>
+                        <td><?php echo $errorItem; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endif; ?>
+        <?php if ($this->skipRow > 0): ?>
+            <p>Товаров нет в базе</p>
+            <?php if (!empty($this->skipRowData)) : ?>
+                <table class="table table-striped">
+                    <?php foreach ($this->skipRowData as $errorData) : ?>
+                        <tr>
+                            <td><?php echo $errorData; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endif; ?>
+        <?php endif; ?>
+    <?php else : ?>
+        <h3>Процесс завершился неудачей</h3>
+        <p>На страницу <a href="<?php echo $this->url('fileupload'); ?>">Загрузка файла</a></p>
+        <p>Убедитесь, если ли поставщик с таким идентификатором, есть ли товары у этого поставщика!</p>
     <?php endif; ?>
 </section>

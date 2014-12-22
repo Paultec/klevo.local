@@ -1,0 +1,30 @@
+<?php
+$title = 'Добавить/Удалить товар с главной страницы';
+$this->headTitle($title);
+?>
+
+<section class="col col-lg-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-lg-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+
+    <p>Вы действительно хотите Добавить/Удалить товар с главной страницы
+        <strong>"<?php echo $this->escapeHtml($product->getName()); ?>"</strong>?
+    </p>
+
+    <?php
+    $url = $this->url('editproduct/edit', array(
+        'action' => 'top',
+        'id'     => $this->id,
+    ));
+    ?>
+
+    <form action="<?php echo $url; ?>" method="post">
+        <div>
+            <input type="hidden" name="id" value="<?php echo (int)$product->getId(); ?>">
+            <input type="submit" class="btn btn-danger" name="top" value="Да">
+            <input type="submit" class="btn btn-success" name="top" value="Нет">
+        </div>
+    </form>
+</section>

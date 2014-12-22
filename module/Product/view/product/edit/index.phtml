@@ -32,6 +32,7 @@
             <th>Цена</th>
             <th>Изображение</th>
             <th><abbr title="Отображение при поиске">Индексирован</abbr></th>
+            <th>На главной</th>
             <th>Действие</th>
         </tr>
         </thead>
@@ -43,6 +44,7 @@
             <th>Цена</th>
             <th>Изображение</th>
             <th>Индексирован</th>
+            <th>На главной</th>
             <th>Действие</th>
         </tr>
         </tfoot>
@@ -65,15 +67,18 @@
                 <td><?php echo $this->result[$i]->getDescription() ?: 'Нет'; ?></td>
                 <td><?php echo $this->result[$i]->getPrice() / 100; ?></td>
                 <td><?php echo $this->result[$i]->getImg() ?
-                        '<a href="' . $this->url('editproduct/edit', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '" class="text-img" data-img="/img/product/'. $this->result[$i]->getImg() .'">Да</a>' :
+                        '<a href="' . $this->url('editproduct/edit', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '" class="text-img" data-img="/img/product/'. $this->result[$i]->getImg() .'">Есть</a>' :
                         '<a href="' . $this->url('editproduct/edit', array('action' => 'img', 'id' => $this->result[$i]->getId())) . '">Нет</a>'; ?>
                 </td>
                 <td><?php echo $this->result[$i]->getIndexed() ? 'Да' : 'Нет'; ?></td>
+                <td><?php echo is_object($this->result[$i]->getIdStatus()) && $this->result[$i]->getIdStatus()->getId() == 5 ? 'Да' : 'Нет'; ?></td>
                 <td class="same-width">
                     <a class="btn btn-primary" href="<?php echo $this->url('editproduct/edit',
                         array('action'=>'edit', 'id' => $this->result[$i]->getId()));?>"><i class="glyphicon glyphicon-edit"></i> Редактировать</a>
                     <a class="btn btn-warning show-hide" href="<?php echo $this->url('editproduct/edit',
                         array('action'=>'hide', 'id' => $this->result[$i]->getId()));?>"><i class="glyphicon glyphicon-eye-close"></i> Скрыть</a>
+                    <a class="btn btn-success" href="<?php echo $this->url('editproduct/edit',
+                        array('action'=>'top', 'id' => $this->result[$i]->getId()));?>"><i class="glyphicon glyphicon-star"></i> На главную</a>
                 </td>
             </tr>
         <?php endfor; ?>

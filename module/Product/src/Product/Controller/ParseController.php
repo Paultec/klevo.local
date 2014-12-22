@@ -32,10 +32,11 @@ class ParseController extends AbstractActionController
     protected $inputFileName;
     protected $inputFileType;
 
-    protected $insertRow = 0;
-    protected $skipRow   = 0;
-    protected $errorRow  = 0;
-    protected $errorData = array();
+    protected $insertRow    = 0;
+    protected $skipRow      = 0;
+    protected $errorRow     = 0;
+    protected $errorData    = array();
+    protected $skipRowData  = array();
 
     private $currentSession;
 
@@ -54,19 +55,22 @@ class ParseController extends AbstractActionController
 
         $parseType = $this->currentSession->parseType;
 
+        $update = null;
         if ($parseType === 'insert') {
             // insert
             $this->insertData();
         } else {
             // update
-            $this->updateData();
+            $update = $this->updateData();
         }
 
         return new ViewModel(array(
-            'insertRow' => $this->insertRow,
-            'skipRow'   => $this->skipRow,
-            'errorRow'  => $this->errorRow,
-            'errorData' => $this->errorData
+            'update'        => $update,
+            'insertRow'     => $this->insertRow,
+            'skipRow'       => $this->skipRow,
+            'errorRow'      => $this->errorRow,
+            'errorData'     => $this->errorData,
+            'skipRowData'   => $this->skipRowData
         ));
     }
 
@@ -136,7 +140,9 @@ class ParseController extends AbstractActionController
     /**
      * Update data
      *
-     * Update virtual quantity form supplier price
+     * Update virtual quantity from supplier price
+     *
+     * @return bool
      */
     protected function updateData()
     {
@@ -145,8 +151,34 @@ class ParseController extends AbstractActionController
 
         $currentData = $this->getCurrentData();
 
+        // получить идентификатор поставщика idSupplier
+        $fullData   = $this->parseExcel();
+        $idSupplier = (int)$fullData[0][1];
+
+        $supplier   = $this->getEntityManager()->getRepository(self::STORE_ENTITY)->findBy(array('id' => $idSupplier));
+        $product    = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findBy(array('idSupplier' => $idSupplier));
+
+        $nullifyId = array();
+
+        foreach ($product as $item) {
+            $nullifyId[] = $item->getId();
+        }
+
+        if (empty($supplier) || empty($nullifyId)) {
+            return false;
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qu = $qb->update(self::PRODUCT_ENTITY_QTY, 'q')
+            ->set('q.virtualQty', '?1')
+            ->where($qb->expr()->in('q.id', $nullifyId))
+            ->setParameter(1, 0)
+            ->getQuery();
+        $qu->execute();
+
         // Удаляем шапку документа
-        $parse = array_slice($this->parseExcel(), 2);
+        $parse = array_slice($fullData, 2);
 
         foreach ($parse as $dataRow) {
             if (isset($currentData[strtolower(trim($dataRow[0]))])) {
@@ -166,6 +198,7 @@ class ParseController extends AbstractActionController
 
                 $this->insertRow++;
             } else {
+                $this->skipRowData[] = (string)$dataRow[0];
                 $this->skipRow++;
             }
         }
@@ -183,6 +216,8 @@ class ParseController extends AbstractActionController
         }
 
         $this->getEntityManager()->flush();
+
+        return true;
     }
 
     /**

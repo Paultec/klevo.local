@@ -114,8 +114,24 @@ return array(
         ),
     ),
     'controllers' => array(
-        'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+        'factories' => array(
+            'Application\Controller\Index' => function($sm) {
+                $controller = new Application\Controller\IndexController();
+
+                $serviceLocator = $sm->getServiceLocator();
+
+                $services = array(
+                    'cache' => $serviceLocator->get('filesystem'),
+                );
+
+                foreach ($services as $serviceKey => $serviceValue) {
+                    $setter = 'set' . ucfirst($serviceKey);
+
+                    $controller->$setter($serviceValue);
+                }
+
+                return $controller;
+            },
         ),
     ),
     'view_manager' => array(

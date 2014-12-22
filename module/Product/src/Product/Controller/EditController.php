@@ -285,6 +285,50 @@ class EditController extends AbstractActionController
     }
 
     /**
+     * @return ViewModel
+     */
+    public function topAction()
+    {
+        // Получить данные из кеша, с учетом идентификатора пользователя и использовать их как параметры redirect
+        $seoUrlParams = unserialize($this->cache->getItem('seoUrlParams_' . $this->currentUser));
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('editproduct');
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $top = $request->getPost('top', 'Нет');
+
+            if ($top == 'Да') {
+                $id = (int)$request->getPost('id');
+                $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id);
+
+                if (is_null($product->getIdStatus()) || ($product->getIdStatus()->getId() !== 5)) {
+                    $product->setIdStatus($this->getEntityManager()->find(self::STATUS_ENTITY, $id = 5));
+                } else {
+                    $product->setIdStatus(null);
+                }
+
+                $this->cache->removeItem('topProduct');
+
+                $this->getEntityManager()->persist($product);
+                $this->getEntityManager()->flush();
+            }
+
+            return $this->redirect()->toRoute('editproduct/seoUrl', $seoUrlParams);
+        }
+
+        return new ViewModel(array(
+            'id'       => $id,
+            'product'  => $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id)
+        ));
+    }
+
+    /**
      * @return \Zend\Http\Response|ViewModel
      */
     public function imgAction()
