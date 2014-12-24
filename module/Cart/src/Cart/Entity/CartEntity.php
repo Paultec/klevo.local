@@ -73,6 +73,16 @@ class CartEntity
     private $idUser;
 
     /**
+     * @var \Data\Entity\Status
+     *
+     * @ORM\ManyToOne(targetEntity="Data\Entity\Status")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idStatus", referencedColumnName="id")
+     * })
+     */
+    private $idStatus;
+
+    /**
      * Get id
      *
      * @return integer
@@ -221,6 +231,29 @@ class CartEntity
     }
 
     /**
+     * Set idStatus
+     *
+     * @param \Data\Entity\Status $idStatus
+     * @return CartEntity
+     */
+    public function setIdStatus(\Data\Entity\Status $idStatus = null)
+    {
+        $this->idStatus = $idStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get idStatus
+     *
+     * @return \Data\Entity\Status
+     */
+    public function getIdStatus()
+    {
+        return $this->idStatus;
+    }
+
+    /**
      * @return array
      */
     public function getArrayCopy()
@@ -242,5 +275,6 @@ class CartEntity
         $this->type             = $data['type'];
         $this->deliveryMethod   = $data['deliveryMethod'];
         $this->paymentMethod    = $data['paymentMethod'];
+        $this->idStatus         = $data['idStatus'];
     }
 }

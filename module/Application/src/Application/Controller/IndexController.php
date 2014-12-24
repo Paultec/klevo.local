@@ -35,7 +35,11 @@ class IndexController extends AbstractActionController
                 ->getQuery();
             $qs->execute();
 
-            $qr = $qs->getArrayResult();
+            try {
+                $qr = $qs->getArrayResult();
+            } catch (\Exception $e) {
+                $qr = null;
+            }
 
             $this->cache->setItem('articles', serialize($qr));
         } else {
@@ -63,7 +67,7 @@ class IndexController extends AbstractActionController
 
         $index = new ViewModel(array(
             'articles' => $qr,
-            'top'      => array_chunk($topProductsArray, 4)
+            'top'      => !empty($topProductsArray) ? array_chunk($topProductsArray, 4) : null
         ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index');

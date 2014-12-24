@@ -1090,31 +1090,31 @@ $(function(){
     /******************************************************************************
      order
      *******************************************************************************/
-    //(function() {
-    //    var length  = 9;
-    //    var $form   = $('.order-form'),
-    //        $phone  = $('.order-phone');
-    //
-    //    $phone.on('keyup', function() {
-    //        var $this = $(this);
-    //
-    //        if ($this.val().length > length) {
-    //            $this.val($this.val().substr(0, length));
-    //        }
-    //    });
-    //
-    //    $form.on('submit', function(e) {
-    //        var curLen = $phone.val().length;
-    //
-    //        if (curLen == 0 || curLen != length) {
-    //            if ($('#informer').length == 0) {
-    //                $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
-    //            }
-    //
-    //            e.preventDefault();
-    //        }
-    //    });
-    //})();
+    (function() {
+        var length  = 9;
+        var $form   = $('.order-form'),
+            $phone  = $('.order-phone');
+
+        $phone.on('keyup', function() {
+            var $this = $(this);
+
+            if ($this.val().length > length) {
+                $this.val($this.val().substr(0, length));
+            }
+        });
+
+        $form.on('submit', function(e) {
+            var curLen = $phone.val().length;
+
+            if (curLen == 0 || curLen != length) {
+                if ($('#informer').length == 0) {
+                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            }
+        });
+    })();
 
     /******************************************************************************
      top products

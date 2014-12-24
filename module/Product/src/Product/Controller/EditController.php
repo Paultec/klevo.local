@@ -17,11 +17,15 @@ use GoSession;
 
 class EditController extends AbstractActionController
 {
-    const PRODUCT_ENTITY  = 'Product\Entity\Product';
-    const BRAND_ENTITY    = 'Catalog\Entity\Brand';
-    const CATEGORY_ENTITY = 'Catalog\Entity\Catalog';
-    const STATUS_ENTITY   = 'Data\Entity\Status';
-    const STORE_ENTITY    = 'Data\Entity\Store';
+    const PRODUCT_ENTITY        = 'Product\Entity\Product';
+    const BRAND_ENTITY          = 'Catalog\Entity\Brand';
+    const CATEGORY_ENTITY       = 'Catalog\Entity\Catalog';
+    const STATUS_ENTITY         = 'Data\Entity\Status';
+    const STORE_ENTITY          = 'Data\Entity\Store';
+    const USER_ENTITY           = 'User\Entity\User';
+    const USER_ADDITION_ENTITY  = 'User\Entity\UserAddition';
+    const CART_ENTITY           = 'Cart\Entity\CartEntity';
+    const CART_TABLE            = 'Cart\Entity\CartTable';
 
     /**
      * @var
@@ -281,6 +285,53 @@ class EditController extends AbstractActionController
         return new ViewModel(array(
             'id'       => $id,
             'product'  => $this->getEntityManager()->find(self::PRODUCT_ENTITY, $id)
+        ));
+    }
+
+    public function productOrderAction()
+    {
+        $orderInfo = array();
+
+        $status = array(
+            'ordered' => 1, // заказано
+            'active'  => 3, // активен
+            'paid'    => 2, // оплачено
+            'closed'  => 6  // закрыт
+        );
+
+        // Cart Entity
+        $cartEntity = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findBy(array('idStatus' => $status['ordered']));
+
+        $count = 0;
+        foreach ($cartEntity as $cartEntityItem) {
+            $idUser         = $cartEntityItem->getIdUser()->getId();
+            $userAddition   = $this->getEntityManager()->getRepository(self::USER_ADDITION_ENTITY)->findOneBy(array('idUser' => $idUser));
+            $cartTable      = $this->getEntityManager()->getRepository(self::CART_TABLE)->findBy(array('idCartEntity' => $cartEntityItem->getId()));
+            $email          = $cartEntityItem->getIdUser()->getEmail();
+
+            $orderInfo[$email][$count]['id']        = $cartEntityItem->getId();
+            $orderInfo[$email][$count]['date']      = $cartEntityItem->getDate()->format('d.m.Y');
+            $orderInfo[$email][$count]['delivery']  = !is_null($cartEntityItem->getDeliveryMethod()) ? $cartEntityItem->getDeliveryMethod()->getName() : null;
+            $orderInfo[$email][$count]['payment']   = !is_null($cartEntityItem->getPaymentMethod())  ? $cartEntityItem->getPaymentMethod()->getName()  : null;
+            $orderInfo[$email][$count]['comment']   = $cartEntityItem->getComment();
+            $orderInfo[$email][$count]['phone']     = $userAddition->getPhone();
+            $orderInfo[$email][$count]['address']   = $userAddition->getAddress();
+
+            $countInner = 0;
+            foreach ($cartTable as $cartTableItem) {
+                $orderInfo[$email][$count]['product'][$countInner]['qty']     = $cartTableItem->getQty();
+                $orderInfo[$email][$count]['product'][$countInner]['price']   = $cartTableItem->getPrice();
+                $orderInfo[$email][$count]['product'][$countInner]['id']      = $cartTableItem->getIdProduct()->getId();
+                $orderInfo[$email][$count]['product'][$countInner]['name']    = $cartTableItem->getIdProduct()->getName();
+
+                $countInner++;
+            }
+
+            $count++;
+        }
+
+        return new ViewModel(array(
+            'orders' => $orderInfo
         ));
     }
 

@@ -169,6 +169,7 @@ class CartController extends AbstractActionController
             $cartEntity->setDeliveryMethod($currentDeliveryMethod);
             $cartEntity->setPaymentMethod($currentPaymentMethod);
             $cartEntity->setComment($postData['comment'] ?: null);
+
             // Если заказ
             if ($isOrder) { $cartEntity->setType(true); }
 

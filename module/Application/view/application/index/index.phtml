@@ -81,6 +81,7 @@
 
     <div class="delim hidden-sm hidden-xs"></div>
 
+    <?php if (!is_null($this->top)) : ?>
     <h3 class="text-center hidden-sm hidden-xs">Популярные</h3>
     <div id="carousel-popular" class="carousel carousel-popular slide hidden-sm hidden-xs" data-ride="carousel">
 
@@ -100,16 +101,17 @@
             <?php endforeach;?>
         </section>
 
-        <a class="left carousel-control carousel-popular-control" href="#carousel-popular" data-slide="prev"><span class="fa fa-chevron-left"></span></a>
-        <a class="right carousel-control carousel-popular-control" href="#carousel-popular" data-slide="next"><span class="fa fa-chevron-right"></span></a>
+        <a class="left carousel-control carousel-popular-control" href="#carousel-popular" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+        <a class="right carousel-control carousel-popular-control" href="#carousel-popular" data-slide="next"><i class="fa fa-chevron-right"></i></a>
     </div>
-
+    <?php endif;?>
 </section>
 
 <section class="col col-lg-3">
     <div class="article">
         <h3 class="text-center"><a href="<?php echo $this->url('article'); ?>">Новые статьи</a></h3>
         <div class="delim"></div>
+        <?php if (!is_null($this->articles)) : ?>
         <div class="last-articles">
             <section class="last-article-item">
                 <?php foreach ($this->articles as $item) : ?>
@@ -122,6 +124,9 @@
                 <?php endforeach;?>
             </section>
         </div>
+        <?php else : ?>
+            <h4>Статей пока нет</h4>
+        <?php endif; ?>
     </div>
 </section>
 <script src="/js/clamp.min.js"></script>
