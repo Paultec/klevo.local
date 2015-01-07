@@ -2,58 +2,188 @@
 $title = 'Заказы';
 $this->headTitle($title);
 ?>
+<style>
+    .order-informer p {
+        max-width: 300px;
+        display: inline-block;
+        margin: 5px 0;
+        padding: 10px;
+    }
+
+    input[type="number"] {
+        max-width: 50px;
+    }
+</style>
 <section class="col col-lg-12">
-    <table id="orderList-table" class="table table-striped">
+    <h2 class="text-center">Заказы</h2>
+    <p>
+        <a class="btn btn-default" href="<?php echo $this->url('product-order'); ?>">Заказанные</a>
+        <a class="btn btn-default" href="<?php echo $this->url('product-order', array('type' => 'active')); ?>">Активные</a>
+        <a class="btn btn-default" href="<?php echo $this->url('product-order', array('type' => 'paid')); ?>">Оплаченные</a>
+    </p>
+    <?php if (!empty($this->error)) : ?>
+        <h4 class="bg-danger text-center">Произошла ошибка! Превышено количество товара.</h4>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Есть в наличии</th>
+                <th>Выбрано</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->error as $errorItem) : ?>
+            <tr>
+                <td class="table-error-id"><?php echo $errorItem['id']; ?></td>
+                <td class="table-error-name" data-error="<?php echo $errorItem['id']; ?>"></td>
+                <td><?php echo $errorItem['have']; ?></td>
+                <td><?php echo $errorItem['selected']; ?></td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+    <table id="orderList-table" class="table">
         <thead>
         <tr>
-            <td>Email</td>
             <td>Дата</td>
+            <td>Email</td>
             <td>Телефон</td>
             <td>Адрес</td>
-            <td>Название товара</td>
-            <td>К-во товара</td>
-            <td>Цена (за ед.)</td>
+            <td>Инф. о заказе (н-е, к-во, цена)</td>
             <td>Способ доставки</td>
             <td>Способ оплаты</td>
             <td>Комментарий</td>
-            <td>Действие</td>
+            <td>Статус</td>
         </tr>
         </thead>
 
         <tfoot>
         <tr>
-            <td>Email</td>
             <td>Дата</td>
+            <td>Email</td>
             <td>Телефон</td>
             <td>Адрес</td>
-            <td>Название товара</td>
-            <td>К-во товара</td>
-            <td>Цена (за ед.)</td>
+            <td>Инф. о заказе</td>
             <td>Способ доставки</td>
             <td>Способ оплаты</td>
             <td>Комментарий</td>
-            <td>Действие</td>
+            <td>Статус</td>
         </tr>
         </tfoot>
 
         <tbody>
         <?php foreach ($this->orders as $orderKey => $orderValue) : ?>
             <?php foreach ($orderValue as $orderItem) : ?>
-            <tr>
-                <td><?php echo $orderKey;?></td>
+            <?php
+                $class = '';
+
+                if (is_null($orderItem['delivery']) && is_null($orderItem['payment'])) {
+                    $class .= 'text-primary';
+                } else {
+                    $class .= 'text-success';
+                }
+            ?>
+            <tr class="<?php echo $class;?>">
                 <td><?php echo $orderItem['date'];?></td>
-                <td><?php echo $orderItem['phone'];?></td>
-                <td><?php echo !is_null($orderItem['address'])  ?  $orderItem['address'] : ' - ';?></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><?php echo !is_null($orderItem['delivery']) ? $orderItem['delivery'] : ' - ';?></td>
-                <td><?php echo !is_null($orderItem['payment'])  ? $orderItem['payment']  : ' - ';?></td>
-                <td><?php echo !is_null($orderItem['comment'])  ? $orderItem['comment']  : ' - ';?></td>
-                <td></td>
+                <td><?php echo $orderKey;?></td>
+                <td><?php echo '0' . $orderItem['phone'];?></td>
+                <td><?php echo !is_null($orderItem['address'])  ?  $orderItem['address'] : '&#8211;';?></td>
+                <td class="data-cell">
+                    <table class="sub-table">
+                        <?php $name = 0;?>
+                        <?php foreach ($orderItem['product'] as $product) : ?>
+                            <tr>
+                                <td class="order-product-name" data-id="<?php echo $product['id']; ?>"><?php echo $product['name'];?></td>
+                                <td><?php echo $product['qty'] < 1 ? 'Заказ' : '<input class="product-qty" data-actual-qty="' .  $product['actualQty'] . '" type="number" data-name="' . $name . '" value="' . $product['qty'] . '" min="1" step="1">';?></td>
+                                <td><?php echo $product['price'] / 100;?></td>
+                            </tr>
+                            <?php $name++;?>
+                        <?php endforeach; ?>
+                    </table>
+                </td>
+                <td><?php echo !is_null($orderItem['delivery']) ? $orderItem['delivery'] : '&#8211;';?></td>
+                <td><?php echo !is_null($orderItem['payment'])  ? $orderItem['payment']  : '&#8211;';?></td>
+                <td><?php echo !is_null($orderItem['comment'])  ? $orderItem['comment']  : '&#8211;';?></td>
+                <td class="form-cell">
+                    <form class="form-inline" action="<?php echo $this->url('product-order'); ?>" method="post">
+                        <input name="idUser" type="hidden" value="<?php echo $orderItem['idUser']; ?>">
+                        <input name="idCartEntity" type="hidden" value="<?php echo $orderItem['id']; ?>">
+                        <?php foreach ($orderItem['product'] as $product) : ?>
+                            <input name="id[]" type="hidden" value="<?php echo $product['id']; ?>">
+                            <input name="qty[]" class="product-qty-hidden" type="hidden" value="<?php echo $product['qty']; ?>">
+                            <input name="price[]" type="hidden" value="<?php echo $product['price']; ?>">
+                        <?php endforeach; ?>
+                            <select class="form-control" name="status">
+                                <option class="text-muted">Выбрать</option>
+                                <option value="3">Активен</option>
+                                <option value="2">Оплачен</option>
+                                <option value="6">Закрыт</option>
+                            </select>
+                        <input class="btn btn-success order-submit hide" type="submit" value="Отправить">
+                    </form>                
+                </td>
             </tr>
             <?php endforeach; ?>
-        <?php endforeach;?>
+        <?php endforeach; ?>
         </tbody>
     </table>
+    <div class="order-informer">
+        <p class="bg-primary">Покупка в 1 клик</p>
+        <p class="bg-success">Через корзину</p>
+        <p class="bg-danger">Заказ (у поставщика)</p>
+    </div>
 </section>
+<script>
+    $('td:contains("Заказ")').parent('tr').removeClass('text-primary').addClass('text-danger');
+    $('select').on('change', function() {
+        $(this).next('.order-submit').trigger('click');
+    });
+    $('.product-qty')
+        .each(function() {
+            var newVal      = $(this).val();
+            var actualQty   = $(this).data('actual-qty');
+
+            if (newVal > actualQty) {
+                $(this).css('background', '#FCDFE2');
+            } else {
+                $(this).removeAttr('style');
+            }
+        })
+        .on('change', function() {
+            var newVal      = $(this).val();
+            var index       = $(this).data('name');
+            var actualQty   = $(this).data('actual-qty');
+
+            if (newVal > actualQty) {
+                $(this).css('background', '#FCDFE2');
+            } else {
+                $(this).removeAttr('style');
+            }
+
+            $(this).parents('.data-cell').siblings('.form-cell').find('.product-qty-hidden').eq(index).val(newVal);
+        });
+    $('.table-error-id').each(function() {
+        var self    = $(this);
+        var idError = self.text();
+
+        $('.order-product-name').each(function() {
+            var id = $(this).data('id');
+
+            if (idError == id) {
+                var text = $(this).text();
+
+                self.next().text(text);
+            }
+        });
+    });
+    (function() {
+        var location = window.location.href;
+        if (location.indexOf('paid') != -1) {
+            $('.product-qty').prop('disabled', true);
+
+            $('select').find('option[value="2"], option[value="3"]').prop('disabled', true);
+        }
+    })();
+</script>

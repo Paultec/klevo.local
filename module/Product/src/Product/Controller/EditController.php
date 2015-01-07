@@ -11,6 +11,9 @@ use Zend\Authentication\AuthenticationService;
 use Product\Entity\Product as ProductEntity;
 use Product\Model\Product;
 
+use Register\Entity\Register as RegisterEntity;
+use Register\Entity\RegisterTable as RegisterTableEntity;
+
 use Product\Form;
 
 use GoSession;
@@ -18,6 +21,7 @@ use GoSession;
 class EditController extends AbstractActionController
 {
     const PRODUCT_ENTITY        = 'Product\Entity\Product';
+    const PRODUCT_ENTITY_QTY    = 'Product\Entity\ProductCurrentQty';
     const BRAND_ENTITY          = 'Catalog\Entity\Brand';
     const CATEGORY_ENTITY       = 'Catalog\Entity\Catalog';
     const STATUS_ENTITY         = 'Data\Entity\Status';
@@ -26,6 +30,10 @@ class EditController extends AbstractActionController
     const USER_ADDITION_ENTITY  = 'User\Entity\UserAddition';
     const CART_ENTITY           = 'Cart\Entity\CartEntity';
     const CART_TABLE            = 'Cart\Entity\CartTable';
+    const OPERATION_ENTITY      = 'Data\Entity\Operation';
+    const PAYMENT_TYPE_ENTITY   = 'Data\Entity\PaymentType';
+    const REGISTER_ENTITY       = 'Register\Entity\Register';
+    const REGISTER_TABLE_ENTITY = 'Register\Entity\RegisterTable';
 
     /**
      * @var
@@ -288,19 +296,92 @@ class EditController extends AbstractActionController
         ));
     }
 
+    /**
+     * @return ViewModel
+     */
     public function productOrderAction()
     {
         $orderInfo = array();
+        $error     = array(); // no errors
 
-        $status = array(
-            'ordered' => 1, // заказано
-            'active'  => 3, // активен
-            'paid'    => 2, // оплачено
-            'closed'  => 6  // закрыт
+        $statuses = array(
+            3 => 'active',
+            2 => 'paid'
         );
 
+        $routeParam = $this->params()->fromRoute('type');
+        $match = array_search($routeParam, $statuses) ?: 1;
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $postData = $request->getPost()->toArray();
+
+            // Check product quantity
+            $error = $this->checkPostData($postData);
+
+            if (empty($error)) {
+                $statusEntity   = $this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findOneBy(array('id' => (int)$postData['status']));
+                $cartEntity     = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findOneBy(array('id' => (int)$postData['idCartEntity']));
+
+                $cartEntity->setIdStatus($statusEntity);
+
+                $this->getEntityManager()->persist($cartEntity);
+                $this->getEntityManager()->flush();
+
+                if ($postData['status'] == 2) {         // paid (оплачен)
+                    $register       = new RegisterEntity();
+
+                    // set register data
+                    $idOperation    = $this->getEntityManager()->getRepository(self::OPERATION_ENTITY)->findOneBy(array('id' => 2));
+                    $idUser         = $this->getEntityManager()->getRepository(self::USER_ENTITY)->findOneBy(array('id' => $postData['idUser']));
+
+                    $register->setDate(new \DateTime());
+                    $register->setIdStoreFrom($this->getEntityManager()->getRepository(self::STORE_ENTITY)->findOneBy(array('id' => 2)));           // Магазин Воронцова
+                    $register->setIdStoreTo($this->getEntityManager()->getRepository(self::STORE_ENTITY)->findOneBy(array('id' => 1)));             // Интернет покупатели
+                    $register->setIdOperation($idOperation);                                                                                        // Продажа
+                    $register->setIdPaymentType($this->getEntityManager()->getRepository(self::PAYMENT_TYPE_ENTITY)->findOneBy(array('id' => 1)));  // Наличные
+                    $register->setIdStatus($this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findOneBy(array('id' => 2)));             // Оплачено
+                    $register->setIdUser($idUser);
+
+                    $totalSum = null;
+
+                    for ($i = 0, $count = count($postData['price']); $i < $count; $i++) {
+                        $totalSum += $postData['price'][$i] * $postData['qty'][$i];
+                    }
+
+                    $register->setTotalSum($totalSum);
+
+                    $this->getEntityManager()->persist($register);
+                    $this->getEntityManager()->flush();
+
+                    $idRegister = $register->getId();
+
+                    // set register table data
+                    for ($i = 0, $count = count($postData['price']); $i < $count; $i++) {
+                        $registerTable  = new RegisterTableEntity();
+
+                        $registerTable->setIdProduct($this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('id' => $postData['id'][$i])));
+                        $registerTable->setIdRegister($this->getEntityManager()->getRepository(self::REGISTER_ENTITY)->findOneBy(array('id' => $idRegister)));
+                        $registerTable->setIdOperation($idOperation);
+                        $registerTable->setIdUser($idUser);
+                        $registerTable->setQty($postData['qty'][$i]);
+                        $registerTable->setPrice($postData['price'][$i]);
+
+                        $this->getEntityManager()->persist($registerTable);
+                    }
+
+                    $this->getEntityManager()->flush();
+                } elseif ($postData['status'] == 6) {   // closed (закрыт)
+                    $cartEntity = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findOneBy(array('id' => (int)$postData['idCartEntity']));
+
+                    $this->getEntityManager()->remove($cartEntity);
+                    $this->getEntityManager()->flush();
+                }
+            }
+        }
+
         // Cart Entity
-        $cartEntity = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findBy(array('idStatus' => $status['ordered']));
+        $cartEntity = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findBy(array('idStatus' => $match));
 
         $count = 0;
         foreach ($cartEntity as $cartEntityItem) {
@@ -316,13 +397,17 @@ class EditController extends AbstractActionController
             $orderInfo[$email][$count]['comment']   = $cartEntityItem->getComment();
             $orderInfo[$email][$count]['phone']     = $userAddition->getPhone();
             $orderInfo[$email][$count]['address']   = $userAddition->getAddress();
+            $orderInfo[$email][$count]['idUser']    = $idUser;
 
             $countInner = 0;
             foreach ($cartTable as $cartTableItem) {
-                $orderInfo[$email][$count]['product'][$countInner]['qty']     = $cartTableItem->getQty();
-                $orderInfo[$email][$count]['product'][$countInner]['price']   = $cartTableItem->getPrice();
-                $orderInfo[$email][$count]['product'][$countInner]['id']      = $cartTableItem->getIdProduct()->getId();
-                $orderInfo[$email][$count]['product'][$countInner]['name']    = $cartTableItem->getIdProduct()->getName();
+                $actualQty = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY_QTY)->findOneBy(array('id' => $cartTableItem->getIdProduct()->getId()));
+
+                $orderInfo[$email][$count]['product'][$countInner]['qty']       = $cartTableItem->getQty();
+                $orderInfo[$email][$count]['product'][$countInner]['price']     = $cartTableItem->getPrice();
+                $orderInfo[$email][$count]['product'][$countInner]['id']        = $cartTableItem->getIdProduct()->getId();
+                $orderInfo[$email][$count]['product'][$countInner]['name']      = $cartTableItem->getIdProduct()->getName();
+                $orderInfo[$email][$count]['product'][$countInner]['actualQty'] = $actualQty->getQty() ?: $actualQty->getVirtualQty();
 
                 $countInner++;
             }
@@ -331,7 +416,8 @@ class EditController extends AbstractActionController
         }
 
         return new ViewModel(array(
-            'orders' => $orderInfo
+            'orders' => $orderInfo,
+            'error'  => $error
         ));
     }
 
@@ -473,6 +559,34 @@ class EditController extends AbstractActionController
     public function setFullName($fullName)
     {
         $this->fullNameService = $fullName;
+    }
+
+    /**
+     * @param $postData
+     *
+     * @return array
+     */
+    protected function checkPostData($postData)
+    {
+        $result = array();
+
+        $productEntityQty = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY_QTY);
+
+        $count = 0;
+        foreach ($postData['id'] as $id) {
+            $realProductQty = $productEntityQty->findOneBy(array('id' => $id));
+            $qty = $realProductQty->getQty() ?: $realProductQty->getVirtualQty();
+
+            if ((int)$postData['qty'][$count] > $qty) {
+                $result[$count]['id']       = $id;
+                $result[$count]['have']     = $qty;
+                $result[$count]['selected'] = (int)$postData['qty'][$count];
+            }
+
+            $count++;
+        }
+
+        return $result;
     }
 
     /**

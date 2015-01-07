@@ -112,14 +112,14 @@ return array(
             'product-order' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/product-order[/:id]',
+                    'route' => '/product-order[/:type][/:id]',
                     'defaults' => array(
                         'controller' => 'Product\Controller\Edit',
                         'action'     => 'product-order',
                     ),
                     'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
+                        'type' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'   => '[0-9]+',
                     ),
                 ),
             ),
