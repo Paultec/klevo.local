@@ -1078,6 +1078,8 @@ $(function(){
             if ($this.val().length > length) {
                 $this.val($this.val().substr(0, length));
             }
+
+            $('.textarea-length-counter').find('span').text($this.val().length);
         });
     })();
 

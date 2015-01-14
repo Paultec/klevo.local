@@ -20,6 +20,7 @@ class CartController extends AbstractActionController
     const PRODUCT_ENTITY_QTY    = 'Product\Entity\ProductCurrentQty';
     const DELIVERY_METHOD       = 'Data\Entity\DeliveryMethod';
     const PAYMENT_METHOD        = 'Data\Entity\PaymentMethod';
+    const STATUS_ENTITY         = 'Data\Entity\Status';
 
     /**
      * @var
@@ -169,6 +170,7 @@ class CartController extends AbstractActionController
             $cartEntity->setDeliveryMethod($currentDeliveryMethod);
             $cartEntity->setPaymentMethod($currentPaymentMethod);
             $cartEntity->setComment($postData['comment'] ?: null);
+            $cartEntity->setIdStatus($this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findOneBy(array('id' => 1)));
 
             // Если заказ
             if ($isOrder) { $cartEntity->setType(true); }

@@ -521,6 +521,8 @@ class EditController extends AbstractActionController
                     ->getQuery();
                 $qu->execute();
 
+                $this->cache->removeItem('topProduct');
+
                 return $this->redirect()->toRoute('editproduct/seoUrl', $seoUrlParams);
             }
         }
