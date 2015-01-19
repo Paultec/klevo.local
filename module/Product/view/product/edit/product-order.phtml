@@ -122,7 +122,8 @@ $this->headTitle($title);
                                 <option value="6">Закрыт</option>
                             </select>
                         <input class="btn btn-success order-submit hide" type="submit" value="Отправить">
-                    </form>                
+                        <input type="submit" name="order-remove" class="btn btn-danger order-remove hide" value="Удалить заказ">
+                    </form>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -184,6 +185,14 @@ $this->headTitle($title);
             $('.product-qty').prop('disabled', true);
 
             $('select').find('option[value="2"], option[value="3"]').prop('disabled', true);
+        }
+    })();
+    (function(){
+        var allow = ['admin', 'boss'];
+        var whoIs = $.trim($('.role').text());
+
+        if (allow.indexOf(whoIs) != -1) {
+            $('.order-remove').removeClass('hide');
         }
     })();
 </script>

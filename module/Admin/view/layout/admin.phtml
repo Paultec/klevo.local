@@ -60,7 +60,7 @@
                 </li>
             <?php endif ?>
             <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
-                <li><a href="<?php echo $this->url('admin');?>" class="float-shadow"><?php echo $this->userRole;?> <i class="glyphicon glyphicon-wrench"></i></a></li>
+                <li><a href="<?php echo $this->url('admin');?>" class="float-shadow role"><?php echo $this->userRole;?> <i class="glyphicon glyphicon-wrench"></i></a></li>
             <?php endif ?>
         </div>
     </div><!-- /Horizontal menu  -->

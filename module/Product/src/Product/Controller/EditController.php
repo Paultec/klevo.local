@@ -316,6 +316,11 @@ class EditController extends AbstractActionController
         if ($request->isPost()) {
             $postData = $request->getPost()->toArray();
 
+            //Проверка на удаление заказа
+            if (isset($postData['order-remove'])) {
+                $this->removeOrder($postData['idCartEntity']);
+            }
+
             // Check product quantity
             $error = $this->checkPostData($postData);
 
@@ -561,6 +566,19 @@ class EditController extends AbstractActionController
     public function setFullName($fullName)
     {
         $this->fullNameService = $fullName;
+    }
+
+    /**
+     * @param $idCartEntity
+     */
+    protected function removeOrder($idCartEntity)
+    {
+        $cartEntity = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findOneBy(array('id' => (int)$idCartEntity));
+
+        $this->getEntityManager()->remove($cartEntity);
+        $this->getEntityManager()->flush();
+
+        $this->prg('/product-order', true);
     }
 
     /**
