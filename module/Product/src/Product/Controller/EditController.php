@@ -322,18 +322,34 @@ class EditController extends AbstractActionController
                 return $this->prg('/product-order', true);
             }
 
-            // Check product quantity
-            $error = $this->checkPostData($postData);
+            // update cartTable qty
+            $cartTable = $this->getEntityManager()->getRepository(self::CART_TABLE)->findBy(array('idCartEntity' => $postData['idCartEntity']));
 
-            $statusEntity   = $this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findOneBy(array('id' => (int)$postData['status']));
-            $cartEntity     = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findOneBy(array('id' => (int)$postData['idCartEntity']));
+            $count = 0;
+            foreach ($cartTable as $cartTableItem) {
+                $cartTableItem->setQty($postData['qty'][$count]);
 
-            $cartEntity->setIdStatus($statusEntity);
+                $this->getEntityManager()->persist($cartTableItem);
 
-            $this->getEntityManager()->persist($cartEntity);
+                $count++;
+            }
+
             $this->getEntityManager()->flush();
 
+            // Check product quantity
+            if ($postData['status'] != 3) {
+                $error = $this->checkPostData($postData);
+            }
+
             if (empty($error)) {
+                $statusEntity   = $this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findOneBy(array('id' => (int)$postData['status']));
+                $cartEntity     = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findOneBy(array('id' => (int)$postData['idCartEntity']));
+
+                $cartEntity->setIdStatus($statusEntity);
+
+                $this->getEntityManager()->persist($cartEntity);
+                $this->getEntityManager()->flush();
+
                 if ($postData['status'] == 2) {         // paid (оплачен)
                     $register       = new RegisterEntity();
 

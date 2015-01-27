@@ -55,6 +55,8 @@ class EditController extends AbstractActionController
         $this->getEntityManager()->remove($galleryItem);
         $this->getEntityManager()->flush();
 
+        unlink($this->imageFolder . $galleryItem->getImg());
+
         return $this->prg('/edit-gallery', true);
     }
 

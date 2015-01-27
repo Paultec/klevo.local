@@ -1096,3 +1096,36 @@ gallery
     border-radius: 5px;
     box-shadow: 0 0 10px 0 rgba(50, 50, 50, 0.75);
 }
+
+/******************************************************************************
+contacts
+*******************************************************************************/
+.contact-phone {
+    color: #428BCA;
+}
+
+.contact-phone i {
+    display: inline-block;
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+}
+
+.mobile-phone {
+    padding-left: 40px;
+}
+
+.viber-lg {
+    background: url("../img/misc/viber-lg.png") no-repeat left center;
+}
+
+.whatsapp-lg {
+    background: url("../img/misc/whatsapp-lg.png") no-repeat right center;
+}
+
+/******************************************************************************
+payment delivery
+*******************************************************************************/
+.payment-delivery h3 {
+    color: #428BCA;
+}

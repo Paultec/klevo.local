@@ -20,7 +20,7 @@ return array(
                 // разрешения для всех посетителей сайта (включая незарегистрированных)
                 array(
                     'controller' => 'Application\Controller\Index',
-                    'action'     => array('index'),
+                    'action'     => array('index', 'payment-delivery', 'contacts'),
                     'roles'      => array(),
                 ),
                 array(
