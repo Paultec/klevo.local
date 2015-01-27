@@ -31,7 +31,8 @@ class Module
                         'Register\Controller\Index',
                         'Register\Controller\Register',
                         'Register\Controller\RegisterTable',
-                        'Article\Controller\Edit'
+                        'Article\Controller\Edit',
+                        'Gallery\Controller\Edit'
                     ))) {
                     $controller->layout('admin/layout');
                 }

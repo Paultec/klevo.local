@@ -49,7 +49,7 @@
         </tr>
         </tfoot>
         <tbody>
-        <?php for($i = 0, $count = count($this->result); $i < $count; $i++): ?>
+        <?php for ($i = 0, $count = count($this->result); $i < $count; $i++): ?>
             <?php
             if (is_object($this->result[$i]->getIdStatus())) {
                 if ($this->result[$i]->getIdStatus()->getId() != 4) {

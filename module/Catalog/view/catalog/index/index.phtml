@@ -1,3 +1,7 @@
+<div class="hidden-md hidden-lg">
+    <span class="glyphicon glyphicon-arrow-down"></span>
+    <a href="#content" class="scroll-to-content">К содержимому</a>
+</div>
 <section id="accordion">
 
     <?php echo $this->showList($this->categoryList, $this->seoUrlParams, $this->route); ?>
@@ -25,4 +29,5 @@
             ?>
         </div>
     </div>
+    <div id="content"></div>
 </section>

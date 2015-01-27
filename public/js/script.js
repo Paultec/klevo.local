@@ -76,21 +76,33 @@ $(function(){
     /******************************************************************************
      accordion
      *******************************************************************************/
-    $('.accordion').each(function(){
-        $(this).accordion({
-            header:      $(this).children('h3'),
-            active:      false,
-            collapsible: true,
-            heightStyle: 'content'
+    (function() {
+        $('.accordion').each(function(){
+            $(this).accordion({
+                header:      $(this).children('h3'),
+                active:      false,
+                collapsible: true,
+                heightStyle: 'content'
+            });
         });
-    });
+
+        var $scroll = $('.scroll-to-content');
+
+        if ($scroll.is(':visible')) {
+            var location = window.location;
+
+            if (location.pathname != '/' && location.hash != 'content') {
+                location.href += '#content';
+            }
+        }
+    })();
 
     /******************************************************************************
      brand filter
      *******************************************************************************/
     (function() {
         $.expr[':'].contains = function(a,i,m){
-            return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+            return (a.textContent || a.innerText || '').toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
         };
 
         function filterList(header, list) {
@@ -110,7 +122,7 @@ $(function(){
                 }
 
                 return false;
-            }).keyup( function () {
+            }).keyup(function () {
                 $(this).change();
             });
         }
@@ -1123,4 +1135,25 @@ $(function(){
      *******************************************************************************/
     $('.activate-indicators').find('li').first().addClass('active');
     $('.activate-carousel').find('div').first().addClass('active');
+
+    /******************************************************************************
+     gallery
+     *******************************************************************************/
+    (function() {
+        var galleryInput = $('.gallery-image-input');
+
+        galleryInput.on('change', function() {
+            $('.gallery-informer').remove();
+
+            if ($(this).val().indexOf('.png') > 0  ||
+                $(this).val().indexOf('.jpeg') > 0 ||
+                $(this).val().indexOf('.jpg') > 0) {
+                $('[type="submit"]').prop('disabled', false);
+            } else {
+                $('[type="submit"]').prop('disabled', true);
+
+                $(this).parents('form').before('<p class="text-danger gallery-informer">Только изображение (jpeg/jpg или png)</p>');
+            }
+        });
+    })();
 });

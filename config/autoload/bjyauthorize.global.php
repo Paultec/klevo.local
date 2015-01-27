@@ -24,6 +24,11 @@ return array(
                     'roles'      => array(),
                 ),
                 array(
+                    'controller' => 'Article\Controller\Index',
+                    'action'     => array('index', 'view'),
+                    'roles'      => array(),
+                ),
+                array(
                     'controller' => 'Product\Controller\Index',
                     'action'     => array('index', 'view'),
                     'roles'      => array(),
@@ -39,8 +44,8 @@ return array(
                     'roles'      => array(),
                 ),
                 array(
-                    'controller' => 'Article\Controller\Index',
-                    'action'     => array('index', 'view'),
+                    'controller' => 'Gallery\Controller\Index',
+                    'action'     => array('index', 'add'),
                     'roles'      => array(),
                 ),
                 // конец раздела 1
@@ -103,6 +108,7 @@ return array(
                         'Register\Controller\Balance',
                         'Register\Controller\Order',
                         'Register\Controller\Payment',
+                        'Gallery\Controller\Edit',
                     ),
                     'roles'      => array('admin'),
                 ),

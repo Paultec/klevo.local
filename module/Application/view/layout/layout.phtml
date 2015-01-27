@@ -15,7 +15,7 @@
                         ->prependStylesheet($this->basePath() . '/css/style.min.css')
                         ->prependStylesheet($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css')
                         ->prependStylesheet($this->basePath() . '/css/font-awesome.css')
-                        ->prependStylesheet($this->basePath() . 'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css') ?>
+                        ->prependStylesheet($this->basePath() . 'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css') ?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()
@@ -24,9 +24,9 @@
             ->prependFile($this->basePath() . '/js/mosaic.min.js')
             ->prependFile($this->basePath() . '/js/jquery.smooth-scroll.min.js')
             ->prependFile($this->basePath() . '/js/jquery.lazyload.min.js')
-            ->prependFile($this->basePath() . 'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js')
+            ->prependFile($this->basePath() . 'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
             ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js')
-            ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+            ->prependFile($this->basePath() . 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
             ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
             ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
         ; ?>
@@ -34,12 +34,12 @@
     <body>
         <div class="container">
             <div class="content row">
-                <div class="col col-lg-2">
+                <div class="col col-md-2">
                     <section id="branding">
                         <a href="/" class="brand"></a>
                     </section>
                 </div>
-                <div class="col col-lg-7">
+                <div class="col col-md-7">
                     <!-- Carousel -->
                     <div class="carousel slide hidden-sm hidden-xs" data-ride="carousel">
                         <section class="carousel-inner">
@@ -51,13 +51,11 @@
                         </section>
                     </div><!-- /Carousel -->
                 </div>
-                <div class="col col-lg-3">
-                    <address class="text-justify">
-                        <strong>
-                            <abbr title="Город">г.</abbr> Днепропетровск<br>
-                            улица, номер<br>
-                        </strong>
+                <div class="col col-md-3">
+                    <address>
+                        <h4><a href="<?php echo $this->url('contacts'); ?>">г. Днепропетровск улица, номер</a></h4>
                         <div class="phone">+38(066)777-61-94 <div class="viber" data-toggle="tooltip" data-placement="top" title="Viber"></div><div class="whatsapp" data-toggle="tooltip" data-placement="top" title="WhatsApp"></div></div>
+                        <br>
                         <div class="phone">+38(098)777-61-94</div>
                     </address>
                 </div>
@@ -89,13 +87,13 @@
                     <?php endif ?>
                     <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
                         <!-- Admin button -->
-                        <li id="control" style="display: block; position: absolute; right: -60px; z-index: 999; overflow: visible"><a href="<?php echo $this->url('admin');?>"><?php echo $this->userRole;?> <i class="glyphicon glyphicon-wrench"></i></a></li>
+                        <li id="control"><a href="<?php echo $this->url('admin');?>"><?php echo $this->userRole;?> <i class="glyphicon glyphicon-wrench"></i></a></li>
                     <?php endif ?>
                 </div>
             </div><!-- /Horizontal menu  -->
             <!-- Search and Cart -->
             <div class="content row">
-                <div class="col col-lg-9">
+                <div class="col col-md-9">
                     <form method="get" action="<?php echo $this->url('search');?>" id="main-search" name="main-search" role="search">
                         <div class="form-group">
                             <input type="search" class="form-control search-input" name="q" autocomplete="off" placeholder="Искать...">
@@ -106,14 +104,14 @@
                         </div>
                     </form>
                 </div>
-                <div class="col col-lg-3">
+                <div class="col col-md-3">
                     <a href="<?php echo $this->url('cart');?>" class="cart-info"><i class="fa fa-shopping-cart fa-3x fa-fw"></i> (товаров: <strong><?php echo $this->itemsInCart; ?></strong>)</a>
                 </div>
             </div><!-- /Search and Cart -->
             <?php echo $this->content; ?>
-            <footer id="footer" class="col col-lg-12 text-center">
+            <footer id="footer" class="col col-md-12 text-center">
                 <!-- Horizontal menu  -->
-                <div class="bottom-nav col col-lg-8 col-lg-offset-4 hidden-sm hidden-xs">
+                <div class="bottom-nav col col-md-8 col-lg-offset-4 hidden-sm hidden-xs">
                     <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav center-block'); ?>
                 </div><!-- /Horizontal menu  -->
                 <p class="text-muted">&copy; <?php echo date('Y') ?> by Klevo <?php echo $this->translate('All rights reserved.') ?></p>

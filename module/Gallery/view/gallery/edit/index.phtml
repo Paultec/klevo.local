@@ -1,0 +1,100 @@
+<?php
+$title = 'Галерея';
+$this->headTitle($title);
+?>
+<section class="col col-lg-12 edit-table">
+    <?php if ($this->gallery) : ?>
+        <table id="galleryList-table" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Изображение</th>
+                <th>Комментарий</th>
+                <th>Активен</th>
+                <th>Действие</th>
+            </tr>
+            </thead>
+
+            <tfoot>
+            <tr>
+                <td>Дата</td>
+                <td>Изображение</td>
+                <td>Комментарий</td>
+                <td>Активен</td>
+                <td>Действие</td>
+            </tr>
+            </tfoot>
+
+            <tbody>
+            <?php foreach ($this->gallery as $item) : ?>
+                <?php
+                if ($item->getIdStatus()->getId() != 4) {
+                    $class = '';
+                } else {
+                    $class = 'hide_row';
+                }
+                ?>
+                <tr class="<?php echo $class;?>">
+                    <td><?php echo $item->getDate()->format('d.m.Y'); ?></td>
+                    <td>
+                        <a href="<?php echo '/img/gallery/' . $item->getImg();?>" data-lightbox="gallery-image">
+                            <img class="lazy img-responsive" data-original="<?php echo '/img/gallery/' . $item->getImg();?>" width="120" alt="">
+                        </a>
+                    </td>
+                    <td style="max-width: 325px"><?php echo $item->getComment() ?: 'Нет'; ?></td>
+                    <td><?php echo $item->getIdStatus()->getId() == 3 ? 'Да' : 'Нет'; ?></td>
+                    <td>
+                        <form action="<?php echo $this->url('edit-gallery'); ?>" method="post">
+                            <input name="id" type="hidden" value="<?php echo $item->getId(); ?>">
+                            <input class="current-gallery-status" name="currentStatus" type="hidden" value="<?php echo $item->getIdStatus()->getId(); ?>">
+                            <select class="form-control" name="status">
+                                <option class="text-muted">Выбрать</option>
+                                <option value="3">Активен</option>
+                                <option value="4">Не активен</option>
+                            </select>
+                            <input class="btn btn-success gallery-submit hide" type="submit" value="Отправить">
+                            <input type="submit" name="gallery-remove" class="btn btn-danger btn-block gallery-remove hide" value="Удалить">
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else : ?>
+        <h3>Галерея пуста</h3>
+    <?php endif;?>
+</section>
+<script>$('head').append('<link rel="stylesheet" href="/lightbox/lightbox.min.css">');</script>
+<script src="/lightbox/lightbox.min.js"></script>
+<script src="/js/jquery.lazyload.min.js"></script>
+<script>
+    $('select').on('change', function() {
+        $(this).next('.gallery-submit').trigger('click');
+    });
+    (function() {
+        $('form').each(function() {
+            var curStatus = $(this).find('.current-gallery-status').val();
+
+            $(this).find('select').find('option').each(function() {
+                if ($(this).val() == curStatus) {
+                    $(this).prop('disabled', true);
+                }
+            });
+        });
+    })();
+    (function(){
+        var allow = ['admin', 'boss'];
+        var whoIs = $.trim($('.role').text());
+
+        if (allow.indexOf(whoIs) != -1) {
+            $('.gallery-remove').removeClass('hide');
+        }
+    })();
+    (function() {
+        var btn = $('.gallery-remove');
+
+        btn.on('click', function() {
+            return confirm('Вы действительно хотите удалить?');
+        });
+    })();
+</script>

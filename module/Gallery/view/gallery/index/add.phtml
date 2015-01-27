@@ -1,0 +1,26 @@
+<?php
+$title = 'Добавить изображение';
+$this->headTitle($title);
+?>
+<section class="col col-md-4 col-md-offset-3">
+    <?php
+    if (!is_null($this->isLogin)) {
+        $form = $this->form;
+        $form->setAttribute('action', $this->url('gallery', array('action' => 'add')));
+        $form->prepare();
+
+        echo $this->form()->openTag($form);
+
+        echo '<div class="form-group">',
+        $this->formRow($form->get('image')),
+        $this->formRow($form->get('comment')),
+        '<div class="textarea-length-counter"><span>0</span> / <strong>255</strong></div>',
+        '</div>';
+
+        echo $this->formSubmit($form->get('submit'));
+        echo $this->form()->closeTag();
+    } else {
+        echo '<p class="bg-warning">Для того, чтобы добавлять изображение, вам необходимо <a href="' . $this->url('zfcuser/login') . '"#log">авторизоваться</a>.</p>';
+    }
+    ?>
+</section>

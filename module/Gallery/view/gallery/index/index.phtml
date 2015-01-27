@@ -1,1 +1,81 @@
-<h1 class="text-center">Ожидается</h1>
+<?php
+$title = 'Галерея';
+$this->headTitle($title);
+?>
+<section class="col col-md-3">
+    <aside class="filter">
+        <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <!-- Accordion -->
+        <?php echo $this->catalog ;?><!-- /Accordion -->
+    </aside>
+</section>
+
+<section class="col col-md-6">
+    <h3 class="text-center gallery-header">Галерея</h3>
+    <?php if (is_null($this->isLogin)) : ?>
+        <p class="bg-warning">Для того, чтобы добавлять изображение, вам необходимо <a href="<?php echo $this->url('zfcuser/login');?>#log">авторизоваться</a>.</p>
+    <?php else : ?>
+        <a class="btn btn-default pull-right add-gallery-image" href="<?php echo $this->url('gallery', array('action' => 'add'));?>"><i class="glyphicon glyphicon-plus"></i> Добавить изображение</a>
+    <?php endif; ?>
+    <div class="gallery-image-holder">
+        <?php if ($this->paginator->count() > 0) : ?>
+            <?php foreach ($this->paginator as $item) : ?>
+                <div class="gallery-image-out">
+                    <div class="text-muted">
+                        <span class="bg-info">Добавлено:
+                            <time class="timeago" datetime="<?php echo $item->getDate()->format('c'); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo $item->getDate()->format('d.m.Y H:i:s'); ?>"></time>
+                        </span>
+                    </div>
+                    <div class="gallery-image-in center-block">
+                        <a href="<?php echo '/img/gallery/' . $item->getImg();?>" data-lightbox="gallery-image">
+                            <img class="lazy img-responsive" data-original="<?php echo '/img/gallery/' . $item->getImg();?>" alt="">
+                        </a>
+                    </div>
+                    <?php if (!is_null($item->getComment())) : ?>
+                    <div class="comments">
+                        <p><?php echo $item->getComment();?></p>
+                    </div>
+                    <?php endif;?>
+                </div>
+            <?php endforeach;?>
+        <?php else : ?>
+            <h3 class="text-center">Пока ничего нет.</h3>
+        <?php endif;?>
+    </div>
+    <div class="delim"></div>
+    <section class="paginator-holder text-center">
+    <?php
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'gallery/paginator/pagination.phtml') : '';
+    ?>
+    </section>
+</section>
+
+<section class="col col-md-3">
+    <div class="article">
+        <h3 class="text-center"><a href="<?php echo $this->url('article'); ?>">Новые статьи</a></h3>
+        <div class="delim"></div>
+        <?php if (!is_null($this->articles)) : ?>
+            <div class="last-articles">
+                <section class="last-article-item">
+                    <?php foreach ($this->articles as $item) : ?>
+                        <?php if (is_null($item['idStatus']) || ($item['idStatus']->id == 3)): ?>
+                            <section class="last-article-item">
+                                <h5><a href="<?php echo $this->url('article/view', array('name' => $item['translit'])); ?>"><?php echo $item['title']; ?></a></h5>
+                                <div class="article-text"><?php echo strip_tags($item['text']); ?></div>
+                            </section>
+                        <?php endif;?>
+                    <?php endforeach;?>
+                </section>
+            </div>
+        <?php else : ?>
+            <h4>Статей пока нет</h4>
+        <?php endif; ?>
+    </div>
+</section>
+<script src="/js/clamp.min.js"></script>
+<script>$('.article-text').each(function(ag,ah){$clamp(ah,{clamp:3,useNativeClamp:false})});</script>
+<script>$('head').append('<link rel="stylesheet" href="/lightbox/lightbox.min.css">');</script>
+<script src="/lightbox/lightbox.min.js"></script>
+<script src="/js/timeago/timeago.min.js"></script>
+<script src="/js/timeago/timeago.ru.min.js"></script>
+<script>$('.timeago').timeago();</script>

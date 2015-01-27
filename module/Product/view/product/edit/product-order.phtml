@@ -28,7 +28,8 @@ $this->headTitle($title);
             <tr>
                 <th>ID</th>
                 <th>Название</th>
-                <th>Есть в наличии</th>
+                <th>В наличии</th>
+                <th>У поставщика</th>
                 <th>Выбрано</th>
             </tr>
             </thead>
@@ -38,7 +39,8 @@ $this->headTitle($title);
                 <td class="table-error-id"><?php echo $errorItem['id']; ?></td>
                 <td class="table-error-name" data-error="<?php echo $errorItem['id']; ?>"></td>
                 <td><?php echo $errorItem['have']; ?></td>
-                <td><?php echo $errorItem['selected']; ?></td>
+                <td><?php echo $errorItem['supplierHave']; ?></td>
+                <td><?php echo $errorItem['selected'] > 0 ? $errorItem['selected'] : 'Заказ'; ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
@@ -77,7 +79,7 @@ $this->headTitle($title);
         <?php foreach ($this->orders as $orderKey => $orderValue) : ?>
             <?php foreach ($orderValue as $orderItem) : ?>
             <?php
-                $class = '';
+                $class = 'table-row ';
 
                 if (is_null($orderItem['delivery']) && is_null($orderItem['payment'])) {
                     $class .= 'text-primary';
@@ -92,14 +94,14 @@ $this->headTitle($title);
                 <td><?php echo !is_null($orderItem['address'])  ?  $orderItem['address'] : '&#8211;';?></td>
                 <td class="data-cell">
                     <table class="sub-table">
-                        <?php $name = 0;?>
+                        <?php $iterator = 0;?>
                         <?php foreach ($orderItem['product'] as $product) : ?>
                             <tr>
                                 <td class="order-product-name" data-id="<?php echo $product['id']; ?>"><?php echo $product['name'];?></td>
-                                <td><?php echo $product['qty'] < 1 ? 'Заказ' : '<input class="product-qty" data-actual-qty="' .  $product['actualQty'] . '" type="number" data-name="' . $name . '" value="' . $product['qty'] . '" min="1" step="1">';?></td>
+                                <td><?php echo $product['qty'] < 1 ? 'Заказ' : '<input class="product-qty" data-from-supplier="' .  $product['fromSupplier'] . '" data-actual-qty="' .  $product['actualQty'] . '" type="number" data-iterator="' . $iterator . '" value="' . $product['qty'] . '" min="1" step="1">из ' .  $product['actualQty'];?></td>
                                 <td><?php echo $product['price'] / 100;?></td>
                             </tr>
-                            <?php $name++;?>
+                            <?php $iterator++;?>
                         <?php endforeach; ?>
                     </table>
                 </td>
@@ -108,6 +110,7 @@ $this->headTitle($title);
                 <td><?php echo !is_null($orderItem['comment'])  ? $orderItem['comment']  : '&#8211;';?></td>
                 <td class="form-cell">
                     <form class="form-inline" action="<?php echo $this->url('product-order'); ?>" method="post">
+                        <input class="path-from" name="from" type="hidden">
                         <input name="idUser" type="hidden" value="<?php echo $orderItem['idUser']; ?>">
                         <input name="idCartEntity" type="hidden" value="<?php echo $orderItem['id']; ?>">
                         <?php foreach ($orderItem['product'] as $product) : ?>
@@ -133,6 +136,7 @@ $this->headTitle($title);
     <div class="order-informer">
         <p class="bg-primary">Покупка в 1 клик</p>
         <p class="bg-success">Через корзину</p>
+        <p style="background: #000; color: #fff">Покупка (у поставщика)</p>
         <p class="bg-danger">Заказ (у поставщика)</p>
     </div>
 </section>
@@ -143,18 +147,24 @@ $this->headTitle($title);
     });
     $('.product-qty')
         .each(function() {
-            var newVal      = $(this).val();
-            var actualQty   = $(this).data('actual-qty');
+            var newVal          = $(this).val(),
+                actualQty       = $(this).data('actual-qty'),
+                fromSupplier    = $(this).data('from-supplier');
+
 
             if (newVal > actualQty) {
                 $(this).css('background', '#FCDFE2');
             } else {
                 $(this).removeAttr('style');
             }
+
+            if (fromSupplier) {
+                $(this).parents('.table-row').removeClass('text-warning, text-primary');
+            }
         })
         .on('change', function() {
             var newVal      = $(this).val();
-            var index       = $(this).data('name');
+            var index       = $(this).data('iterator');
             var actualQty   = $(this).data('actual-qty');
 
             if (newVal > actualQty) {
@@ -194,5 +204,17 @@ $this->headTitle($title);
         if (allow.indexOf(whoIs) != -1) {
             $('.order-remove').removeClass('hide');
         }
+    })();
+    (function() {
+        var path = window.location.pathname;
+
+        $('.path-from').val(path);
+    })();
+    (function() {
+        var btn = $('.order-remove');
+
+        btn.on('click', function() {
+            return confirm('Вы действительно хотите удалить заказ?');
+        });
     })();
 </script>

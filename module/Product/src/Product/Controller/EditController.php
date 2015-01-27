@@ -302,7 +302,6 @@ class EditController extends AbstractActionController
     public function productOrderAction()
     {
         $orderInfo = array();
-        $error     = array(); // no errors
 
         $statuses = array(
             3 => 'active',
@@ -319,20 +318,22 @@ class EditController extends AbstractActionController
             //Проверка на удаление заказа
             if (isset($postData['order-remove'])) {
                 $this->removeOrder($postData['idCartEntity']);
+
+                return $this->prg('/product-order', true);
             }
 
             // Check product quantity
             $error = $this->checkPostData($postData);
 
+            $statusEntity   = $this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findOneBy(array('id' => (int)$postData['status']));
+            $cartEntity     = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findOneBy(array('id' => (int)$postData['idCartEntity']));
+
+            $cartEntity->setIdStatus($statusEntity);
+
+            $this->getEntityManager()->persist($cartEntity);
+            $this->getEntityManager()->flush();
+
             if (empty($error)) {
-                $statusEntity   = $this->getEntityManager()->getRepository(self::STATUS_ENTITY)->findOneBy(array('id' => (int)$postData['status']));
-                $cartEntity     = $this->getEntityManager()->getRepository(self::CART_ENTITY)->findOneBy(array('id' => (int)$postData['idCartEntity']));
-
-                $cartEntity->setIdStatus($statusEntity);
-
-                $this->getEntityManager()->persist($cartEntity);
-                $this->getEntityManager()->flush();
-
                 if ($postData['status'] == 2) {         // paid (оплачен)
                     $register       = new RegisterEntity();
 
@@ -382,6 +383,10 @@ class EditController extends AbstractActionController
                     $this->getEntityManager()->remove($cartEntity);
                     $this->getEntityManager()->flush();
                 }
+            } else {
+                $this->currentSession->orderError = $error;
+
+                return $this->prg($postData['from'], true);
             }
         }
 
@@ -408,17 +413,25 @@ class EditController extends AbstractActionController
             foreach ($cartTable as $cartTableItem) {
                 $actualQty = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY_QTY)->findOneBy(array('id' => $cartTableItem->getIdProduct()->getId()));
 
-                $orderInfo[$email][$count]['product'][$countInner]['qty']       = $cartTableItem->getQty();
-                $orderInfo[$email][$count]['product'][$countInner]['price']     = $cartTableItem->getPrice();
-                $orderInfo[$email][$count]['product'][$countInner]['id']        = $cartTableItem->getIdProduct()->getId();
-                $orderInfo[$email][$count]['product'][$countInner]['name']      = $cartTableItem->getIdProduct()->getName();
-                $orderInfo[$email][$count]['product'][$countInner]['actualQty'] = $actualQty->getQty() ?: $actualQty->getVirtualQty();
+                $orderInfo[$email][$count]['product'][$countInner]['qty']           = $cartTableItem->getQty();
+                $orderInfo[$email][$count]['product'][$countInner]['price']         = $cartTableItem->getPrice();
+                $orderInfo[$email][$count]['product'][$countInner]['id']            = $cartTableItem->getIdProduct()->getId();
+                $orderInfo[$email][$count]['product'][$countInner]['name']          = $cartTableItem->getIdProduct()->getName();
+                $orderInfo[$email][$count]['product'][$countInner]['actualQty']     = $actualQty->getQty() ?: $actualQty->getVirtualQty();
+                $orderInfo[$email][$count]['product'][$countInner]['fromSupplier']  = 0; //false
+
+                if ($actualQty->getQty() == 0 && $actualQty->getVirtualQty() > 0) {
+                    $orderInfo[$email][$count]['product'][$countInner]['fromSupplier'] = 1; // true
+                }
 
                 $countInner++;
             }
 
             $count++;
         }
+
+        $error = $this->currentSession->orderError;
+        unset($this->currentSession->orderError);
 
         return new ViewModel(array(
             'orders' => $orderInfo,
@@ -577,8 +590,6 @@ class EditController extends AbstractActionController
 
         $this->getEntityManager()->remove($cartEntity);
         $this->getEntityManager()->flush();
-
-        $this->prg('/product-order', true);
     }
 
     /**
@@ -595,12 +606,14 @@ class EditController extends AbstractActionController
         $count = 0;
         foreach ($postData['id'] as $id) {
             $realProductQty = $productEntityQty->findOneBy(array('id' => $id));
-            $qty = $realProductQty->getQty() ?: $realProductQty->getVirtualQty();
+            $qty            = $realProductQty->getQty() /*?: $realProductQty->getVirtualQty()*/;
+            $supplierQty    = $realProductQty->getVirtualQty();
 
-            if ((int)$postData['qty'][$count] > $qty) {
-                $result[$count]['id']       = $id;
-                $result[$count]['have']     = $qty;
-                $result[$count]['selected'] = (int)$postData['qty'][$count];
+            if (($qty == 0 && $supplierQty == 0) || ((int)$postData['qty'][$count] > $qty)) {
+                $result[$count]['id']           = $id;
+                $result[$count]['have']         = $qty;
+                $result[$count]['supplierHave'] = $supplierQty;
+                $result[$count]['selected']     = (int)$postData['qty'][$count];
             }
 
             $count++;

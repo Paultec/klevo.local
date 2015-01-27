@@ -338,7 +338,7 @@ class CartController extends AbstractActionController
         }
 
         foreach ($postData['id'] as $postId) {
-            if (empty((int)$postId)) {
+            if (empty($postId)) {
                 $flag = !$flag;
             }
         }

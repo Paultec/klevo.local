@@ -1,0 +1,64 @@
+<?php
+$url = $this->url('gallery');
+?>
+
+<?php if ($this->pageCount): ?>
+    <ul class="pagination">
+        <!-- Previous page link -->
+        <?php if (isset($this->previous)): ?>
+            <li>
+                <a href="<?php echo $url.'/1'?>" class="first-page" data-toggle="tooltip" data-placement="top" title="Первая">&lt;&lt;&lt;</a>
+            </li>
+            <li>
+                <a href="<?php echo $url.'/'.$this->previous; ?>" data-toggle="tooltip" data-placement="top" title="Предыдущая">&lt;&lt;</a>
+            </li>
+        <?php else: ?>
+            <li class="disabled">
+                <a href="#">
+                    &lt;&lt;&lt;
+                </a>
+            </li>
+            <li class="disabled">
+                <a href="#">
+                    &lt;&lt;
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <!-- Numbered page links -->
+        <?php foreach ($this->pagesInRange as $page): ?>
+            <?php if ($page != $this->current): ?>
+                <li>
+                    <a href="<?php echo $url.'/'.$page; ?>">
+                        <?php echo $page; ?>
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="active">
+                    <a href="#"><?php echo $page; ?></a>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <!-- Next page link -->
+        <?php if (isset($this->next)): ?>
+            <li>
+                <a href="<?php echo $url.'/'.$this->next; ?>" data-toggle="tooltip" data-placement="top" title="Следующая">&gt;&gt;</a>
+            </li>
+            <li>
+                <a href="<?php echo $url.'/'.$this->pageCount; ?>" data-toggle="tooltip" data-placement="top" title="Последняя">&gt;&gt;&gt;</a>
+            </li>
+        <?php else: ?>
+            <li class="disabled">
+                <a href="#">
+                    &gt;&gt;
+                </a>
+            </li>
+            <li class="disabled">
+                <a href="#">
+                    &nbsp;&gt;&gt;&gt;
+                </a>
+            </li>
+        <?php endif; ?>
+    </ul>
+<?php endif; ?>

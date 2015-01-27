@@ -1050,9 +1050,49 @@ cart breadcrumb
 }
 
 /******************************************************************************
- top products
- *******************************************************************************/
+top products
+*******************************************************************************/
 .popular-product .thumbnail {
     width: 125px;
     height: 125px;
+}
+
+/******************************************************************************
+gallery
+*******************************************************************************/
+.gallery-header {
+    margin-top: 0;
+}
+
+.gallery-image-holder {
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.gallery-image-out {
+    border-bottom: 1px dashed #563d7c;
+    padding: 10px 10px;
+}
+
+.gallery-image-out:last-child {
+    border-bottom: none;
+}
+
+.gallery-image-in {
+    max-width: 320px;
+}
+
+.add-gallery-image {
+    margin-bottom: 10px;
+    border: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.comments {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0 rgba(50, 50, 50, 0.75);
 }

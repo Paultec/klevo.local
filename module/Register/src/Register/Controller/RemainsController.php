@@ -192,7 +192,7 @@ class RemainsController extends AbstractActionController
         $query = $qb->getQuery();
         $myStore = $query->getResult();
 
-        $allRegister = array();
+        $allRegister    = array();
         $remainsByStore = array();
 
         foreach ($myStore as $store) {
@@ -276,6 +276,7 @@ class RemainsController extends AbstractActionController
             // получаю все записи с расходом товаров
             foreach ($registerOut as $register) {
                 $allRegister[] = $register;
+
                 $qb = $this->getEntityManager()->createQueryBuilder();
                 $qb->add('select', 'rt')
                     ->add('from', 'Register\Entity\RegisterTable rt')
@@ -294,8 +295,10 @@ class RemainsController extends AbstractActionController
                 while ($registerTableOut) {
                     $product = array_shift($registerTableOut);
                     $qtyOut = $product->getQty();
+
                     while ($qtyOut > 0) {
                         $firstIncome = array_shift($remainsByStore[$store->getId()][$product->getIdProduct()->getId()]);
+
                         if ($firstIncome->getQty() > $qtyOut) {
                             $qtyIncome = $firstIncome->getQty();
                             $firstIncome->setQty($qtyIncome - $qtyOut);
