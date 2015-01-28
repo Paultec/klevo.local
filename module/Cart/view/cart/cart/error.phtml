@@ -1,12 +1,17 @@
-<section class="col col-lg-3">
+<?php
+$title = 'Ошибка!';
+$this->headTitle($title);
+?>
+<section class="col col-md-3">
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <div class="delim"></div>
         <!-- Accordion -->
         <?php echo $this->catalog ;?><!-- /Accordion -->
     </aside>
 </section>
 
-<section class="col col-lg-9">
+<section class="col col-md-9">
     <h1 class="text-center">Ошибка! :(</h1>
     <h3>К сожалению, что-то пошло не так. Пожалуйста повторите покупку еще раз. Если ошибка повториться, обратитесь к нам по контактным телефонам.
     Приносим извинения за неудобства.</h3>

@@ -314,6 +314,10 @@ Main search
     position: relative;
 }
 
+.search-header {
+    margin-top: 0;
+}
+
 .search {
     position: absolute;
     top: 10px;

@@ -114,9 +114,9 @@ $(function(){
                 var filter = $(this).val();
 
                 if(filter) {
-                    $matches = $(list).find('a:contains(' + filter + ')').parent();
-                    $('.filter-item', list).not($matches).addClass('hide');
-                    $matches.removeClass('hide');
+                    var matches = $(list).find('a:contains(' + filter + ')').parent();
+                    $('.filter-item', list).not(matches).addClass('hide');
+                    matches.removeClass('hide');
                 } else {
                     $(list).find('.filter-item').removeClass('hide');
                 }
@@ -854,7 +854,7 @@ $(function(){
     (function() {
         var length = 9 ,curLen = 0;
 
-        $('.order-product').on('click', function(e) {
+        $('.order-product').on('click', function() {
             var id   = $(this).prev().prev('.id').val();
             var text = $(this).parents('.product').find('h5').text() || $('.product-name').text();
 
@@ -890,9 +890,10 @@ $(function(){
         var $form = $('.add-to-cart');
 
         $form.on('submit', function() {
-            var pathname = window.location.pathname;
+            var pathname    = window.location.pathname,
+                queryParam  = window.location.search;
 
-            $('.continue').val(pathname);
+            $('.continue').val(pathname + queryParam);
         });
     })();
 
@@ -1155,5 +1156,12 @@ $(function(){
                 $(this).parents('form').before('<p class="text-danger gallery-informer">Только изображение (jpeg/jpg или png)</p>');
             }
         });
+
+        var fix = /File has an incorrect mimetype.*/i;
+        var error = galleryInput.parents('label').next('ul').find('li');
+
+        if (fix.test(error.text())) {
+            error.html('<span class="glyphicon glyphicon glyphicon-ban-circle"></span> Недопустимый тип файла');
+        }
     })();
 });

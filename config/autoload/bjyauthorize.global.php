@@ -108,6 +108,7 @@ return array(
                         'Register\Controller\Balance',
                         'Register\Controller\Order',
                         'Register\Controller\Payment',
+                        'Search\Controller\Index',
                         'Gallery\Controller\Edit',
                     ),
                     'roles'      => array('admin'),

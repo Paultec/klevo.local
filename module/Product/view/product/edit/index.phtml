@@ -1,16 +1,21 @@
+<?php
+$title = 'Продукты';
+$this->headTitle($title);
+?>
 <style>
     .same-width a { width: 144px; }
 </style>
 
-<section class="col col-lg-3">
+<section class="col col-md-3">
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> Каталог товаров</h3>
+        <div class="delim"></div>
         <!-- Accordion -->
         <?php echo $this->catalog ;?><!-- /Accordion -->
     </aside>
 </section>
 
-<section class="col col-lg-9 edit-table">
+<section class="col col-md-9 edit-table">
     <?php if (!is_null($this->breadcrumbs)) : ?>
         <div class="filter-criteria">
             <?php foreach ($this->breadcrumbs as $key => $value) : ?>

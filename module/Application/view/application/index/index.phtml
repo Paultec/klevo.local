@@ -1,12 +1,17 @@
-<section class="col col-lg-3">
+<?php
+$title = 'Главная';
+$this->headTitle($title);
+?>
+<section class="col col-md-3">
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <div class="delim"></div>
         <!-- Accordion -->
         <?php echo $this->catalog ;?><!-- /Accordion -->
     </aside>
 </section>
 
-<section class="col col-lg-6">
+<section class="col col-md-6">
     <div id="carousel" class="carousel slide hidden-sm hidden-xs" data-ride="carousel">
 
         <ol class="carousel-indicators">
@@ -107,7 +112,7 @@
     <?php endif;?>
 </section>
 
-<section class="col col-lg-3">
+<section class="col col-md-3">
     <div class="article">
         <h3 class="text-center"><a href="<?php echo $this->url('article'); ?>">Новые статьи</a></h3>
         <div class="delim"></div>

@@ -1,7 +1,11 @@
+<?php
+$title = 'Статьи';
+$this->headTitle($title);
+?>
 <style>
     .article-text { max-height: 140px; max-width: 400px; white-space: nowrap; overflow: hidden; }
 </style>
-<section class="col col-lg-12">
+<section class="col col-md-12">
     <p>
         <a class="btn btn-success" href="<?php echo $this->url('edit-article/default', array('action' => 'add'));?>"><i class="glyphicon glyphicon-plus"></i> Добавить статью</a>
         <a class="btn btn-warning" href="<?php echo $this->url('article-img-upload');?>"><i class="glyphicon glyphicon-plus"></i> Добавить изображение</a>

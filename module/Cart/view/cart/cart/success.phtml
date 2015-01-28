@@ -1,4 +1,7 @@
 <?php
+$title = 'Успех';
+$this->headTitle($title);
+
 $result = $this->result;
 $total  = null;
 
@@ -6,15 +9,16 @@ if (isset($result['total'])) {
     $total  = array_pop($result);
 }
 ?>
-<section class="col col-lg-3">
+<section class="col col-md-3">
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <div class="delim"></div>
         <!-- Accordion -->
         <?php echo $this->catalog ;?><!-- /Accordion -->
     </aside>
 </section>
 
-<section class="col col-lg-9">
+<section class="col col-md-9">
     <h1 class="text-center success-header">Успех</h1>
     <h3>Выш заказ принят. Наш менеджер свяжется с вами в ближайшее время. Спасибо за покупку!</h3>
         <div class="success div-table">

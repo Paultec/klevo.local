@@ -1,4 +1,8 @@
-<div class="col col-lg-12">
+<?php
+$title = 'Редактирование статьи';
+$this->headTitle($title);
+?>
+<div class="col col-md-12">
     <form action="<?php echo $this->url('edit-article/default', array('action' => 'edit', 'id' => $this->id)); ?>" method="POST">
         <input name="id" type="hidden" value="<?php echo $this->id; ?>">
         <label>Заголовок: <input type="text" class="form-control" name="title" value="<?php echo $this->title; ?>" placeholder="Заголовок статьи" required="required"></label>

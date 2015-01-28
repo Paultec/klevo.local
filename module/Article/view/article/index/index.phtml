@@ -2,7 +2,7 @@
 $title = 'Статьи';
 $this->headTitle($title);
 ?>
-<section class="col col-lg-12">
+<section class="col col-md-12">
     <?php if ($this->paginator->count() > 0): ?>
         <div class="article-holder">
         <?php foreach ($this->paginator as $item): ?>
@@ -21,7 +21,7 @@ $this->headTitle($title);
     <?php endif;?>
 </section>
 
-<section class="col col-lg-12 text-center paginator-holder">
+<section class="col col-md-12 text-center paginator-holder">
     <div class="delim"></div>
     <?php
     echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'article/paginator/pagination.phtml') : '';

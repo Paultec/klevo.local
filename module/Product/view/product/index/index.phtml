@@ -1,12 +1,24 @@
-<section class="col col-lg-3">
+<?php
+$title = ' ';
+if (!is_null($this->breadcrumbs)) {
+    foreach ($this->breadcrumbs as $key => $value) {
+        $title .= $value['name'] . ' ';
+    }
+} else {
+    $title .= 'Все продукты';
+}
+$this->headTitle($title);
+?>
+<section class="col col-md-3">
     <aside class="filter">
         <h3><span class="glyphicon glyphicon-filter"></span> <span class="product-list">Каталог товаров</span></h3>
+        <div class="delim"></div>
         <!-- Accordion -->
         <?php echo $this->catalog ;?><!-- /Accordion -->
     </aside>
 </section>
 
-<section class="col col-lg-9">
+<section class="col col-md-9">
     <?php if (!is_null($this->breadcrumbs)) : ?>
         <div class="filter-criteria">
             <?php foreach ($this->breadcrumbs as $key => $value) : ?>
@@ -22,7 +34,7 @@
     <div class="delim"></div>
 </section>
 
-<section class="col col-lg-9 product-holder">
+<section class="col col-md-9 product-holder">
     <?php if ($this->paginator->count() > 0): ?>
         <?php foreach ($this->paginator as $item): ?>
             <?php if (is_null($item[0]->getIdStatus()) || ($item[0]->getIdStatus()->getId() == 3)): ?>
@@ -62,8 +74,8 @@
                         </form><!-- /Add to cart -->
                     <?php endif; ?>
                     <?php if (!in_array($item[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
+                        <!-- One click buy -->
                         <form class="form-inline">
-                            <!-- One click buy -->
                             <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
                             <?php if ($item['quantity'] === 0 &&  $item['virtualQty'] > 0) : ?>
                                 <input type="hidden" class="qty" name="qty" value="<?php echo $item['virtualQty']; ?>">
@@ -145,7 +157,7 @@
 </div>
 <div class="md-overlay"></div>
 
-<section class="col col-lg-9 col-lg-offset-3 text-center paginator-holder">
+<section class="col col-md-9 col-md-offset-3 text-center paginator-holder">
     <div class="delim"></div>
 <?php
     echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'product/paginator/pagination.phtml', array('params' => $this->seoUrlParams)) : "";

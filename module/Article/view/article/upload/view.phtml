@@ -1,3 +1,7 @@
+<?php
+$title = 'Изображения';
+$this->headTitle($title);
+?>
 <style>
     ol {
         font-size: 22px;
@@ -21,7 +25,7 @@
     }
 </style>
 <div class="content row">
-    <div class="col col-lg-4">
+    <div class="col col-md-4">
        <ol class="tree list-unstyled">
         <?php foreach ($this->result as $itemKey => $itemVal) : ?>
             <?php if (is_array($itemVal)) : ?>
@@ -38,7 +42,7 @@
         <?php endforeach; ?>
         </ol>
     </div>
-    <div class="col col-lg-8">
+    <div class="col col-md-8">
         <?php
         if (empty($this->result)) {
             echo '<h1>Нет изображений</h1>';

@@ -7,21 +7,31 @@ ini_set('max_execution_time', 7200);
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Paginator\Paginator;
+use Zend\Session\Container;
 
 use ZendSearch\Lucene\Lucene;
 use ZendSearch\Lucene\Document;
 use ZendSearch\Lucene\Index;
 use ZendSearch\Lucene\Search\QueryParser;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use DoctrineModule\Paginator\Adapter\Collection as Adapter;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+
+use GoSession;
 
 class IndexController extends AbstractActionController
 {
-    const PRODUCT_ENTITY = 'Product\Entity\Product';
+    const PRODUCT_ENTITY        = 'Product\Entity\Product';
+    const PRODUCT_ENTITY_QTY    = 'Product\Entity\ProductCurrentQty';
 
     protected $em;
     protected $idIndexed = array();
+    private $currentSession;
+
+    public function __construct()
+    {
+        $this->currentSession = new Container();
+    }
 
     /**
      * @return ViewModel
@@ -53,62 +63,58 @@ class IndexController extends AbstractActionController
 
         $hits = $index->find($query);
 
-        $tmpArr = array();
+        $field = array();
 
         foreach ($hits as $result) {
             // выставляем минимальный вес релевантности
             if ($result->score > 0.7) {
-                $tmpArr[] = $result->idProduct;
+                $field[] = $result->idProduct;
             }
         }
 
-        if (!empty($tmpArr)) {
-            $temp   = array();
-            $result = array();
+        // add field function in Doctrine
+        $doctrineConfig = $this->getEntityManager()->getConfiguration();
+        $doctrineConfig->addCustomStringFunction('FIELD', 'DoctrineExtensions\Query\Mysql\Field');
 
-            $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
 
-            $qs = $qb->select('p')
-                ->from(self::PRODUCT_ENTITY, 'p')
-                ->where($qb->expr()->in('p.id', $tmpArr))
-                ->andWhere('p.price > ?1')
-                ->setParameter(1, 0)
-                ->getQuery();
-            $qs->execute();
+        $qs = $qb
+            ->select('p, field(p.id, ?1) as HIDDEN field', 'q.qty as quantity', 'q.virtualQty')
+            ->from(self::PRODUCT_ENTITY, 'p')
+            ->join(
+                self::PRODUCT_ENTITY_QTY, 'q',
+                'WITH', 'p.id = q.idProduct'
+            )
+            ->where($qb->expr()->in('p.id', '?1'))
+            ->andWhere('p.price != 0')
+            ->andWhere(
+                $qb->expr()->orX('p.idStatus != 4', 'p.idStatus IS NULL')
+            )
+            ->setParameter(1, $field)
+            ->orderBy('field');
 
-            $qr = $qs->getResult();
+        // Pagination
+        $matches = $this->getEvent()->getRouteMatch();
+        $page    = $matches->getParam('page', 1);
 
-            if (!empty($qr)) {
-                foreach ($qr as $item) {
-                    $temp[] = $item->getId();
-                }
+        $adapter   = new DoctrineAdapter(new ORMPaginator($qs, false));
+        $paginator = new Paginator($adapter);
 
-                // вывод в порядке весов релевантности
-                foreach ($tmpArr as $value) {
-                    if (array_search($value, $temp) !== false) {
-                        $result[] = $qr[array_search($value, $temp)];
-                    }
-                }
+        $paginator
+            ->setCurrentPageNumber($page)
+            ->setItemCountPerPage(24);
 
-                // Pagination
-                $matches = $this->getEvent()->getRouteMatch();
-                $page    = $matches->getParam('page', 1);
+        // id товаров, которые уже в корзине
+        $inCart = isset($this->currentSession->cart) ? $this->currentSession->cart : array();
 
-                $adapter   = new ArrayCollection($result);
-                $paginator = new Paginator(new Adapter($adapter));
-
-                $paginator
-                    ->setCurrentPageNumber($page)
-                    ->setItemCountPerPage(24);
-            } else {
-                $paginator = null;
-            }
-        } else {
-            $paginator = null;
-        }
+        // данные пользователя
+        $userInfo = $this->forward()->dispatch('Data/Controller/CartUserHelp',
+            array('action' => 'user'))->getVariables();
 
         $res = new ViewModel(array(
-            'paginator' => $paginator,
+            'paginator' => $paginator ?: null,
+            'userInfo'  => $userInfo,
+            'inCart'    => $inCart
         ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
