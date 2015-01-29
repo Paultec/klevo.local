@@ -11,7 +11,6 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
 use Imagine\Image\Box;
-use Imagine\Image\Point;
 use Imagine\Gd\Imagine;
 
 use Gallery\Entity\Gallery as GalleryEntity;
@@ -176,9 +175,7 @@ class IndexController extends AbstractActionController
         $width   = $size->getWidth();
         $height  = $size->getHeight();
 
-        $imageOrientation = ($width - $height) > 0 ? 'landscape' : 'portrait';
-
-        if ($imageOrientation == 'landscape') {
+        if (($width - $height) > 0) {
             $rate = $width / $height;
 
             $image->resize(new Box(640, (640 / $rate)))->save();

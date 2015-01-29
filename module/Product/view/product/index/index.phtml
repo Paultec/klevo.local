@@ -42,11 +42,11 @@ $this->headTitle($title);
                 <div class="col col-md-4">
                     <?php if ($item[0]->getImg()): ?>
                         <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
-                            <img class="lazy img-responsive" data-original="/img/product/<?php echo $item[0]->getImg();?>" width="270" alt="">
+                            <img class="lazy img-responsive" data-original="/img/product/min/<?php echo $item[0]->getImg();?>" width="270" alt="">
                         </a>
                     <?php else : ?>
                     <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
-                        <img class="lazy" data-original="/img/product/noimage.png" width="270" alt="">
+                        <img class="lazy" data-original="/img/product/min/noimage.png" width="270" alt="">
                     </a>
                     <?php endif; ?>
                 </div>

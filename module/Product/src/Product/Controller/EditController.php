@@ -14,6 +14,9 @@ use Product\Model\Product;
 use Register\Entity\Register as RegisterEntity;
 use Register\Entity\RegisterTable as RegisterTableEntity;
 
+use Imagine\Image\Box;
+use Imagine\Gd\Imagine;
+
 use Product\Form;
 
 use GoSession;
@@ -40,6 +43,7 @@ class EditController extends AbstractActionController
      */
     protected $em;
     protected $fullName;
+    protected $imageFolder  = './public/img/product/';
     private $cache;
     private $currentSession;
     private $currentUser;
@@ -530,6 +534,8 @@ class EditController extends AbstractActionController
                 $explode  = explode(DIRECTORY_SEPARATOR, $formData['file']['tmp_name']);
                 $fileName = $explode[count($explode) - 1];
 
+                $this->imgManipulation($fileName);
+
                 $qb = $this->getEntityManager()->createQueryBuilder();
 
                 // Название изображения | null
@@ -609,6 +615,37 @@ class EditController extends AbstractActionController
     }
 
     /**
+     * @param $fileName
+     */
+    protected function imgManipulation($fileName)
+    {
+        $needed      = 254;
+        $designation = 'min/';
+
+        if (!is_dir($this->imageFolder . $designation)) {
+            mkdir($this->imageFolder . $designation);
+        }
+
+        // resize
+        $imagine = new Imagine();
+        $image   = $imagine->open($this->imageFolder . '/' . $fileName);
+
+        $size    = $image->getSize();
+        $width   = $size->getWidth();
+        $height  = $size->getHeight();
+
+        if (($width - $height) > 0) {
+            $rate = $width / $height;
+
+            $image->resize(new Box($needed, ($needed / $rate)))->save($this->imageFolder . $designation . $fileName);
+        } else {
+            $rate = $height / $width;
+
+            $image->resize(new Box(($needed / $rate), $needed))->save($this->imageFolder . $designation . $fileName);
+        }
+    }
+
+    /**
      * @param $postData
      *
      * @return array
@@ -674,7 +711,9 @@ class EditController extends AbstractActionController
      */
     protected function removeOldImg($imageName)
     {
-        $result = unlink('./public/img/product/' . $imageName);
+        unlink($this->imageFolder . 'min/' . $imageName);
+
+        $result = unlink($this->imageFolder . $imageName);
 
         return $result;
     }

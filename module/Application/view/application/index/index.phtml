@@ -100,7 +100,7 @@ $this->headTitle($title);
             <?php foreach ($this->top as $topPart) : ?>
                 <div class="item">
                 <?php foreach ($topPart as $item) : ?>
-                    <div class="col popular-product col-md-3"><a href="/product/<?php echo $item['href']; ?>.html" class="thumbnail" title="<?php echo $item['title']; ?>"><img src="/img/product/<?php echo $item['img'] ?: 'noimage.png'; ?>" alt=""></a></div>
+                    <div class="col popular-product col-md-3"><a href="/product/<?php echo $item['href']; ?>.html" class="thumbnail" title="<?php echo $item['title']; ?>"><img src="/img/product/min/<?php echo $item['img'] ?: 'noimage.png'; ?>" alt=""></a></div>
                 <?php endforeach;?>
                 </div>
             <?php endforeach;?>

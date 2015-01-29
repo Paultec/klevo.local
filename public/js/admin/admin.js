@@ -1,8 +1,15 @@
 $(function() {
-    $('#productList-table').add('#articleList-table').add('#orderList-table').add('#galleryList-table').dataTable({
+    $('#productList-table').add('#articleList-table').add('#orderList-table').dataTable({
         "language": {
             "url": "../../resources/ru_RU.lg"
         }
+    });
+
+    $('#galleryList-table').dataTable({
+        "language": {
+            "url": "../../resources/ru_RU.lg"
+        },
+        "order": [[ 0, "desc" ]]
     });
 
     // image overlay
