@@ -101,7 +101,7 @@ $this->headTitle($title);
                             </div>
                             <div class="step step-1 center-block">
                                 <label for="delivery">Укажите способ доставки:</label>
-                                <select name="delivery" id="delivery" class="form-control">
+                                <select name="delivery" id="delivery" class="form-control in-storage-delivery">
                                     <?php
                                     foreach ($this->delivery as $delivery) {
                                         if (is_null($delivery->getIdStatus()) || $delivery->getIdStatus()->getId() == 3) {
@@ -114,7 +114,7 @@ $this->headTitle($title);
                             </div>
                             <div class="step step-2 center-block">
                                 <label for="payment">Укажите способ оплаты:</label>
-                                <select name="payment" id="payment" class="form-control">
+                                <select name="payment" id="payment" class="form-control in-storage-payment">
                                     <?php
                                     foreach ($this->payment as $payment) {
                                         if (is_null($payment->getIdStatus()) || $payment->getIdStatus()->getId() == 3) {

@@ -1,5 +1,22 @@
 <?php
 return array(
+    'router' => array(
+        'routes' => array(
+            'personal-cabinet' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/personal-cabinet[/:action]',
+                    'constraints' => array(
+                        'action'  => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'User\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+        ),
+    ),
     'doctrine' => array(
         'driver' => array(
             // overriding zfc-user-doctrine-orm's config
@@ -36,7 +53,11 @@ return array(
             ),
         ),
     ),
-
+    'controllers' => array(
+        'invokables' => array(
+            'User\Controller\Index' => 'User\Controller\IndexController',
+        ),
+    ),
     'translator' => array(
         'locale' => 'ru_RU',
         'translation_file_patterns' => array(

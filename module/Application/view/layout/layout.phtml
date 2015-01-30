@@ -33,6 +33,22 @@
     </head>
     <body>
         <div class="container">
+            <div class="row">
+                <!-- Header toolbar -->
+                <section class="col col-md-12 head-toolbar">
+                    <div class="pull-left personal-cabinet">
+                        <a href="<?php echo $this->url('personal-cabinet'); ?>">Личный кабинет</a>
+                    </div>
+                    <div class="pull-right enter">
+                        <?php if (!$this->zfcUserIdentity()): ?>
+                            <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Войти</a>
+                            <a href="<?php echo $this->url('zfcuser/register') . '#reg'; ?>">Зарегистрироваться</a>
+                        <?php else: ?>
+                            <a href="<?php echo $this->url('zfcuser/logout'); ?>">Выйти</a>
+                        <?php endif ?>
+                    </div>
+                </section><!-- /Header toolbar -->
+            </div>
             <div class="content row">
                 <div class="col col-md-2">
                     <section id="branding">
@@ -74,17 +90,6 @@
                     <?php echo $this->navigation('navigation')->menu()->setULClass('nav navbar-nav main-nav'); ?>
                 </div>
                 <div class="grub-data">
-                    <?php if (!$this->zfcUserIdentity()): ?>
-                        <li><a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>" class="float-shadow">Войти <i class="glyphicon glyphicon-user"></i></a></li>
-                    <?php else: ?>
-                        <li class="dropdown">
-                            <a href="<?php echo $this->url('zfcuser/logout'); ?>" class="logout">Выйти <i class="glyphicon glyphicon-user"><span class="caret"></span></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="<?php echo $this->url('zfcuser/changeemail') . '#changem'; ?>">Изменить email</a></li>
-                                <li><a href="<?php echo $this->url('zfcuser/changepassword') . '#changep'; ?>">Изменить пароль</a></li>
-                            </ul>
-                        </li>
-                    <?php endif ?>
                     <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
                         <!-- Admin button -->
                         <li id="control"><a href="<?php echo $this->url('admin');?>"><?php echo $this->userRole;?> <i class="glyphicon glyphicon-wrench"></i></a></li>

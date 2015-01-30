@@ -1,0 +1,118 @@
+<section class="col col-md-12">
+    <?php if (!empty($this->userInfo)) : ?>
+    <div class="col col-md-4">
+        <p>Настройки</p>
+        <ul class="list-unstyled">
+            <li><span class="btn-link toggle-control" data-toggle="personal-data">Личные данные</span></li>
+            <li><a href="<?php echo $this->url('cart');?>">Корзина</a></li>
+            <li><span class="btn-link toggle-control last-view-toggle" data-toggle="last-view">Последние просмотренные товары</span></li>
+            <li><a href="<?php echo $this->url('zfcuser/changeemail') . '#changem'; ?>">Изменить email</a></li>
+            <li><a href="<?php echo $this->url('zfcuser/changepassword') . '#changep'; ?>">Изменить пароль</a></li>
+        </ul>
+    </div>
+    <div class="col col-md-8 toggle personal-data">
+        <h3 class="text-center">Персональные данные</h3>
+        <form action="" method="post" class="personal-data">
+            <input name="updatePersonalData" value="true" type="hidden">
+            <div class="form-group">
+                <label for="user-name" class="col col-sm-3 control-label">Ваше имя:</label>
+                <div class="col col-sm-9">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user" style="padding: 0 9px"></i></span>
+                        <input type="text" class="form-control" name="userName" id="user-name" value="<?php echo $this->userInfo[0]['username']; ?>" placeholder="Ваше имя">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="user-phone" class="col col-sm-3 control-label">Ваш телефон:</label>
+                <div class="col col-sm-9">
+                    <div class="input-group">
+                        <span class="input-group-addon"><strong>+380</strong></span>
+                        <input type="text" class="form-control" name="userPhone" id="user-phone" value="<?php echo $this->userInfo[1]['phone']; ?>" placeholder="Ваш номер">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="user-address" class="col col-sm-3 control-label">Ваш адрес:</label>
+                <div class="col col-sm-9">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-home" style="padding: 0 9px"></i></span>
+                        <input type="text" class="form-control" name="userAddress" id="user-address" value="<?php echo $this->userInfo[1]['address']; ?>" placeholder="Ваш адрес">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col col-sm-9 col-sm-offset-3">
+                    <input class="btn btn-primary" type="submit" value="Отправить">
+                </div>
+            </div>
+        </form>
+
+        <h3 class="text-center">Предпочтительный способ оплаты и доставки</h3>
+        <form>
+            <div class="form-group">
+                <label for="delivery" class="col-sm-3 control-label">Способ доставки: </label>
+                <div class="col-sm-9">
+                    <select class="form-control in-storage-delivery" name="delivery" id="delivery">
+                        <option value="0">Выбрать</option>
+                        <?php foreach ($this->deliveryMethod as $delivery) : ?>
+                            <?php if (is_null($delivery->getIdStatus()) || $delivery->getIdStatus() == 3) : ?>
+                                <option value="<?php echo $delivery->getId(); ?>"><?php echo $delivery->getName(); ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="payment" class="col-sm-3 control-label">Способ оплаты: </label>
+                <div class="col-sm-9">
+                    <select class="form-control in-storage-payment" name="delivery" id="payment">
+                        <option value="0">Выбрать</option>
+                        <?php foreach ($this->paymentMethod as $payment) : ?>
+                            <?php if (is_null($payment->getIdStatus()) || $payment->getIdStatus() == 3) : ?>
+                                <option value="<?php echo $payment->getId(); ?>"><?php echo $payment->getName(); ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col col-md-8 toggle last-view hide">
+        <h3 class="text-center">Последние просмотренные товары</h3>
+        <section class="last-viewed-products"></section>
+    </div>
+    <?php else : ?>
+        <h2>Для доступа к личному кабинету, вам необходимо <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Войти</a></h2>
+    <?php endif; ?>
+</section>
+
+<section class="col col-md-12">
+    <h2 class="text-center">Обратная связь</h2>
+    <form action="" method="post">
+        <input name="mail" value="true" type="hidden">
+        <div class="form-group">
+            <label for="email" class="col-sm-2 control-label">Ваш email: </label>
+            <div class="col-sm-10">
+                <input type="email" name="email" class="form-control" id="email" placeholder="Email" value="<?php echo $this->userInfo[0]['email']; ?>" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="subject" class="col-sm-2 control-label">Тема: </label>
+            <div class="col-sm-10">
+                <input type="text" name="subject" class="form-control" id="subject" placeholder="Тема" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="text" class="col-sm-2 control-label">Суть: </label>
+            <div class="col-sm-10">
+                <textarea class="form-control" name="text" id="text" placeholder="Суть" required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </div>
+        </div>
+    </form>
+</section>

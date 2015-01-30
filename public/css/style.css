@@ -41,6 +41,30 @@ textarea {
     font-weight: normal;
 }
 
+.btn-link:hover {
+    cursor: pointer;
+}
+
+/******************************************************************************
+head toolbar
+*******************************************************************************/
+.head-toolbar {
+    background: rgb(66,139,202);
+    background: -moz-linear-gradient(left, rgba(66,139,202,1) 0%, rgba(24,111,215,1) 50%, rgba(66,139,202,1) 100%);
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(66,139,202,1)), color-stop(50%,rgba(24,111,215,1)), color-stop(100%,rgba(66,139,202,1)));
+    background: -webkit-linear-gradient(left, rgba(66,139,202,1) 0%,rgba(24,111,215,1) 50%,rgba(66,139,202,1) 100%);
+    background: -o-linear-gradient(left, rgba(66,139,202,1) 0%,rgba(24,111,215,1) 50%,rgba(66,139,202,1) 100%);
+    background: -ms-linear-gradient(left, rgba(66,139,202,1) 0%,rgba(24,111,215,1) 50%,rgba(66,139,202,1) 100%);
+    background: linear-gradient(to right, rgba(66,139,202,1) 0%,rgba(24,111,215,1) 50%,rgba(66,139,202,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#428bca', endColorstr='#428bca',GradientType=1);
+    padding: 10px;
+    margin: 5px 15px;
+}
+
+.head-toolbar a, .head-toolbar a:hover, .head-toolbar a:active {
+    color: #ffffff;
+}
+
 /******************************************************************************
 footer
 *******************************************************************************/

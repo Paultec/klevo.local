@@ -48,6 +48,11 @@ return array(
                     'action'     => array('index', 'add'),
                     'roles'      => array(),
                 ),
+                array(
+                    'controller' => 'User\Controller\Index',
+                    'action'     => array('index'),
+                    'roles'      => array(),
+                ),
                 // конец раздела 1
 
                 // Раздел 2

@@ -1164,4 +1164,179 @@ $(function(){
             error.html('<span class="glyphicon glyphicon glyphicon-ban-circle"></span> Недопустимый тип файла');
         }
     })();
+
+    /******************************************************************************
+     personal cabinet
+     *******************************************************************************/
+    (function() {
+        var length  = 9;
+        var $form   = $('.personal-data'),
+            $phone  = $('#user-phone');
+
+        $phone.on('keyup', function() {
+            var $this = $(this);
+
+            if ($this.val().length > length) {
+                $this.val($this.val().substr(0, length));
+            }
+        }).on('keypress', function(e) {
+            return !(/\D/.test(String.fromCharCode(e.charCode)));
+        });
+
+        $('#user-name').on('keypress', function(e) {
+            return (/^[a-zA-z ]+$/.test(String.fromCharCode(e.charCode)));
+        });
+
+        $form.on('submit', function(e) {
+            var curLen = $phone.val().length;
+
+            if (curLen == 0 || curLen != length) {
+                if ($('#informer').length == 0) {
+                    $form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            }
+        });
+    })();
+
+    (function() {
+        $('.toggle-control').on('click', function() {
+            $('.toggle').addClass('hide');
+
+            var data = $(this).data('toggle');
+
+            $('.' + data).removeClass('hide');
+        });
+    })();
+
+    (function() {
+        var storageDelivery = $('.in-storage-delivery'),
+            storagePayment  = $('.in-storage-payment');
+
+        storageDelivery.on('change', function() {
+            var deliveryVal = $(this).find('option:selected').val();
+
+            if (deliveryVal > 0) {
+                localStorage.setItem('delivery', deliveryVal);
+            }
+        });
+
+        storagePayment.on('change', function() {
+            var paymentVal = $(this).find('option:selected').val();
+
+            if (paymentVal > 0) {
+                localStorage.setItem('payment', paymentVal);
+            }
+        });
+
+        var delivery = localStorage.getItem('delivery'),
+            payment  = localStorage.getItem('payment');
+
+        if (delivery !== null) {
+            storageDelivery.find('option').each(function() {
+                if ($(this).val() == delivery) {
+                    $(this).prop('selected', true);
+                }
+            });
+        }
+
+        if (payment !== null) {
+            storagePayment.find('option').each(function() {
+                if ($(this).val() == payment) {
+                    $(this).prop('selected', true);
+                }
+            });
+        }
+    })();
+
+    //last view product set
+    (function() {
+        var LS = {
+            set: function(key, val) {
+                return localStorage.setItem(key, JSON.stringify(val));
+            },
+            get: function(key) {
+                return JSON.parse(localStorage.getItem(key));
+            },
+            remove: function(key) {
+                return localStorage.removeItem(key);
+            },
+            ///////////////////////////////////////////////////////////
+            getItem: function(key, index) {
+                return this.get(key)[index];
+            },
+            getLastItem: function(key) {
+                return this.get(key)[this.getLength(key) - 1];
+            },
+            getLength: function(key) {
+                return this.get(key).length;
+            },
+            removeElement: function(key, index) {
+                var storage = this.get(key);
+                storage.splice(index, 1);
+
+                this.set(key, storage);
+
+                return this.get(key);
+            },
+            removeLast: function(key) {
+                var storage = this.get(key);
+                storage.pop();
+
+                this.set(key, storage);
+
+                return this.get(key);
+            }
+        };
+
+        $('.set-product-in-store').on('click', function() {
+            var maxViewedElements = 15;
+            var curProduct = $(this).parents('.product');
+
+            var img  = curProduct.find('.store-img').prop('src'),
+                href = curProduct.find('.store-href');
+
+            var storage = {};
+
+            storage.img         = img.slice(img.lastIndexOf('/'), img.length);
+            storage.href        = href.prop('href').slice(href.prop('href').lastIndexOf('/'), href.prop('href').length);
+            storage.name        = href.text();
+            storage.price       = curProduct.find('.store-price').text();
+            storage.description = curProduct.find('.store-description').text();
+
+            var item = LS.get('viewed') || [];
+
+            if (item.length > 0) {
+                for (var i = 0, length = LS.getLength('viewed'); i < length; i++) {
+                    if (item[i].href == storage.href) {
+                        item = LS.removeElement('viewed', i);
+                    }
+                }
+            }
+
+            item.unshift(storage);
+            LS.set('viewed', item);
+
+            if (LS.getLength('viewed') > maxViewedElements) {
+                LS.removeLast('viewed');
+            }
+        });
+
+        //last view product get
+        $('.last-view-toggle').on('click', function() {
+            if (LS.get('viewed') !== null) {
+                for (var i = 0, length = LS.getLength('viewed'); i < length; i++) {
+                    var html = '';
+                    var el   = LS.get('viewed')[i];
+
+                    html += '<div class="last-viewed-product-item row"><div class="col col-sm-3"><a href="/product'  + el.href + '"><img class="img-responsive" src="/img/product/min' + el.img + '" width="135" alt=""></a></div><div class="col col-sm-9"><h5><a href="/product' + el.href + '">' + el.name + '</a></h5><p>'  + el.description + '</p><p>' + el.price + '</p></div></div><div class="delim"></div>';
+
+                    $('.last-viewed-products').append(html);
+                }
+            } else {
+                $('.last-viewed-products').append('<h4 class="text-center">Пока ничего нет.</h4>');
+            }
+        });
+    })();
 });
