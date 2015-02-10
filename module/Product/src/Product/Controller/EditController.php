@@ -419,9 +419,11 @@ class EditController extends AbstractActionController
             $userAddition   = $this->getEntityManager()->getRepository(self::USER_ADDITION_ENTITY)->findOneBy(array('idUser' => $idUser));
             $cartTable      = $this->getEntityManager()->getRepository(self::CART_TABLE)->findBy(array('idCartEntity' => $cartEntityItem->getId()));
             $email          = $cartEntityItem->getIdUser()->getEmail();
+            $name           = $cartEntityItem->getIdUser()->getUsername() ?: null;
 
             $orderInfo[$email][$count]['id']        = $cartEntityItem->getId();
             $orderInfo[$email][$count]['date']      = $cartEntityItem->getDate()->format('d.m.Y');
+            $orderInfo[$email][$count]['name']      = $name;
             $orderInfo[$email][$count]['delivery']  = !is_null($cartEntityItem->getDeliveryMethod()) ? $cartEntityItem->getDeliveryMethod()->getName() : null;
             $orderInfo[$email][$count]['payment']   = !is_null($cartEntityItem->getPaymentMethod())  ? $cartEntityItem->getPaymentMethod()->getName()  : null;
             $orderInfo[$email][$count]['comment']   = $cartEntityItem->getComment();

@@ -6,6 +6,7 @@ ini_set('max_execution_time', 7200);
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Zend\Paginator\Paginator;
 use Zend\Session\Container;
 
@@ -194,6 +195,62 @@ class IndexController extends AbstractActionController
         $index->optimize();
 
         return new ViewModel();
+    }
+
+    public function preSearchAction()
+    {
+        $limit = 10;
+
+        $request = $this->getRequest();
+
+        if (!$request->isXmlHttpRequest()) {
+            return $this->redirect()->toRoute('home');
+        }
+
+        $postData = $request->getPost();
+        $str = $postData['str'];
+
+        // установка необходимой кодировки для поиска
+        \ZendSearch\Lucene\Analysis\Analyzer\Analyzer::setDefault(
+            new \ZendSearch\Lucene\Analysis\Analyzer\Common\Utf8\CaseInsensitive()
+        );
+
+        \ZendSearch\Lucene\Search\QueryParser::setDefaultEncoding('UTF-8');
+
+        // Поиск запроса в индексе
+        $searchIndexLocation = $this->getIndexLocation();
+        $index = Lucene::open($searchIndexLocation);
+        $query = QueryParser::parse($str, 'UTF-8');
+
+        $hits = $index->find($query);
+
+        $field = array();
+
+        foreach ($hits as $result) {
+            // выставляем минимальный вес релевантности
+            if ($result->score > 0.7) {
+                $field[] = $result->idProduct;
+            }
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qs = $qb->select('p')
+            ->from(self::PRODUCT_ENTITY, 'p')
+            ->where($qb->expr()->in('p.id', '?1'))
+            ->andWhere('p.price != 0')
+            ->andWhere(
+                $qb->expr()->orX('p.idStatus != 4', 'p.idStatus IS NULL')
+            )
+            ->setMaxResults($limit)
+            ->setParameter(1, $field)
+            ->getQuery();
+
+        $qr = $qs->getArrayResult();
+
+        return new JsonModel(array(
+            'result' => json_encode($qr)
+        ));
     }
 
     /**

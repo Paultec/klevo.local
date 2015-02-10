@@ -19,48 +19,66 @@ $(function(){
     /******************************************************************************
      Horizontal menu
      *******************************************************************************/
+    (function() {
+        var menuItem = $('.horizontal-nav');
 
-    var menuItem = $('.horizontal-nav');
-
-    menuItem.find('a').hover(function() {
-        $(this).css({'color': '#563D7C'})
-               .children().css({'color': '#428BCA'});
+        menuItem.find('a').hover(function() {
+            $(this).css({'color': '#563D7C'})
+                .children().css({'color': '#428BCA'});
         },function() {
             $(this).css({'color': '#428BCA'})
                 .children().css({'color': '#563D7C'});
         });
 
-    var menu_glyphicon = ['glyphicon-home',
-                          'glyphicon-picture',
-                          'glyphicon-pencil',
-                          'glyphicon-comment',
-                          'glyphicon-shopping-cart',
-                          'glyphicon-earphone'];
+        var menu_glyphicon = ['glyphicon-home',
+            'glyphicon-picture',
+            'glyphicon-pencil',
+            'glyphicon-comment',
+            'glyphicon-shopping-cart',
+            'glyphicon-earphone'];
 
-    var nav = $('.nav:first').find('li').find('a');
+        var nav = $('.nav:first').find('li').find('a');
 
-    nav.each(function(index) {
-        $(this).append(' <i class="glyphicon '+ menu_glyphicon[index] +'\"></i>');
-    });
+        nav.each(function(index) {
+            $(this).prepend('<i class="glyphicon ' + menu_glyphicon[index] + '\"></i> ');
+        });
 
-    menuItem.find('li.active').addClass('outline-outward');
+        menuItem.find('li.active').addClass('outline-outward');
 
-    /* Grab navigation */
-    var grab = $('.grub-data');
-    grab.appendTo( $('.main-nav') );
+        visibleCheck();
 
-    grab.children().unwrap();
+        $(window).on('resize', function() {
+            visibleCheck();
+        });
 
-    /* Sub-nav */
-    // Menu dropdown
-    $('ul.nav').find('li.dropdown').hover(function(){
-        $('.dropdown-menu', this).fadeIn();
-    }, function(){
-        $('.dropdown-menu', this).fadeOut();
-    });
+        /* Grab navigation */
+        var grab = $('.grub-data');
+        grab.appendTo( $('.main-nav') );
 
-    /* Bottom-menu */
-    $('.bottom-nav').find('li').find('a').removeClass('float-shadow');
+        grab.children().unwrap();
+
+        /* Sub-nav */
+        // Menu dropdown
+        $('ul.nav').find('li.dropdown').hover(function(){
+            $('.dropdown-menu', this).fadeIn();
+        }, function(){
+            $('.dropdown-menu', this).fadeOut();
+        });
+
+        /* Bottom-menu */
+        $('.bottom-nav').find('li').find('a').removeClass('float-shadow');
+
+        function visibleCheck() {
+            var mainNav  = $('#main-navigation'),
+                hasClass = $('.navbar-toggle').is(':visible');
+
+            if (hasClass) {
+                mainNav.find('li.active').removeClass('outline-outward').end().find('a').removeClass('float-shadow');
+            } else {
+                mainNav.find('li.active').addClass('outline-outward').end().find('a').addClass('float-shadow');
+            }
+        }
+    })();
 
     /******************************************************************************
      Info on carousel
@@ -506,6 +524,96 @@ $(function(){
 
         $('.search-input').val(clear);
     }
+
+    /******************************************************************************
+     pre search
+     *******************************************************************************/
+    (function() {
+        $('.search-input').on('keyup', function() {
+            var str       = $.trim($(this).val()),
+                strLength = str.length;
+
+            if (strLength > 4) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/search/pre-search',
+                    data: { str: str }
+                })
+                    .done(function(data) {
+                        if (data.result.length > 0 && strLength > 4) {
+                            var resize = newPos();
+
+                            var left    = resize.left,
+                                top     = resize.top,
+                                width   = resize.width;
+
+                            var pre_search = $('.pre-search');
+
+                            if (pre_search.length > 0) {
+                                pre_search.remove();
+                            }
+
+                            $('<ul class="list-unstyled pre-search hide"></ul>').css({
+                                'position'  : 'absolute',
+                                'z-index'   : 9999,
+                                'top'       : top   + 'px',
+                                'left'      : left  + 'px',
+                                'width'     : width + 'px',
+                                'background': '#fff'
+                            }).appendTo('body');
+
+                            var parse = JSON.parse(data.result);
+
+                            $(parse).each(function(index, value) {
+                                if (value.img == null) {
+                                    value.img = 'noimage.png';
+                                }
+
+                                pre_search = $('.pre-search').append('<li class="product"><a class="set-product-in-store store-href" href="/product/' + value.translit + '.html"><img class="store-img" width="65" src="/img/product/min/' + value.img + '">' + value.name + '</a></li>');
+                            });
+
+                            if (pre_search.find('li').length > 1) {
+                                $('.search-input').addClass('bottom-radius-remove');
+
+                                pre_search.removeClass('hide').append('<a class="text-right" href="/search?q=' + str + '">Показать все результаты &gt;&gt;</a>');
+                            }
+                        }
+                    })
+                    .fail(function() {})
+                    .always(function() {});
+            }
+
+            $('body').on('click', function() {
+                $('.pre-search').fadeOut('fast').remove();
+                $('.search-input').removeClass('bottom-radius-remove');
+            });
+
+            function newPos() {
+                var search_input = $('.search-input'),
+                    pos     = search_input.offset();
+
+                return {
+                    left:   pos.left,
+                    top:    pos.top + 34,
+                    width:  search_input.width() + 25
+                };
+            }
+
+            $(window).on('resize', function() {
+                var resize = newPos();
+
+                var left    = resize.left,
+                    top     = resize.top,
+                    width   = resize.width;
+
+                $('.pre-search').css({
+                    'top'   :  top  + 'px',
+                    'left'  : left  + 'px',
+                    'width' : width + 'px'
+                });
+            });
+        });
+    })();
 
     /******************************************************************************
      breadcrumb
@@ -1290,25 +1398,25 @@ $(function(){
             }
         };
 
-        $('.set-product-in-store').on('click', function() {
+        $(document).on('click', '.set-product-in-store', function() {
             var maxViewedElements = 15;
             var curProduct = $(this).parents('.product');
 
             var img  = curProduct.find('.store-img').prop('src'),
-                href = curProduct.find('.store-href');
+                href = curProduct.find('.store-href').prop('href');
 
             var storage = {};
 
             storage.img         = img.slice(img.lastIndexOf('/'), img.length);
-            storage.href        = href.prop('href').slice(href.prop('href').lastIndexOf('/'), href.prop('href').length);
-            storage.name        = href.text();
+            storage.href        = href.slice(href.lastIndexOf('/'), href.length);
+            storage.name        = curProduct.find('.store-href').text();
             storage.price       = curProduct.find('.store-price').text();
             storage.description = curProduct.find('.store-description').text();
 
             var item = LS.get('viewed') || [];
 
             if (item.length > 0) {
-                for (var i = 0, length = LS.getLength('viewed'); i < length; i++) {
+                for (var i = 0; i < LS.getLength('viewed'); i++) {
                     if (item[i].href == storage.href) {
                         item = LS.removeElement('viewed', i);
                     }
@@ -1330,7 +1438,7 @@ $(function(){
                     var html = '';
                     var el   = LS.get('viewed')[i];
 
-                    html += '<div class="last-viewed-product-item row"><div class="col col-sm-3"><a href="/product'  + el.href + '"><img class="img-responsive" src="/img/product/min' + el.img + '" width="135" alt=""></a></div><div class="col col-sm-9"><h5><a href="/product' + el.href + '">' + el.name + '</a></h5><p>'  + el.description + '</p><p>' + el.price + '</p></div></div><div class="delim"></div>';
+                    html += '<div class="last-viewed-product-item product row"><div class="col col-sm-3"><a class="store-href" href="/product'  + el.href + '"><img class="img-responsive set-product-in-store store-img" src="/img/product/min' + el.img + '" width="135" alt=""></a></div><div class="col col-sm-9"><h5><a class="set-product-in-store store-href" href="/product' + el.href + '">' + el.name + '</a></h5><p class="store-description">'  + el.description + '</p><p class="store-price">' + el.price + '</p></div></div>';
 
                     $('.last-viewed-products').append(html);
                 }
@@ -1338,5 +1446,51 @@ $(function(){
                 $('.last-viewed-products').append('<h4 class="text-center">Пока ничего нет.</h4>');
             }
         });
+    })();
+
+    /******************************************************************************
+     feedback form
+     *******************************************************************************/
+    (function() {
+        var form = $('.feedback-form');
+
+        form.on('submit', function(e) {
+            var email   = $('.feedback-form-email').val(),
+                subject = $('.feedback-form-subject').val(),
+                text    = $('.feedback-form-text').val();
+
+            if (!email_reg.test(email) || !subject || !text) {
+                if ($('#informer').length == 0) {
+                    form.prepend('<p id="informer" class="text-danger text-center">Проверьте введенные данные.</p>');
+                }
+
+                e.preventDefault();
+            }
+        });
+    })();
+
+    /******************************************************************************
+     Flash Messenger
+     *******************************************************************************/
+    (function() {
+        var messenger   = $('.flash-messenger'),
+            message     = messenger.find('li').text(),
+            timer       = null;
+
+        if (message != '') {
+            messenger.removeClass('hide');
+
+            autoClose();
+        }
+
+        messenger.on('click', function() {
+            $(this).fadeOut('slow');
+
+            clearTimeout(timer);
+        });
+
+        function autoClose() {
+            timer = setTimeout(function(){ messenger.trigger('click'); }, 8000);
+        }
     })();
 });

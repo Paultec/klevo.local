@@ -92,7 +92,7 @@
                 <div class="grub-data">
                     <?php if ($this->userRole !== 'guest' && $this->userRole !== 'user'): ?>
                         <!-- Admin button -->
-                        <li id="control"><a href="<?php echo $this->url('admin');?>"><?php echo $this->userRole;?> <i class="glyphicon glyphicon-wrench"></i></a></li>
+                        <li id="control"><a href="<?php echo $this->url('admin');?>"><i class="glyphicon glyphicon-wrench"></i> <?php echo $this->userRole;?></a></li>
                     <?php endif ?>
                 </div>
             </div><!-- /Horizontal menu  -->
@@ -122,9 +122,34 @@
                 <p class="text-muted">&copy; <?php echo date('Y') ?> by Klevo <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
         </div> <!-- /container -->
-        <a href="#" class="feedback hidden-sm hidden-xs">Обратная связь</a>
+        <span class="feedback hidden-sm hidden-xs md-trigger" data-modal="modal-4">Обратная связь</span>
+        <!-- Feedback form -->
+        <div class="md-modal md-effect-1" id="modal-4">
+            <div class="md-content">
+                <h3>Обратная связь</h3>
+                <div>
+                    <form action="<?php echo $this->url('feedback'); ?>" method="post" class="feedback-form" name="feedback-form">
+                        <div class="form-group">
+                            <label for="email" class="control-label">Ваш email: </label>
+                            <input type="email" name="email" class="form-control feedback-form-email" id="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                        <label for="subject" class="control-label">Тема: </label>
+                            <input type="text" name="subject" class="form-control feedback-form-subject" id="subject" placeholder="Тема" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="text" class="control-label">Суть: </label>
+                            <textarea class="form-control feedback-form-text" name="text" id="text" placeholder="Суть" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="md-overlay"></div><!-- /Feedback form -->
         <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button"><span class="glyphicon glyphicon-chevron-up"></span></a>
         <div class="good-idea hidden-md hidden-sm hidden-xs"></div>
-        <script type="text/javascript" src="http://ie.cntrlmrktng.ru/1.0/help.js" charset="UTF-8" async="async"></script>
     </body>
 </html>

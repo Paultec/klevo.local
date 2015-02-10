@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Mail;
 
 class IndexController extends AbstractActionController
 {
@@ -66,8 +67,9 @@ class IndexController extends AbstractActionController
         }
 
         $index = new ViewModel(array(
-            'articles' => $qr,
-            'top'      => !empty($topProductsArray) ? array_chunk($topProductsArray, 4) : null
+            'flashMessages' => $this->flashMessenger()->getMessages(),
+            'articles'      => $qr,
+            'top'           => !empty($topProductsArray) ? array_chunk($topProductsArray, 4) : null
         ));
 
         $catalog = $this->forward()->dispatch('Catalog\Controller\Index');
@@ -90,6 +92,55 @@ class IndexController extends AbstractActionController
     public function contactsAction()
     {
         return new ViewModel();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function feedbackAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $postData = $request->getPost()->toArray();
+
+            if (empty($postData['email']) || empty($postData['subject']) || empty($postData['text'])) {
+                $this->flashMessenger()->addMessage('При отправки сообщения, произошла ошибка.
+                                                    Скорее всего вы заполнили не все данные.
+                                                    Если ошибка будет повторяться -
+                                                    свяжитесь с нами позвонив по телефону.');
+            }
+
+            if (!filter_var($postData['email'], FILTER_VALIDATE_EMAIL)) {
+                $this->flashMessenger()->addMessage('При отправки сообщения, произошла ошибка.
+                                                    Скорее всего вы некорректный email.
+                                                    Если ошибка будет повторяться -
+                                                    свяжитесь с нами позвонив по телефону.');
+            }
+
+            array_walk($postData, function(&$item) {
+                $item = strip_tags($item);
+            });
+
+            $mail = new Mail\Message();
+
+            $mail->setBody($postData['text'])
+                 ->setFrom('klevo@mail.com.ua', 'From Site')
+                 ->addTo('fake@email.com', 'Fake User')
+                 ->setSubject($postData['subject']);
+
+            try {
+                $transport = new Mail\Transport\Sendmail();
+                $transport->send($mail);
+
+                $this->flashMessenger()->addMessage('Ваше письмо отправлено, мы ответим вам в ближайшее время!');
+            } catch(\Exception $e) {
+                $this->flashMessenger()->addMessage('При отправки сообщения, произошла ошибка.
+                                                    Свяжитесь с нами позвонив по телефону.');
+            }
+        }
+
+        return $this->redirect()->toRoute('home');
     }
 
     /**

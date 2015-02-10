@@ -4,7 +4,7 @@ return array(
     'router' => array(
         'routes' => array(
             'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
@@ -14,7 +14,7 @@ return array(
                 ),
             ),
             'gallery' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/gallery',
                     'defaults' => array(
@@ -24,7 +24,7 @@ return array(
                 ),
             ),
             'article' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/article',
                     'defaults' => array(
@@ -34,7 +34,7 @@ return array(
                 ),
             ),
             'paymentdelivery' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/payment-delivery',
                     'defaults' => array(
@@ -44,7 +44,7 @@ return array(
                 ),
             ),
             'contacts' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/contacts',
                     'defaults' => array(
@@ -53,7 +53,16 @@ return array(
                     ),
                 ),
             ),
-
+            'feedback' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route'    => '/feedback',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'feedback',
+                    ),
+                ),
+            ),
             'application' => array(
                 'type'    => 'Literal',
                 'options' => array(

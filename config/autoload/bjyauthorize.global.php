@@ -20,7 +20,7 @@ return array(
                 // разрешения для всех посетителей сайта (включая незарегистрированных)
                 array(
                     'controller' => 'Application\Controller\Index',
-                    'action'     => array('index', 'payment-delivery', 'contacts'),
+                    'action'     => array('index', 'payment-delivery', 'contacts', 'feedback'),
                     'roles'      => array(),
                 ),
                 array(
@@ -40,7 +40,7 @@ return array(
                 ),
                 array(
                     'controller' => 'Search\Controller\Index',
-                    'action'     => array('index'),
+                    'action'     => array('index', 'pre-search'),
                     'roles'      => array(),
                 ),
                 array(

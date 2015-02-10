@@ -38,61 +38,61 @@ $this->headTitle($title);
     <?php if ($this->paginator->count() > 0): ?>
         <?php foreach ($this->paginator as $item): ?>
             <?php if (is_null($item[0]->getIdStatus()) || ($item[0]->getIdStatus()->getId() == 3)): ?>
-            <section class="product row">
-                <div class="col col-md-4">
-                    <?php if ($item[0]->getImg()): ?>
-                        <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
-                            <img class="lazy img-responsive set-product-in-store store-img" data-original="/img/product/min/<?php echo $item[0]->getImg();?>" width="270" alt="">
-                        </a>
-                    <?php else : ?>
-                    <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
-                        <img class="lazy" data-original="/img/product/min/noimage.png" width="270" alt="">
-                    </a>
-                    <?php endif; ?>
-                </div>
-                <div class="col col-md-8">
-                    <h5>
-                        <a class="set-product-in-store store-href" href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>"><?php echo $item[0]->getName(); ?></a>
-                    </h5>
-                    <p class="store-description"><?php echo $item[0]->getDescription(); ?></p>
-                    <?php if ($item['quantity'] === 0 &&  $item['virtualQty'] > 0) : ?>
-                        <p class="product-delivery">Доставка в течении 2-3 дней</p>
-                    <?php endif; ?>
-                    <?php if ($item[0]->getPrice() !== 0) : ?>
-                        <p class="product-price store-price"><?php echo $item[0]->getPrice() / 100; ?></p>
-                    <?php endif; ?>
-                </div>
-                <div class="cart-form">
-                    <?php if ($item['quantity'] > 0 || $item['virtualQty'] > 0) : ?>
-                        <!-- Add to cart -->
-                        <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
-                            <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
-                            <input type="hidden" class="continue" name="continue">
-                            <?php if (!in_array($item[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
-                                <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
-                            <?php else : ?>
-                                <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
-                            <?php endif; ?>
-                        </form><!-- /Add to cart -->
-                    <?php endif; ?>
-                    <?php if (!in_array($item[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
-                        <!-- One click buy -->
-                        <form class="form-inline">
-                            <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
-                            <?php if ($item['quantity'] === 0 &&  $item['virtualQty'] > 0) : ?>
-                                <input type="hidden" class="qty" name="qty" value="<?php echo $item['virtualQty']; ?>">
-                            <?php else : ?>
-                                <input type="hidden" class="qty" name="qty" value="<?php echo $item['quantity']; ?>">
-                            <?php endif; ?>
-                            <?php if ($item['quantity'] < 1 && $item['virtualQty'] < 1) : ?>
-                                <input type="button" value="Заказать" name="order" class="btn btn-warning order-product md-trigger" data-modal="modal-3" data-toggle="tooltip" data-placement="top" title="Заказ товара">
-                            <?php else : ?>
-                                <input type="button" value="Купить" name="oneClickBuy" class="btn btn-success one-click-buy md-trigger" data-modal="modal-1" data-toggle="tooltip" data-placement="top" title="в 1 клик">
-                            <?php endif; ?>
-                        </form><!-- /One click buy -->
-                    <?php endif; ?>
-                </div>
-            </section>
+                <section class="product row">
+                    <div class="col col-md-4">
+                        <?php if ($item[0]->getImg()): ?>
+                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
+                                <img class="lazy img-responsive set-product-in-store store-img" data-original="/img/product/min/<?php echo $item[0]->getImg();?>" width="270" alt="">
+                            </a>
+                        <?php else : ?>
+                            <a href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>">
+                                <img class="lazy" data-original="/img/product/min/noimage.png" width="270" alt="">
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                    <div class="col col-md-8">
+                        <h5>
+                            <a class="set-product-in-store store-href" href="<?php echo $this->url('product/view', array('action' => 'view', 'name' => $item[0]->getTranslit()));?>"><?php echo $item[0]->getName(); ?></a>
+                        </h5>
+                        <p class="store-description"><?php echo $item[0]->getDescription(); ?></p>
+                        <?php if ($item['quantity'] === 0 &&  $item['virtualQty'] > 0) : ?>
+                            <p class="product-delivery">Доставка в течении 2-3 дней</p>
+                        <?php endif; ?>
+                        <?php if ($item[0]->getPrice() !== 0) : ?>
+                            <p class="product-price store-price"><?php echo $item[0]->getPrice() / 100; ?></p>
+                        <?php endif; ?>
+                    </div>
+                    <div class="cart-form">
+                        <?php if ($item['quantity'] > 0 || $item['virtualQty'] > 0) : ?>
+                            <!-- Add to cart -->
+                            <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
+                                <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
+                                <input type="hidden" class="continue" name="continue">
+                                <?php if (!in_array($item[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
+                                    <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
+                                <?php else : ?>
+                                    <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
+                                <?php endif; ?>
+                            </form><!-- /Add to cart -->
+                        <?php endif; ?>
+                        <?php if (!in_array($item[0]->getId(), $this->inCart)) : /* Если товар еще не в корзине */ ?>
+                            <!-- One click buy -->
+                            <form class="form-inline">
+                                <input type="hidden" class="id" name="id" value="<?php echo $item[0]->getId(); ?>">
+                                <?php if ($item['quantity'] === 0 &&  $item['virtualQty'] > 0) : ?>
+                                    <input type="hidden" class="qty" name="qty" value="<?php echo $item['virtualQty']; ?>">
+                                <?php else : ?>
+                                    <input type="hidden" class="qty" name="qty" value="<?php echo $item['quantity']; ?>">
+                                <?php endif; ?>
+                                <?php if ($item['quantity'] < 1 && $item['virtualQty'] < 1) : ?>
+                                    <input type="button" value="Заказать" name="order" class="btn btn-warning order-product md-trigger" data-modal="modal-3" data-toggle="tooltip" data-placement="top" title="Заказ товара">
+                                <?php else : ?>
+                                    <input type="button" value="Купить" name="oneClickBuy" class="btn btn-success one-click-buy md-trigger" data-modal="modal-1" data-toggle="tooltip" data-placement="top" title="в 1 клик">
+                                <?php endif; ?>
+                            </form><!-- /One click buy -->
+                        <?php endif; ?>
+                    </div>
+                </section>
             <?php endif; ?>
         <?php endforeach; ?>
     <?php else : ?>

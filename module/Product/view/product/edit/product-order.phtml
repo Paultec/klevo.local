@@ -51,6 +51,7 @@ $this->headTitle($title);
         <tr>
             <td>Дата</td>
             <td>Email</td>
+            <td>Имя</td>
             <td>Телефон</td>
             <td>Адрес</td>
             <td>Инф. о заказе (н-е, к-во, цена)</td>
@@ -65,6 +66,7 @@ $this->headTitle($title);
         <tr>
             <td>Дата</td>
             <td>Email</td>
+            <td>Имя</td>
             <td>Телефон</td>
             <td>Адрес</td>
             <td>Инф. о заказе</td>
@@ -89,7 +91,8 @@ $this->headTitle($title);
             ?>
             <tr class="<?php echo $class;?>">
                 <td><?php echo $orderItem['date'];?></td>
-                <td><?php echo $orderKey;?></td>
+                <td><?php echo $orderKey; //email ?></td>
+                <td><?php echo !is_null($orderItem['name']) ? $orderItem['name'] : '&#8211;';?></td>
                 <td><?php echo '0' . $orderItem['phone'];?></td>
                 <td><?php echo !is_null($orderItem['address'])  ?  $orderItem['address'] : '&#8211;';?></td>
                 <td class="data-cell">
