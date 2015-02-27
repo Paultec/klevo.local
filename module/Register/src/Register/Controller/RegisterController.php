@@ -282,8 +282,7 @@ class RegisterController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost()){
-
+        if ($request->isPost()) {
             $registerNote = new RegisterEntity();
             $form->setData($request->getPost());
 
@@ -321,8 +320,8 @@ class RegisterController extends AbstractActionController
 
         return new ViewModel(array(
             'form'        => $form,
-            'storeFrom'   => $this->setOptionItems(self::STORE_ENTITY),
-            'storeTo'     => $this->setOptionItems(self::STORE_ENTITY),
+            'storeFrom'   => $this->setOptionItems(self::STORE_ENTITY, true),
+            'storeTo'     => $this->setOptionItems(self::STORE_ENTITY, true),
             'operation'   => $this->setOptionItems(self::OPERATION_ENTITY),
             'paymentType' => $this->setOptionItems(self::PAYMENT_TYPE_ENTITY),
             'status'      => $this->setOptionItems(self::STATUS_ENTITY),
@@ -338,8 +337,8 @@ class RegisterController extends AbstractActionController
 
         if ($request->isPost()){
             $idRegister = $request->getPost('idRegister');
-            $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
-            $form = $this->getForm();
+            $register   = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
+            $form       = $this->getForm();
         }
 
         return new ViewModel(array(
@@ -353,22 +352,25 @@ class RegisterController extends AbstractActionController
      *
      * @return array
      */
-    protected function setOptionItems($entity)
+    protected function setOptionItems($entity, $attrib = false)
     {
-        $optionList = $this->getEntityManager()
-            ->getRepository($entity)->findAll();
+        $optionList = $this->getEntityManager()->getRepository($entity)->findAll();
 
         $optionArray = array();
 
         for ($i = 0, $option = count($optionList); $i < $option; $i++) {
-            $optionArray[$i]['id']   = $optionList[$i]->getId();
-            $optionArray[$i]['name'] = $optionList[$i]->getName();
+            $optionArray[$i]['id']      = $optionList[$i]->getId();
+            $optionArray[$i]['name']    = $optionList[$i]->getName();
+
+            if ($attrib) {
+                $optionArray[$i]['attrib']  = $optionList[$i]->getIdAttrib()->getId();
+            }
         }
 
         array_unshift($optionArray, array(
-                'id'   => null,
-                'name' => 'Выберите из списка'
-            ));
+            'id'   => null,
+            'name' => 'Выберите из списка'
+        ));
 
         return $optionArray;
     }

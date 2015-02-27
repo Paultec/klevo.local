@@ -31,6 +31,7 @@ class Module
                         'Register\Controller\Index',
                         'Register\Controller\Register',
                         'Register\Controller\RegisterTable',
+                        'Register\Controller\Remains',
                         'Article\Controller\Edit',
                         'Gallery\Controller\Edit'
                     ))) {

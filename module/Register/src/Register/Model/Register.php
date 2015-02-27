@@ -21,9 +21,17 @@ class Register
      * @Annotation\Type("Zend\Form\Element\Date")
      * @Annotation\Required({"required":"true" })
      * @Annotation\Options({"label":"Дата:"})
+     * @Annotation\Attributes({"class":"form-control"})
      * @Annotation\Attributes({"min":"2014-01-01","step":"1"})
      */
     public $date;
+
+    /**
+     * @Annotation\Options({"label":"Тип операции: "})
+     * @Annotation\Required({"required":"true" })
+     * @Annotation\Attributes({"class":"form-control"})
+     */
+    public $idOperation;
 
     /**
      * @Annotation\Options({"label":"От кого: "})
@@ -38,13 +46,6 @@ class Register
      * @Annotation\Attributes({"class":"form-control"})
      */
     public $idStoreTo;
-
-    /**
-     * @Annotation\Options({"label":"Тип операции: "})
-     * @Annotation\Required({"required":"true" })
-     * @Annotation\Attributes({"class":"form-control"})
-     */
-    public $idOperation;
 
     /**
      * @Annotation\Options({"label":"Вид оплаты: "})

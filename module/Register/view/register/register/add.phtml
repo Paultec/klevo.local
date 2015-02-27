@@ -23,43 +23,106 @@ $this->headTitle($title);
     $form->prepare();
 
     echo $this->form()->openTag($form);
-    echo '<div class="form-group">' . "\n";
 
-    echo $this->formRow($form->get('date')) . "<br/>";
+    echo $this->formRow($form->get('date'));
 
-    echo '<label>От кого:' . "\n";
-    echo '<select class="form-control" name="idStoreFrom">' . "\n";
-    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->storeFrom);
-    echo '</select>' . "\n";
-    echo '</label>' . "\n";
+    echo '<label>Тип операции:
+              <select class="form-control operation-type" name="idOperation" required>',
+                $this->partialLoop('register/partial/optionLoop.phtml', $this->operation),
+             '</select>
+          </label>';
 
-    echo '<label>Кому:' . "\n";
-    echo '<select class="form-control" name="idStoreTo">' . "\n";
-    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->storeTo);
-    echo '</select>' . "\n";
-    echo '</label>' . "<br/>";
+    echo '<label>От кого:
+             <select class="form-control operation-from" name="idStoreFrom" required>',
+                $this->partialLoop('register/partial/optionLoop.phtml', $this->storeFrom),
+             '</select>
+         </label>';
 
-    echo '<label>Тип операции:' . "\n";
-    echo '<select class="form-control" name="idOperation">' . "\n";
-    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->operation);
-    echo '</select>' . "\n";
-    echo '</label>' . "\n";
+    echo '<label>Кому:
+              <select class="form-control operation-to" name="idStoreTo" required>',
+                $this->partialLoop('register/partial/optionLoop.phtml', $this->storeTo),
+             '</select>
+          </label>';
 
-    echo '<label>Вид оплаты:' . "\n";
-    echo '<select class="form-control" name="idPaymentType">' . "\n";
-    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->paymentType);
-    echo '</select>' . "\n";
-    echo '</label>' . "\n";
+    echo '<label>Вид оплаты:
+             <select class="form-control" name="idPaymentType" required>',
+                $this->partialLoop('register/partial/optionLoop.phtml', $this->paymentType),
+            '</select>
+         </label>';
 
-    echo '<label>Статус операции:' . "\n";
-    echo '<select class="form-control" name="idStatus">' . "\n";
-    echo $this->partialLoop('register/partial/optionLoop.phtml', $this->status);
-    echo '</select>' . "\n";
-    echo '</label>' . "<br/>";
+    echo '<label>Статус операции:
+            <select class="form-control" name="idStatus" required>',
+                $this->partialLoop('register/partial/optionLoop.phtml', $this->status),
+            '</select>
+        </label>';
 
-    echo $this->formSubmit($form->get('submit')) . "\n";
+    echo $this->formSubmit($form->get('submit'));
 
-    echo  '</div>' . "\n";
     echo $this->form()->closeTag();
     ?>
 </section>
+<script>
+    (function() {
+        var compare = [
+            {  },
+            { 3: 1 },
+            { 1: 2 },
+            { 2: 1 },
+            { 1: 3 },
+            { 1: 1 }
+        ];
+
+        var operationFrom   = $('.operation-from').find('option'),
+            operationTo     = $('.operation-to').find('option');
+
+        var source = $('select').filter(':not(".operation-type")');
+
+        source.add('.btn').prop('disabled', true);
+
+        $('.operation-type').on('change', function() {
+            var val = $(this).val();
+
+            operationFrom.first().prop('selected', true);
+            operationTo.first().prop('selected', true);
+
+            if (compare[val] !== undefined) {
+                prepareSelect(compare[val]);
+            }
+
+            if (val != '') {
+                triggerDisabled(source, $(this));
+            } else {
+                triggerDisabled(source, $(this));
+            }
+        });
+
+        function triggerDisabled(source, $this) {
+            if ($this.val() != '') {
+                source.add('.btn').prop('disabled', false);
+            } else {
+                source.add('.btn').prop('disabled', true);
+            }
+        }
+
+        function prepareSelect(compare) {
+            for (var key in compare) if (compare.hasOwnProperty(key)) {
+                var from = key,
+                    to   = compare[key];
+            }
+
+            operationFrom.add(operationTo).prop('disabled', true);
+
+            operationFrom.each(function() {
+                if ($(this).data('attrib') == from) {
+                    $(this).prop('disabled', false);
+                }
+            });
+
+            operationTo.each(function() {
+                if ($(this).data('attrib') == to) {
+                    $(this).prop('disabled', false);
+                }
+            });
+        }
+    })();
+</script>
