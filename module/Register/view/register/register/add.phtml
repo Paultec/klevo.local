@@ -110,17 +110,25 @@ $this->headTitle($title);
                     to   = compare[key];
             }
 
-            operationFrom.add(operationTo).prop('disabled', true);
+            operationFrom.add(operationTo).prop('disabled', true).find('option').css('display', 'inline');
 
             operationFrom.each(function() {
-                if ($(this).data('attrib') == from) {
-                    $(this).prop('disabled', false);
+                var $this = $(this);
+
+                if ($this.data('attrib') == from) {
+                    $this.prop('disabled', false).css('display', 'inline');
+                } else {
+                    $this.prop('disabled', true).css('display', 'none');
                 }
             });
 
             operationTo.each(function() {
+                var $this = $(this);
+
                 if ($(this).data('attrib') == to) {
-                    $(this).prop('disabled', false);
+                    $this.prop('disabled', false).css('display', 'inline');
+                } else {
+                    $this.prop('disabled', true).css('display', 'none');
                 }
             });
         }

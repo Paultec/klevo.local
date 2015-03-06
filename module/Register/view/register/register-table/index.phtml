@@ -129,8 +129,9 @@
 <!--        </ol>-->
 <!--    --><?php //endif ?>
 
-    <?php if ($this->product): ?>
+    <?php if (!is_null($this->product)): ?>
 
+        <?php if (!empty($this->product)) : ?>
         <table id="product-table" class="table table-striped ">
             <thead>
             <tr>
@@ -146,59 +147,85 @@
             </tr>
             </tfoot>
             <tbody>
-            <?php foreach($this->product as $item): ?>
-                <tr>
-                    <td style="max-width: 450px"><?php echo $item->getName(); ?></td>
-                    <td>
-                        <form method="post" action="<?php echo $this->url('register-table');?>" class="form-inline product-select" role="form">
-                            <input type="hidden" name="idProduct" value="<?php echo $item->getId(); ?>">
+                <?php foreach($this->product as $item): ?>
+                    <tr>
+                        <td style="max-width: 450px"><?php echo $item->getName(); ?></td>
+                        <td>
+                            <form method="post" action="<?php echo $this->url('register-table');?>" class="form-inline product-select" role="form">
+                                <input type="hidden" name="idProduct" value="<?php echo $item->getId(); ?>">
 
-                            <div class="form-group">
-                                <label class="sr-only" for="qty">К-во:</label>
-                                <input type="number" min="1" step="1" class="form-control qty" name="qty" value="<?php echo $item->getQty(); ?>">
-                            </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="qty">К-во:</label>
+                                    <input type="number" min="1" step="1" class="form-control qty" name="qty" value="<?php echo $item->getQty(); ?>">
+                                </div>
 
-                            <div class="form-group">
-                                <label class="sr-only" for="price">Цена:</label>
-                                <input type="number" min="0.01" step="0.01" class="form-control price" name="price" value="<?php echo $item->getPrice() / 100; ?>">
-                            </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="price">Цена:</label>
+                                    <input type="number" min="0" step="0.01" class="form-control price" name="price" value="<?php echo $item->getPrice() / 100; ?>">
+                                </div>
 
-                            <div class="form-group">
-                                <label class="add">
-                                    <input class="btn btn-default hide add-button" type="submit" value="Добавить">
-                                    <i class="glyphicon glyphicon-circle-arrow-up" data-toggle="tooltip" data-placement="top" title="Добавить"></i>
-                                </label>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+                                <div class="form-group">
+                                    <label class="add">
+                                        <input class="btn btn-default hide add-button" type="submit" value="Добавить">
+                                        <i class="glyphicon glyphicon-circle-arrow-up" data-toggle="tooltip" data-placement="top" title="Добавить"></i>
+                                    </label>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
+        <?php else : ?>
+            <h2>Таких товаров нет.</h2>
+        <?php endif; ?>
     <?php else: ?>
         <h2>Выберите производителя или категорию для продолжения.</h2>
     <?php endif ?>
 </section>
 <script>
-    // Выделить содержимое по клику
-    $('.price').on('click', function() {
-        $(this).select();
-    });
+    (function() {
+        // Выделить содержимое по клику
+        $('.price').on('click', function() {
+            $(this).select();
+        });
 
-    $('.add-button').on('click', function(e) {
-        var qty     = $(this).parent().parent().siblings().find('.qty');
-        var price   = $(this).parent().parent().siblings().find('.price');
+        $('.add-button').on('click', function(e) {
+            var qty     = $(this).parent().parent().siblings().find('.qty');
+            var price   = $(this).parent().parent().siblings().find('.price');
 
-        if (qty.val() == '') {
-            qty.css('border', '1px solid red');
+            if (qty.val() == '') {
+                qty.css('border', '1px solid red');
 
-            e.preventDefault();
-        }
+                e.preventDefault();
+            }
 
-        if (price.val() < 0) {
-            price.css('border', '1px solid red');
+            if (price.val() < 0) {
+                price.css('border', '1px solid red');
 
-            e.preventDefault();
-        }
-    });
+                e.preventDefault();
+            }
+        });
+
+        $(window).on('beforeunload', function() {
+            return "Будет создан Нулевой приход!\nПродолжить?";
+        });
+
+        $('form').on('submit', function() {
+            $(window).off('beforeunload');
+        });
+
+        $('a').on('click', function() {
+            var answer = confirm("Все не сохраненные данные будут утеряны.\nПродолжить?");
+
+            if (answer) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/register-table/clear'
+                });
+            }
+
+            return answer;
+        });
+    })();
 </script>

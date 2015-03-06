@@ -244,6 +244,32 @@ class RegisterTableController extends AbstractActionController
     }
 
     /**
+     * @return \Zend\Http\Response
+     */
+    public function clearAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isXmlHttpRequest()) {
+            $currentSession = new Container();
+
+            $registerTable = $this->getEntityManager()->getRepository(self::REGISTER_TABLE_ENTITY)->findBy(array('idRegister' => $currentSession->idRegister));
+
+            if (empty($registerTable)) {
+                $register = $this->getEntityManager()->getRepository(self::REGISTER_ENTITY)->findBy(array('id' => $currentSession->idRegister));
+
+                foreach ($register as $registerItem) {
+                    $this->getEntityManager()->remove($registerItem);
+                }
+
+                $this->getEntityManager()->flush();
+            }
+        }
+
+        return $this->redirect()->toRoute('register');
+    }
+
+    /**
      * Set cache from factory
      *
      * @param $cache
