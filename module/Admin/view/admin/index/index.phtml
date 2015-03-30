@@ -71,5 +71,13 @@ $this->headTitle($title);
                 <li><a tabindex="-1" href="<?php echo $this->url('edit-gallery');?>">Редактировать галерею</a></li>
             </ul>
         </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Пользователи <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a tabindex="-1" href="<?php echo $this->url('user-info');?>">Просмотреть пользователей</a></li>
+            </ul>
+        </li>
     </ul>
 </div>

@@ -115,6 +115,7 @@ return array(
                         'Register\Controller\Payment',
                         'Search\Controller\Index',
                         'Gallery\Controller\Edit',
+                        'User\Controller\Edit',
                     ),
                     'roles'      => array('admin'),
                 ),

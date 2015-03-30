@@ -43,6 +43,13 @@ class UserAddition
     private $address;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="discount", type="integer", nullable=true)
+     */
+    private $discount;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="checked", type="boolean", nullable=false)
@@ -149,6 +156,29 @@ class UserAddition
     }
 
     /**
+     * Set discount
+     *
+     * @param integer $discount
+     * @return UserAddition
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * Get discount
+     *
+     * @return integer
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
      * Set checked
      *
      * @param boolean $checked
@@ -239,5 +269,6 @@ class UserAddition
         $this->idUser   = $data['idUser'];
         $this->address  = $data['address'];
         $this->checked  = $data['checked'];
+        $this->discount = $data['discount'];
     }
 }

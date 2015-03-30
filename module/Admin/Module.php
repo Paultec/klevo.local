@@ -33,7 +33,8 @@ class Module
                         'Register\Controller\RegisterTable',
                         'Register\Controller\Remains',
                         'Article\Controller\Edit',
-                        'Gallery\Controller\Edit'
+                        'Gallery\Controller\Edit',
+                        'User\Controller\Edit'
                     ))) {
                     $controller->layout('admin/layout');
                 }

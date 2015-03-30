@@ -100,6 +100,9 @@ class IndexController extends AbstractActionController
         $this->prg('/personal-cabinet', true);
     }
 
+    /*
+     * @todo add send mail
+     */
     protected function sendMail($postData)
     {
         var_dump($postData);

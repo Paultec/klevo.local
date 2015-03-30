@@ -15,6 +15,20 @@ return array(
                     ),
                 ),
             ),
+            'user-info' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/user-info[/:action][/:page]',
+                    'constraints' => array(
+                        'action'  => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'page'    => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'User\Controller\Edit',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     'doctrine' => array(
@@ -56,6 +70,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'User\Controller\Index' => 'User\Controller\IndexController',
+            'User\Controller\Edit' => 'User\Controller\EditController',
         ),
     ),
     'translator' => array(

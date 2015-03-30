@@ -1,0 +1,49 @@
+<?php
+$title = 'Информация о пользователе';
+$this->headTitle($title);
+?>
+<section class="col col-md-12">
+    <?php if ($this->paginator->count() > 0): ?>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Email</th>
+                <th>Телефон</th>
+                <th>Адрес</th>
+                <th>Общая сумма покупки, грн.</th>
+                <th>Скидка, %</th>
+            </tr>
+            </thead>
+            <tbody>
+        <?php foreach ($this->paginator as $user): ?>
+            <?php $userRole = $user[0]->getRoles();  if ($userRole[0]->getId() == 5) : ?>
+            <tr>
+                <td><?php echo $user[0]->getUsername() ?: '&mdash;'; ?></td>
+                <td><?php echo $user[0]->getEmail(); ?></td>
+                <td><?php echo $user['phone'] ?: '&mdash;'; ?></td>
+                <td><?php echo $user['address'] ?: '&mdash;'; ?></td>
+                <td><?php echo $user['totalBuy'] / 100; ?></td>
+                <td>
+                    <form class="form-inline" action="<?php echo $this->url('user-info', array('action' => 'discount')); ?>" method="post">
+                        <input name="idUser" type="hidden" value="<?php echo $user[0]->getId(); ?>">
+                        <input class="form-control" type="number" name="discount" min="0" max="100" value="<?php echo $user['discount'] ?: 0; ?>">
+                        <input class="btn btn-default" type="submit" value="Сохранить">
+                    </form>
+                </td>
+            </tr>
+            <?php endif; ?>
+        <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php else : ?>
+        <h1>Пользователей нет!</h1>
+    <?php endif; ?>
+</section>
+
+<section class="col col-md-12 text-center paginator-holder">
+    <div class="delim"></div>
+    <?php
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'user/paginator/pagination.phtml') : '';
+    ?>
+</section>
