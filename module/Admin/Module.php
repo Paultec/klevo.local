@@ -32,6 +32,8 @@ class Module
                         'Register\Controller\Register',
                         'Register\Controller\RegisterTable',
                         'Register\Controller\Remains',
+                        'Register\Controller\Payment',
+                        'Register\Controller\Balance',
                         'Article\Controller\Edit',
                         'Gallery\Controller\Edit',
                         'User\Controller\Edit'

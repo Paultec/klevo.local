@@ -36,6 +36,13 @@ class Payment
     private $amount;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
      * @var \Data\Entity\Store
      *
      * @ORM\ManyToOne(targetEntity="Data\Entity\Store")
@@ -102,6 +109,29 @@ class Payment
     }
 
     /**
+     * Set comment
+     *
+     * @param string $comment
+     * @return Payment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
      * Set idStore
      *
      * @param \Data\Entity\Store $idStore
@@ -139,9 +169,10 @@ class Payment
      */
     public function populate($data = array())
     {
-        $this->id      = $data['id'];
-        $this->date    = $data['date'];
-        $this->amount  = $data['amount'];
-        $this->idStore = $data['idStore'];
+        $this->id       = $data['id'];
+        $this->date     = $data['date'];
+        $this->amount   = $data['amount'];
+        $this->comment  = $data['comment'];
+        $this->idStore  = $data['idStore'];
     }
 }

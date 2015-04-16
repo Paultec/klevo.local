@@ -162,7 +162,7 @@ class RegisterTableController extends AbstractActionController
             $product = $this->getEntityManager()->find(self::PRODUCT_ENTITY, $idProduct);
             $qty = $productList[$i]->currentQty;
             $price = $productList[$i]->currentPrice;
-            $totalSum += $qty * $price;
+            $totalSum += $qty * $price * 100;
 
             unset($productList[$i]->currentQty);
             unset($productList[$i]->currentPrice);

@@ -113,6 +113,7 @@ return array(
                         'Register\Controller\Balance',
                         'Register\Controller\Order',
                         'Register\Controller\Payment',
+                        'Register\Controller\Balance',
                         'Search\Controller\Index',
                         'Gallery\Controller\Edit',
                         'User\Controller\Edit',
@@ -125,7 +126,7 @@ return array(
                 // глобальные разрешения для авторизованных пользователей с ролью BOSS
                 array(
                     'controller' => array(
-                        'Register\Controller\User',
+                        'User\Controller\Edit',
                     ),
                     'roles'      => array('boss'),
                 ),

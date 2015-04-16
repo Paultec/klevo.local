@@ -1,1 +1,70 @@
-Action "index", controller "Balance", module "Register".
+<?php
+$title = 'Баланс';
+$this->headTitle($title);
+?>
+<section class="col col-md-12">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Поставщик</th>
+            <th>Получено</th>
+            <th>Оплачено</th>
+            <th>Возврат</th>
+            <th>Баланс</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <?php foreach ($this->result  as $key => $value) : ?>
+            <?php
+                $incoming = $value['incoming'] / 100 ?: 0;
+                $outgoing = $value['outgoing'] / 100 ?: 0;
+                $returns  = $value['returns']  / 100 ?: 0;
+                $balance  = $incoming - $outgoing - $returns;
+                $style    = '';
+
+                if ($balance > 0) {
+                    $style = '#0000ff';
+                } else {
+                    $style = '#ff0000';
+                }
+            ?>
+            <tr>
+                <td><?php echo $key; ?></td>
+                <td>
+                    <form class="form-inline" method="post" action="<?php echo $this->url('register'); ?>">
+                        <input type="hidden" name="idStoreFrom" value="<?php echo $value['id']; ?>">
+                        <input type="submit" class="btn btn-link" name="storeFrom" data-value="<?php echo $key; ?>" value="<?php echo $incoming; ?>">
+                    </form>
+                </td>
+                <td>
+                    <form class="form-inline" method="post" action="<?php echo $this->url('payment'); ?>">
+                        <input type="hidden" name="idStore" value="<?php echo $value['id']; ?>">
+                        <input type="submit" class="btn btn-link" name="store" data-value="<?php echo $key; ?>" value="<?php echo $outgoing; ?>">
+                    </form>
+                </td>
+                <td>
+                    <form class="form-inline" method="post" action="<?php echo $this->url('register'); ?>">
+                        <input type="hidden" name="idOperation" value="4, <?php echo $value['id']; ?>">
+                        <input type="submit" class="btn btn-link" name="operation" data-value="возврат поставщику, <?php echo $key; ?>" value="<?php echo $returns; ?>">
+                    </form>
+                </td>
+                <td style="color: <?php echo $style; ?>"><?php echo $balance; ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</section>
+<script>
+    $('.form-inline').on('submit', function(e) {
+        var btn = $(this).find('[type="submit"]'),
+            val = btn.data('value');
+
+        if (btn.val() == 0) {
+            e.preventDefault();
+            return false;
+        }
+
+        btn.val(val);
+    });
+</script>

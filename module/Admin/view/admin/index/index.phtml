@@ -15,7 +15,7 @@ $this->headTitle($title);
                 <li><a tabindex="-1" href="<?php echo $this->url('balance');?>">Баланс</a></li>
                 <li><a tabindex="-1" href="<?php echo $this->url('order');?>">Заказы</a></li>
                 <li><a tabindex="-1" href="<?php echo $this->url('payment');?>">Платежи</a></li>
-                <li><a tabindex="-1" href="<?php echo $this->url('user');?>">Пользователи</a></li>
+                <li><a tabindex="-1" href="<?php echo $this->url('user-info');?>">Пользователи</a></li>
             </ul>
         </li>
         <li class="dropdown">
@@ -69,14 +69,6 @@ $this->headTitle($title);
             </a>
             <ul class="dropdown-menu" role="menu">
                 <li><a tabindex="-1" href="<?php echo $this->url('edit-gallery');?>">Редактировать галерею</a></li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                Пользователи <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" role="menu">
-                <li><a tabindex="-1" href="<?php echo $this->url('user-info');?>">Просмотреть пользователей</a></li>
             </ul>
         </li>
     </ul>

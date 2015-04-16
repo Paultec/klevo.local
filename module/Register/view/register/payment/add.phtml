@@ -1,3 +1,24 @@
-Module: Register
-Controller: Payment
-Action: add
+<section class="col col-md-7 col-md-offset-2">
+    <form action="<?php echo $this->url('payment', array('action' => 'add')); ?>" method="post">
+        <div class="form-group">
+            <label for="date">Дата: </label>
+            <input id="date" class="form-control" type="date" name="date" min="2014-01-01" step="1" required>
+        </div>
+        <div class="form-group">
+            <label for="amount">Сумма: (грн.) </label>
+            <input type="number" min="0" step="0.1" class="form-control" name="amount" id="amount" required>
+        </div>
+        <div class="form-group">
+            <label for="store">Поставщик</label>
+            <select name="store" class="form-control" id="store" required>
+                <?php echo $this->partialLoop('register/partial/optionLoop.phtml', $this->suppliers); ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="comment">Комментарий: (опционально)</label>
+            <textarea class="form-control" name="comment" id="comment"></textarea>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Отправить">
+    </form>
+</section>

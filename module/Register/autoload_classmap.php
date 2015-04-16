@@ -9,7 +9,6 @@ return array(
   'Register\Controller\RegisterController'            => __DIR__ . '/src/Register/Controller/RegisterController.php',
   'Register\Controller\RegisterTableController'       => __DIR__ . '/src/Register/Controller/RegisterTableController.php',
   'Register\Controller\RemainsController'             => __DIR__ . '/src/Register/Controller/RemainsController.php',
-  'Register\Controller\UserController'                => __DIR__ . '/src/Register/Controller/UserController.php',
   'Register\Entity\Payment'                           => __DIR__ . '/src/Register/Entity/Payment.php',
   'Register\Entity\Register'                          => __DIR__ . '/src/Register/Entity/Register.php',
   'Register\Entity\RegisterTable'                     => __DIR__ . '/src/Register/Entity/RegisterTable.php',

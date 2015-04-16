@@ -1,1 +1,86 @@
-Action "index", controller "Payment", module "Register".
+<?php
+$title = 'Платежи';
+$this->headTitle($title);
+?>
+<p><a class="btn btn-primary" href="<?php echo $this->url('payment', array('action' => 'add'));?>"><i class="glyphicon glyphicon-plus"></i> Добавить платеж</a></p>
+<div class="filter-criteria">Установленные фильтры: &nbsp;
+    <form method="post" action="<?php echo $this->url('payment'); ?>">
+        <?php
+        foreach ($this->filter as $key => $value) {
+            switch ($key) {
+                case 'beginDate':
+                    echo '<strong>начало периода:</strong> ';
+                    break;
+                case 'endDate':
+                    echo '<strong> конец периода:</strong> ';
+                    break;
+                case 'store';
+                    echo '<strong> поставщик:</strong> ';
+                    break;
+            }
+            echo $value; ?>
+            <label class="btn-remove">
+                <input type="submit" class="btn btn-danger hide" name="<?php echo $key . 'Reset'; ?>">
+                <span class="glyphicon glyphicon-remove cross" data-toggle="tooltip" data-placement="top" title="Удалить фильтр"></span>
+            </label>
+        <?php } ?>
+    </form>
+</div>
+<div>
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab0" data-toggle="tab">Выбрать:</a></li>
+            <li><a href="#tab1" data-toggle="tab">период</a></li>
+            <li><a href="#tab2" data-toggle="tab">поставщик</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab0"></div>
+            <div class="tab-pane" id="tab1">
+                <form method="post" action="<?php echo $this->url('payment'); ?>">
+                    начало периода &nbsp;<input type="date" name="beginDate">
+                    &nbsp; конец периода &nbsp;<input type="date" name="endDate">
+                    <input type="submit" class="btn btn-info" value="Готово">
+                </form>
+            </div>
+            <div class="tab-pane" id="tab2">
+                <?php foreach ($this->data['store'] as $store) : ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('payment'); ?>">
+                        <input type="hidden" name="idStore" value="<?php echo $store->getId(); ?>">
+                        <input type="submit" class="btn btn-link" name="store" value="<?php echo $store->getName(); ?>">
+                    </form>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if ($this->paginator->count() > 0): ?>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Сумма, грн.</th>
+            <th>Поставщик</th>
+            <th>Комментарий</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <?php foreach ($this->paginator as $payment) : ?>
+        <tr>
+            <td><?php echo $payment->getDate()->format('d.m.Y'); ?></td>
+            <td><?php echo $payment->getAmount() / 100; ?></td>
+            <td><?php echo $payment->getIdStore()->getName(); ?></td>
+            <td><?php echo $payment->getComment(); ?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php else : ?>
+    <h2>Платежей нет.</h2>
+<?php endif; ?>
+<div class="delim"></div>
+<section class="col col-md-12 text-center">
+    <?php
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'register/paginator/pagination.phtml') : "";
+    ?>
+</section>

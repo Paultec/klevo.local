@@ -1,13 +1,4 @@
 <?php
-//
-//$form = $this->form;
-//$form->setAttribute('action', $this->url('register', array('action' => 'add')));
-//$form->prepare();
-//
-//echo $this->form()->openTag($form);
-//echo $this->formCollection($form);
-//echo $this->form()->closeTag();
-
 $title = 'Журнал движения товаров';
 $this->headTitle($title);
 ?>
@@ -51,7 +42,7 @@ $this->headTitle($title);
          </label>';
 
     echo '<label>Статус операции:
-            <select class="form-control" name="idStatus" required>',
+            <select class="form-control operation-status" name="idStatus" required>',
                 $this->partialLoop('register/partial/optionLoop.phtml', $this->status),
             '</select>
         </label>';
@@ -69,11 +60,13 @@ $this->headTitle($title);
             { 1: 2 },
             { 2: 1 },
             { 1: 3 },
-            { 1: 1 }
+            { 1: 1 },
+            { 1: 4 }
         ];
 
         var operationFrom   = $('.operation-from').find('option'),
-            operationTo     = $('.operation-to').find('option');
+            operationTo     = $('.operation-to').find('option'),
+            operationStatus = $('.operation-status').find('option');
 
         var source = $('select').filter(':not(".operation-type")');
 
@@ -84,6 +77,8 @@ $this->headTitle($title);
 
             operationFrom.first().prop('selected', true);
             operationTo.first().prop('selected', true);
+            operationStatus.first().prop('selected', true);
+            operationStatus.css('display', 'inline');
 
             if (compare[val] !== undefined) {
                 prepareSelect(compare[val]);
@@ -108,6 +103,12 @@ $this->headTitle($title);
             for (var key in compare) if (compare.hasOwnProperty(key)) {
                 var from = key,
                     to   = compare[key];
+
+                // если списание
+                if (to == 4) {
+                    operationStatus.css('display', 'none');
+                    $('.operation-status').find('option:contains("закрыт")').css('display', 'inline');
+                }
             }
 
             operationFrom.add(operationTo).prop('disabled', true).find('option').css('display', 'inline');

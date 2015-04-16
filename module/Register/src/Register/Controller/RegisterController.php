@@ -107,10 +107,30 @@ class RegisterController extends AbstractActionController
                 unset($currentSession->idOperation);
             }
             if ($request->getPost('operation')) {
-                $filter['operation'] = $request->getPost('operation');
-                $currentSession->operation = $filter['operation'];
-                $idOperation = $request->getPost('idOperation');
-                $currentSession->idOperation = $idOperation;
+                if (strpos($request->getPost('operation'), ',') !== false) {
+                    $explode            = explode(',', $request->getPost('operation'));
+                    $explodeOperation   = explode(',', $request->getPost('idOperation'));
+
+                    $operation          = reset($explode);
+                    $idOperation        = reset($explodeOperation);
+                    $storeTo            = end($explode);
+                    $idStoreTo          = end($explodeOperation);
+
+                    // operation
+                    $filter['operation']            = $operation;
+                    $currentSession->operation      = $filter['operation'];
+                    $currentSession->idOperation    = $idOperation;
+
+                    // storeTo
+                    $filter['storeTo']            = $storeTo;
+                    $currentSession->storeTo      = $filter['storeTo'];
+                    $currentSession->idStoreTo    = $idStoreTo;
+                } else {
+                    $filter['operation'] = $request->getPost('operation');
+                    $currentSession->operation = $filter['operation'];
+                    $idOperation = $request->getPost('idOperation');
+                    $currentSession->idOperation = $idOperation;
+                }
             } elseif ($currentSession->operation) {
                 $filter['operation'] = $currentSession->operation;
                 $idOperation = $currentSession->idOperation;
@@ -348,7 +368,8 @@ class RegisterController extends AbstractActionController
     }
 
     /**
-     * @param $entity
+     * @param      $entity
+     * @param bool $attrib
      *
      * @return array
      */
