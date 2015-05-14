@@ -405,7 +405,7 @@ class RemainsController extends AbstractActionController
         $data['storeTo'] = $myStore;
 
         return new ViewModel(array(
-            'remains' => $remains,
+            'remains'   => $remains,
             'filter'    => $filter,
             'data'      => $data,
         ));

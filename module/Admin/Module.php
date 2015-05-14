@@ -35,6 +35,7 @@ class Module
                         'Register\Controller\Payment',
                         'Register\Controller\Balance',
                         'Article\Controller\Edit',
+                        'Article\Controller\Upload',
                         'Gallery\Controller\Edit',
                         'User\Controller\Edit'
                     ))) {

@@ -140,7 +140,7 @@ $this->headTitle($title);
                     <td><?php echo $item->getIdStoreTo()->getName(); ?></td>
                     <td><?php echo $item->getIdOperation()->getName(); ?></td>
                     <td><?php echo $item->getIdUser()->getEmail(); ?></td>
-                    <td><?php echo $item->getTotalSum(); ?></td>
+                    <td><?php echo $item->getTotalSum() / 100; ?></td>
                     <td>
                         <form class="float-form" method="post" action="<?php echo $this->url('register-table', array('action' => 'get-detail')); ?>">
                             <input type="submit" class="btn btn-info" name="detailRegister" value="Детали">

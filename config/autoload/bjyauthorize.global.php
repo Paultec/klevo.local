@@ -116,7 +116,6 @@ return array(
                         'Register\Controller\Balance',
                         'Search\Controller\Index',
                         'Gallery\Controller\Edit',
-                        'User\Controller\Edit',
                     ),
                     'roles'      => array('admin'),
                 ),

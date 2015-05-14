@@ -1292,7 +1292,7 @@ $(function(){
         });
 
         $('#user-name').on('keypress', function(e) {
-            return (/^[a-zA-z ]+$/.test(String.fromCharCode(e.charCode)));
+            return (/^[а-яА-я ]+$/.test(String.fromCharCode(e.charCode)));
         });
 
         $form.on('submit', function(e) {
