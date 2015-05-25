@@ -36,9 +36,11 @@
             <div class="row">
                 <!-- Header toolbar -->
                 <section class="col col-md-12 head-toolbar">
-                    <div class="pull-left personal-cabinet">
-                        <a href="<?php echo $this->url('personal-cabinet'); ?>">Личный кабинет</a>
-                    </div>
+                    <?php if ($this->zfcUserIdentity()): ?>
+                        <div class="pull-left personal-cabinet">
+                            <a href="<?php echo $this->url('personal-cabinet'); ?>">Личный кабинет</a>
+                        </div>
+                    <?php endif ?>
                     <div class="pull-right enter">
                         <?php if (!$this->zfcUserIdentity()): ?>
                             <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Войти</a>
@@ -110,7 +112,7 @@
                     </form>
                 </div>
                 <div class="col col-md-3">
-                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><i class="fa fa-shopping-cart fa-3x fa-fw"></i> (товаров: <strong><?php echo $this->itemsInCart; ?></strong>)</a>
+                    <a href="<?php echo $this->url('cart');?>" class="cart-info"><i class="fa fa-shopping-cart fa-3x fa-fw"></i> (товаров: <strong class="items-in-cart"><?php echo $this->itemsInCart; ?></strong>)</a>
                 </div>
             </div><!-- /Search and Cart -->
             <?php echo $this->content; ?>

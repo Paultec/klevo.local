@@ -4,6 +4,7 @@ namespace Cart\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\Stdlib\DateTime;
 
@@ -248,7 +249,22 @@ class CartController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
+        if ($request->isXmlHttpRequest()) {
+            $postData = $request->getPost();
+
+            if (empty($postData['id'])) {
+                return new JsonModel(array(
+                    'info' => 'error'
+                ));
+            }
+
+            $this->cartPrepare($postData);
+
+            return new JsonModel(array(
+                'info'  => 'success',
+                'id'    => $postData['id']
+            ));
+        } elseif ($request->isPost()) {
             $postData = $request->getPost();
 
             if (empty($postData['id'])) {
@@ -257,15 +273,7 @@ class CartController extends AbstractActionController
                 return $this->prg('/cart/error', true);
             }
 
-            if (!isset($this->currentSession->cart)) {
-                $this->currentSession->cart = array();
-                $this->currentSession->cart[] = (int)$postData['id'];
-            } else {
-                // Если товара еще нет в корзине
-                if (!in_array((int)$postData['id'], $this->currentSession->cart)) {
-                    $this->currentSession->cart[] = (int)$postData['id'];
-                }
-            }
+            $this->cartPrepare($postData);
 
             // откуда добавил в корзину
             // при использовании кнопки "Продолжить"
@@ -321,6 +329,19 @@ class CartController extends AbstractActionController
         }
 
         return $this->redirect()->toRoute('home');
+    }
+
+    protected function cartPrepare($postData)
+    {
+        if (!isset($this->currentSession->cart)) {
+            $this->currentSession->cart = array();
+            $this->currentSession->cart[] = (int)$postData['id'];
+        } else {
+            // Если товара еще нет в корзине
+            if (!in_array((int)$postData['id'], $this->currentSession->cart)) {
+                $this->currentSession->cart[] = (int)$postData['id'];
+            }
+        }
     }
 
     /**

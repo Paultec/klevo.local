@@ -997,11 +997,43 @@ $(function(){
     (function() {
         var $form = $('.add-to-cart');
 
-        $form.on('submit', function() {
-            var pathname    = window.location.pathname,
-                queryParam  = window.location.search;
+        //$form.on('submit', function() {
+        //    var pathname    = window.location.pathname,
+        //        queryParam  = window.location.search;
+        //
+        //    $('.continue').val(pathname + queryParam);
+        //});
 
-            $('.continue').val(pathname + queryParam);
+        $form.on('submit', function(e) {
+            e.preventDefault();
+
+            var id  = $(this).parent().find('.id').val(),
+                btn = $('.btn');
+
+            $.ajax({
+                type: 'POST',
+                url: '/cart/add',
+                data: { id: id },
+
+                beforeSend: function() {
+                    btn.prop('disabled', true);
+                }
+            })
+                .done(function(data) {
+                    if (data.info !== 'error') {
+                        var itemsInCart = $('.items-in-cart');
+
+                        itemsInCart.text(parseInt(itemsInCart.text()) + 1);
+
+                        $('.product-' + data.id).find('.add-to-cart-btn').remove()
+                            .end().find('.ajax-btn').removeClass('hide')
+                            .end().next().remove();
+                    }
+                })
+                .fail(function() {})
+                .always(function() {
+                    btn.prop('disabled', false);
+                });
         });
     })();
 
@@ -1009,7 +1041,7 @@ $(function(){
      remove all cart items
      *******************************************************************************/
     (function() {
-        $('.remove-all').on('click', function(e) {
+        $('.remove-all').on('click', function() {
             var answer = confirm('Вы действительно хотите удалить все товары из корзины?');
 
             if (answer) {

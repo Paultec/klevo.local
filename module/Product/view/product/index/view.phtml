@@ -42,11 +42,13 @@
     <div class="cart-form-single-product">
         <?php if ($this->product['quantity'] > 0 || $this->product['virtualQty'] > 0) : ?>
             <!-- Add to cart -->
-            <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart">
+            <form action="<?php echo $this->url('cart/default', array('action' => 'add'));?>" method="post" class="form-inline add-to-cart product-<?php echo $this->product[0]->getId(); ?>">
                 <input type="hidden" class="id" name="id" value="<?php echo $this->product[0]->getId(); ?>">
                 <input type="hidden" class="continue" name="continue">
                 <?php if (!in_array($this->product[0]->getId(), $this->inCart)) : ?>
-                    <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Добавить">
+                    <input type="submit" value="В корзину" name="addToCart" class="btn btn-primary add-to-cart-btn" data-toggle="tooltip" data-placement="top" title="Добавить">
+                    <!-- with ajax -->
+                    <input type="button" value="Уже в корзине" class="btn btn-info hide ajax-btn" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
                 <?php else : ?>
                     <input type="button" value="Уже в корзине" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Товар уже в корзине">
                 <?php endif; ?>
