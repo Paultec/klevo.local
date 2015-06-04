@@ -28,6 +28,7 @@ class CartController extends AbstractActionController
      */
     protected $em;
     private $currentSession;
+    private $tmpOrder = null; // если комбинированная покупка, заказ и товары в корзине
 
     public function __construct()
     {
@@ -68,13 +69,36 @@ class CartController extends AbstractActionController
                 unset($postData['delivery']);
                 unset($postData['payment']);
                 unset($postData['comment']);
+
+                // добавить товары из корзины, если есть
+                if (!is_null($this->currentSession->cart)) {
+                    foreach ($this->currentSession->cart as $item) {
+                        if (!in_array($item, $postData['id'])) {
+                            $postData['id'][]  = (string)$item;
+                            $postData['qty'][] = '1';
+                        }
+                    }
+                }
             }
 
             // если заказ
             if (isset($postData['order'])) {
                 unset($postData['qty']);
 
-                $isOrder = !$isOrder;
+                // если при заказе есть товары в корзине
+                if (!is_null($this->currentSession->cart)) {
+                    $this->tmpOrder = $postData;
+                    unset($postData);
+
+                    foreach ($this->currentSession->cart as $item) {
+                        $postData['id'][] = (string)$item;
+                        $postData['qty'][] = '1';
+                    }
+
+                    $postData['phone'] = $this->tmpOrder['phone'];
+                } else {
+                    $isOrder = !$isOrder;
+                }
             }
 
             // проверить post параметры
@@ -132,6 +156,31 @@ class CartController extends AbstractActionController
                 // если заказ - записываем данные о товаре в результирующий массив, без проверки к-ва
                 $result[0]              = $qr[0][0];
                 $result[0]['quantity']  = 0;
+            }
+
+            // проверить нет ли заказа
+            // если при заказе есть товары в корзине
+            if (!is_null($this->tmpOrder)) {
+                $checkResult = $this->checkPostData($this->tmpOrder, true);
+
+                if (!$checkResult) {
+                    $this->currentSession->cartError = true;
+
+                    return $this->prg('/cart/error', true);
+                }
+
+                $elemsCount = count($result) + 1;
+
+                $orderProduct = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('id' => $this->tmpOrder['id'][0]));
+
+                $result[$elemsCount]['id'] = $orderProduct->getId();
+                $result[$elemsCount]['name'] = $orderProduct->getName();
+                $result[$elemsCount]['translit'] = $orderProduct->getTranslit();
+                $result[$elemsCount]['description'] = $orderProduct->getDescription();
+                $result[$elemsCount]['price'] = $orderProduct->getPrice();
+                $result[$elemsCount]['img'] = $orderProduct->getImg();
+
+                $result[$elemsCount]['quantity']  = 0;
             }
 
             // данные пользователя
@@ -299,9 +348,12 @@ class CartController extends AbstractActionController
 
             unset($this->currentSession->cartSuccess);
 
+            $cache = $this->getServiceLocator()->get('filesystem');
+            $cache->setItem('active-order', true);
+
             $viewModel = new ViewModel(array(
-                    'result' => $result
-                ));
+                'result' => $result
+            ));
 
             $catalog = $this->forward()->dispatch('Catalog\Controller\Index', array('action' => 'index'));
             $viewModel->addChild($catalog, 'catalog');
@@ -331,6 +383,9 @@ class CartController extends AbstractActionController
         return $this->redirect()->toRoute('home');
     }
 
+    /**
+     * @param $postData
+     */
     protected function cartPrepare($postData)
     {
         if (!isset($this->currentSession->cart)) {

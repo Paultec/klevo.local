@@ -81,6 +81,7 @@
         </h3>
         <div>
             <p>Для подтверждения заказа, укажите свой <strong>номер телефона</strong> и желаемое <strong>количество</strong> в поле ввода:</p>
+            <p class="cart-product-exists bg-warning text-danger hide"><strong>Обратите внимание:</strong> В корзине уже есть товары, они будут добавлены к текущей покупке!</p>
             <div class="one-click-buy-form">
                 <form action="<?php echo $this->url('cart');?>" method="post" class="form-inline" role="form">
                     <input name="id[]" type="hidden" class="one-click-buy-product-input-id">
@@ -110,6 +111,7 @@
         <h3 class="order-info-header">Заказать товар</h3>
         <div>
             <p class="order-info">Для подтверждения заказа, укажите свой <strong>номер телефона</strong> в поле ввода:</p>
+            <p class="cart-product-exists bg-warning text-danger hide"><strong>Обратите внимание:</strong> В корзине уже есть товары, они будут добавлены к текущей покупке!</p>
             <div class="order-form">
                 <form action="<?php echo $this->url('cart');?>" method="post" class="form-inline" role="form">
                     <input name="id[]" type="hidden" class="order-product-input-id">

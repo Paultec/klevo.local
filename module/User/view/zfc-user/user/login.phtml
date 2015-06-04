@@ -33,6 +33,8 @@ $form->setAttribute('name', 'auth_form');
 
     <input type="submit" id="auth_btn" class="btn btn-primary" name="submit" value="Войти">
 
+    <p><a href="<?php echo $this->url('zfcuser/forgotpassword') ?>">Забыли пароль?</a></p>
+
 <?php echo $this->form()->closeTag() ?>
         <?php if ($this->enableRegistration) : ?>
             <p class="sing_in"><?php echo $this->translate('Not registered?'); ?> <a class="register-link" href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') . '#reg' ?>"><?php echo $this->translate('Sign up!'); ?></a></p>

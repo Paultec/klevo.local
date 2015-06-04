@@ -4,6 +4,7 @@ namespace Product\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Authentication\AuthenticationService;
@@ -462,6 +463,30 @@ class EditController extends AbstractActionController
     }
 
     /**
+     * @return \Zend\Http\Response|JsonModel
+     */
+    public function activeOrderAction()
+    {
+        $request = $this->getRequest();
+
+        $postData = $request->getPost('action');
+
+        if ($request->isXmlHttpRequest()) {
+            if ($postData == 'remove' && $this->cache->hasItem('active-order')) {
+                $this->cache->removeItem('active-order');
+            }
+
+            $activeOrder = $this->cache->getItem('active-order');
+
+            return new JsonModel(array(
+                'activeOrder' => $activeOrder
+            ));
+        }
+
+        return $this->redirect()->toRoute('product-order');
+    }
+
+    /**
      * @return ViewModel
      */
     public function topAction()
@@ -622,10 +647,10 @@ class EditController extends AbstractActionController
     protected function imgManipulation($fileName)
     {
         $needed      = 254;
-        $designation = 'min/';
+        $destination = 'min/';
 
-        if (!is_dir($this->imageFolder . $designation)) {
-            mkdir($this->imageFolder . $designation);
+        if (!is_dir($this->imageFolder . $destination)) {
+            mkdir($this->imageFolder . $destination);
         }
 
         // resize
@@ -639,11 +664,11 @@ class EditController extends AbstractActionController
         if (($width - $height) > 0) {
             $rate = $width / $height;
 
-            $image->resize(new Box($needed, ($needed / $rate)))->save($this->imageFolder . $designation . $fileName);
+            $image->resize(new Box($needed, ($needed / $rate)))->save($this->imageFolder . $destination . $fileName);
         } else {
             $rate = $height / $width;
 
-            $image->resize(new Box(($needed / $rate), $needed))->save($this->imageFolder . $designation . $fileName);
+            $image->resize(new Box(($needed / $rate), $needed))->save($this->imageFolder . $destination . $fileName);
         }
     }
 

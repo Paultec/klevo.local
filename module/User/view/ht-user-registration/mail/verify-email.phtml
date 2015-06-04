@@ -1,0 +1,8 @@
+<h2 style="text-align: center">Подтверждение Email</h2>
+
+<p>Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свой адрес электронной почты.</p>
+
+<?php $link = $this->serverUrl() . $this->url('zfcuser/verify_email', array('userId' => $user->getId(), 'token' => $registrationRecord->getToken())); ?>
+<a href="<?php echo $link ?>">
+    <?php echo $link; ?>
+</a>

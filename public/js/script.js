@@ -215,7 +215,7 @@ $(function(){
     /******************************************************************************
      validate register data
      *******************************************************************************/
-    var reg_form = $('.register_form');
+    var reg_form = $('.register_form').add('.form_reset');
 
     // labels & inputs
     reg_form.find('label').eq(0).attr('for', 'email')
@@ -269,6 +269,29 @@ $(function(){
             password.css('border', '1px solid red');
         }
     });
+
+    var token     = /The two given tokens do not match/i,
+        noEmail   = /The email address you entered was not found/i,
+        matchUser = /A record matching the input was found/i,
+        authFail  = /Authentication failed. Please try again/i;
+
+    var error = $('form').find('li');
+
+    if (token.test(error.text())) {
+        error.html(' Пароль не совпадает');
+    }
+
+    if (noEmail.test(error.text())) {
+        error.html(' Адрес электронной почты не найден');
+    }
+
+    if (matchUser.test(error.text())) {
+        error.html(' Уже есть пользователь с таким Email');
+    }
+
+    if (authFail.test(error.text())) {
+        error.html(' Ошибка аутентификации либо email не подтвержден. Пожалуйста, попробуйте еще раз');
+    }
 
     /******************************************************************************
      validate change email data
@@ -396,7 +419,7 @@ $(function(){
     $('form')
         .find('ul').addClass('list-unstyled')
         .find('li').css({'color' : '#cc0000', 'background' : '#FFDD7A'})
-        .prepend('<span class="glyphicon glyphicon glyphicon-ban-circle"></span> ');
+        .prepend('<span class="glyphicon glyphicon-ban-circle"></span> ');
 
     /******************************************************************************
      Logout confirm
@@ -900,6 +923,10 @@ $(function(){
             var id      = $(this).prev().prev('.id').val();
                 qty     = $(this).prev('.qty').val();
 
+            if ($('.items-in-cart').text() != 0) {
+                $('.cart-product-exists').removeClass('hide');
+            }
+
             $('.one-click-buy-product-name').text(text);
             $('.one-click-buy-product-input-id').val(id);
             $('.one-click-buy-number').prop('max', qty)/*.removeClass('hide')*/
@@ -922,8 +949,8 @@ $(function(){
         var $form = $('.one-click-buy-form').find('form');
 
         $form.on('submit', function(e) {
-            curQty = $('.one-click-buy-number').val();
-            curLen = $('.one-click-buy-input').val().length;
+            curQty = parseInt($('.one-click-buy-number').val());
+            curLen = parseInt($('.one-click-buy-input').val().length);
 
             if (curQty > qty || curQty <= 0) {
                 if ($('#informer').length == 0) {
@@ -965,6 +992,10 @@ $(function(){
         $('.order-product').on('click', function() {
             var id   = $(this).prev().prev('.id').val();
             var text = $(this).parents('.product').find('h5').text() || $('.product-name').text();
+
+            if ($('.items-in-cart').text() != 0) {
+                $('.cart-product-exists').removeClass('hide');
+            }
 
             $('.order-product-name').text(text);
             $('.order-product-input-id').val(id);
@@ -1477,6 +1508,51 @@ $(function(){
             } else {
                 $('.last-viewed-products').append('<h4 class="text-center">Пока ничего нет.</h4>');
             }
+        });
+    })();
+
+    /******************************************************************************
+     list ordered products
+     *******************************************************************************/
+    (function() {
+        $('.all-purchase').on('click', function() {
+            var btn = $(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '/personal-cabinet',
+                beforeSend: function() {
+                    btn.prop('disabled', true);
+                }
+            })
+                .done(function(data) {
+                    var html = '';
+                    $(data.purchasedProducts).each(function(index, value) {
+                        var date = new Date(value.date.date);
+
+                        var day   = date.getDate(),
+                            month = (date.getMonth() < 10) ? '0' + (date.getMonth() + 1) : date.getMonth() + 1,
+                            year  = date.getFullYear();
+
+                        var img      = value[0].img,
+                            name     = value[0].name,
+                            translit = value[0].translit,
+                            price    = value.price;
+
+                        html += '<tr>\
+                                    <td>' + day + '.' + month + '.' + year + '</td>\
+                                    <td><img class="img-responsive" src="/img/product/' + img + '" alt="" width="65"></td>\
+                                    <td><a href="/product/' + translit + '.html">' + name + '</a></td>\
+                                    <td>' + (price / 100) + '</td>\
+                                </tr>';
+                    });
+
+                    $('.list-ordered-products').find('tbody').remove()
+                        .end().find('table').append('<tbody>' + html + '</tbody>');
+                    btn.remove();
+                })
+                .fail(function() {})
+                .always(function() {});
         });
     })();
 

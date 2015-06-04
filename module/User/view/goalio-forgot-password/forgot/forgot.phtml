@@ -1,0 +1,34 @@
+<?php
+$title = 'Восстановление пароля';
+$this->headTitle($title);
+?>
+<div class="col col-md-7 col-md-offset-2 form_wrap">
+    <h1 class="text-center">Забыли пароль?</h1>
+
+    <?php
+    $form = $this->forgotForm;
+    $form->prepare();
+    $form->setAttribute('action', $this->url('zfcuser/forgotpassword'));
+    $form->setAttribute('method', 'post');
+    ?>
+
+    <?php echo $this->form()->openTag($form) ?>
+
+        <?php echo $this->formElementErrors($form->get('email')) ?>
+
+        <?php echo $this->formLabel($form->get('email')) ?>
+        <?php echo $this->formInput($form->get('email')->setAttributes(array(
+            'class'       => 'form-control',
+            'placeholder' => 'Введите Email',
+            'pattern'     => '^[\w\.=-]+@[\w\.-]+\.[\w]{2,6}$',
+            'autofocus'   => true,
+            'required'    => true
+        ))) ?>
+
+        <?php echo $this->formButton($form->get('submit')->setLabel('Отправить')->setAttribute('class', 'btn btn-primary')) ?>
+
+
+    <?php echo $this->form()->closeTag() ?>
+
+    <a href="<?php echo $this->url('zfcuser/login') ?>">Войти</a>
+</div>

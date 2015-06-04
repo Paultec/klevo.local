@@ -1,0 +1,7 @@
+<div class="col col-md-7 col-md-offset-2 form_wrap">
+    <h1 class="text-center">Забыли пароль?</h1>
+
+    <p><?php echo sprintf('Напоминание было отправлено на ваш адрес электронной почты %s.', $this->escapeHtml($this->email)); ?></p>
+
+    <a href="<?php echo $this->url('zfcuser/login') ?>">Войти</a>
+</div>

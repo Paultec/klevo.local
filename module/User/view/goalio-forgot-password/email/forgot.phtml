@@ -1,0 +1,3 @@
+<h2>Вы получили это письмо, потому что начали процесс восстановления пароля. Чтобы продолжить, пожалуйста, нажмите на ссылку ниже:</h2>
+
+<?php echo $this->serverUrl($this->url('zfcuser/resetpassword', array('userId' => $this->record->getUserId(), 'token' => $this->record->getRequestKey()))); ?>

@@ -101,7 +101,7 @@ $settings = array(
      *
      * Accepted values: boolean true or false
      */
-    //'login_after_registration' => true,
+    'login_after_registration' => false,
 
     /**
      * Registration Form Captcha
@@ -153,7 +153,6 @@ $settings = array(
      * Accepted values: A valid route name within your application
      *
      */
-    //'login_redirect_route' => 'zfcuser',
     'login_redirect_route' => 'home',
 
     /**
@@ -164,7 +163,6 @@ $settings = array(
      * Default value: 'zfcuser/login'
      * Accepted values: A valid route name within your application
      */
-    //'logout_redirect_route' => 'zfcuser/login',
     'logout_redirect_route' => 'home',
 
     /**
@@ -218,7 +216,7 @@ $settings = array(
      * User table name
      */
     'table_name' => 'user',
-    
+
     /**
      * End of ZfcUser configuration
      */

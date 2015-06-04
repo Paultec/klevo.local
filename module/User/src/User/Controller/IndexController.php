@@ -2,6 +2,7 @@
 namespace User\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
 
@@ -12,6 +13,9 @@ class IndexController extends AbstractActionController
     const DELIVERY_METHOD       = 'Data\Entity\DeliveryMethod';
     const PAYMENT_METHOD        = 'Data\Entity\PaymentMethod';
     const CART_ENTITY           = 'Cart\Entity\CartEntity';
+    const PRODUCT_ENTITY        = 'Product\Entity\Product';
+    const REGISTER_ENTITY       = 'Register\Entity\Register';
+    const REGISTER_TABLE_ENTITY = 'Register\Entity\RegisterTable';
 
     protected $em;
     private $currentUser;
@@ -28,6 +32,15 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         $request = $this->getRequest();
+
+        if ($request->isXmlHttpRequest()) {
+            $purchasedProducts = $this->getPurchasedProducts(null);
+
+            return new JsonModel(array(
+                'purchasedProducts' => $purchasedProducts
+            ));
+        }
+
         if ($request->isPost()) {
             $postData = $request->getPost()->toArray();
 
@@ -42,6 +55,7 @@ class IndexController extends AbstractActionController
             }
         }
 
+        // user info
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qs =  $qb
             ->select(array('u', 'ua'))
@@ -56,14 +70,49 @@ class IndexController extends AbstractActionController
 
         $qr = $qs->getArrayResult();
 
+        // последние 5 покупок
+        $purchasedProducts = $this->getPurchasedProducts();
+
         $deliveryMethod = $this->getEntityManager()->getRepository(self::DELIVERY_METHOD)->findAll();
         $paymentMethod  = $this->getEntityManager()->getRepository(self::PAYMENT_METHOD)->findAll();
 
         return new ViewModel(array(
             'userInfo'          => $qr,
             'deliveryMethod'    => $deliveryMethod,
-            'paymentMethod'     => $paymentMethod
+            'paymentMethod'     => $paymentMethod,
+            'purchasedProducts' => $purchasedProducts
         ));
+    }
+
+    /**
+     * @param int $limit
+     *
+     * @return mixed
+     */
+    protected function getPurchasedProducts($limit = 5)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qs =  $qb
+            ->select(array('r.date as date', 'rt.price as price', 'p'))
+            ->from(self::REGISTER_ENTITY, 'r')
+            ->join(
+                self::REGISTER_TABLE_ENTITY, 'rt',
+                'WITH', 'r.id = rt.idRegister'
+            )
+            ->join(
+                self::PRODUCT_ENTITY, 'p',
+                'WITH', 'rt.idProduct = p.id'
+            )
+            ->where('rt.idUser = ?1')
+            ->setParameter(1, $this->currentUser)
+            ->groupBy('r.date', 'p.name')
+            ->orderBy('rt.id', 'desc')
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        $qr = $qs->getArrayResult();
+
+        return $qr;
     }
 
     /**

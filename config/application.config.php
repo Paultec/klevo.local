@@ -17,6 +17,14 @@ return array(
         'ZfcUser',
         'ZfcUserDoctrineORM',
         'BjyAuthorize',
+        'MtMail',
+        'HtUserRegistration',
+        'HtUserRegistrationDoctrineORM',
+        'GoalioMailService',
+        'GoalioForgotPassword',
+        'GoalioForgotPasswordDoctrineORM',
+//        'GoalioRememberMe',
+//        'GoalioRememberMeDoctrineORM',
         'Catalog',
         'User',
         'Cart',
@@ -35,5 +43,5 @@ return array(
             './vendor'
             ),
         'config_glob_paths' => array('config/autoload/{,*.}{global,local}.php')
-        )
-    );
+        ),
+);

@@ -1020,6 +1020,13 @@ cart
     color: #563D7C;
 }
 
+.cart-product-exists {
+    padding: 15px !important;
+    margin: 10px !important;
+    border: 3px solid #ff0000;
+    border-radius: 5px;
+}
+
 /******************************************************************************
 cart breadcrumb
 *******************************************************************************/
@@ -1216,4 +1223,39 @@ Flash Messenger
 
 .flash-messenger:hover {
     cursor: pointer;
+}
+
+/******************************************************************************
+new order info
+*******************************************************************************/
+.new-order-info {
+    display: table;
+    width: 60px;
+    height: 40px;
+    position: fixed;
+    top: 15%;
+    left: -20px;
+    background: #333333;
+    border-right: 3px solid #cc0000;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    text-align: right;
+    padding-right: 5px;
+    cursor: pointer;
+    transition: left 0.5s;
+}
+
+.new-order-info:hover {
+    left: 0;
+}
+
+.new-order-info span {
+    display: table-cell;
+    font-size: 26px;
+    color: #666666;
+    vertical-align: middle;
+}
+
+.new-order-info span.active {
+    color: #ffff00;
 }

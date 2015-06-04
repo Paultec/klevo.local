@@ -59,13 +59,23 @@ return array(
                 // разграничение доступа к модулю ZfcUser для неавторизовавшихся и авторизовавшихся
                 array(
                     'controller' => 'zfcuser',
-                    'action'     => array('index', 'login', 'authenticate','register'),
+                    'action'     => array('index', 'login', 'authenticate', 'register'),
                     'roles'      => array('guest'),
                 ),
                 array(
                     'controller' => 'zfcuser',
                     'action'     => array('logout', 'changepassword', 'changeemail'),
                     'roles'      => array('user'),
+                ),
+                array(
+                    'controller' => 'goalioforgotpassword_forgot',
+                    'action'     => array('forgot', 'passwordchanged', 'reset', 'sent'),
+                    'roles'      => array('guest'),
+                ),
+                array(
+                    'controller' => 'HtUserRegistration',
+                    'action'     => array('verify-email'),
+                    'roles'      => array('guest'),
                 ),
                 // конец раздела 2
 
@@ -132,6 +142,5 @@ return array(
                 // конец раздела 6
             ),
         ),
-
     ),
 );

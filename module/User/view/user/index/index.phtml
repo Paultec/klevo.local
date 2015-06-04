@@ -6,6 +6,7 @@
             <li><span class="btn-link toggle-control" data-toggle="personal-data">Личные данные</span></li>
             <li><a href="<?php echo $this->url('cart');?>">Корзина</a></li>
             <li><span class="btn-link toggle-control last-view-toggle" data-toggle="last-view">Последние просмотренные товары</span></li>
+            <li><span class="btn-link toggle-control products-view-toggle" data-toggle="products-list">Список заказов</span></li>
             <li><a href="<?php echo $this->url('zfcuser/changeemail') . '#changem'; ?>">Изменить email</a></li>
             <li><a href="<?php echo $this->url('zfcuser/changepassword') . '#changep'; ?>">Изменить пароль</a></li>
         </ul>
@@ -81,6 +82,37 @@
     <div class="col col-md-8 toggle last-view hide">
         <h3 class="text-center">Последние просмотренные товары</h3>
         <section class="last-viewed-products"></section>
+    </div>
+    <div class="col col-md-8 toggle products-list hide">
+        <h3 class="text-center">Мои заказы</h3>
+        <section class="list-ordered-products">
+            <?php if ($this->purchasedProducts) : ?>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Изображение</th>
+                        <th>Название</th>
+                        <th>Цена, грн.</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <?php foreach ($this->purchasedProducts as $product) : ?>
+                    <tr>
+                        <td><?php echo $product['date']->format('d.m.Y'); ?></td>
+                        <td><img class="img-responsive" src="<?php echo '/img/product/' . $product[0]['img']?>" alt="" width="65"></td>
+                        <td><a href="/product/<?php echo $product[0]['translit']; ?>.html"><?php echo $product[0]['name']; ?></a></td>
+                        <td><?php echo $product['price'] / 100; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <button class="btn btn-default center-block all-purchase">Показать все <i class="glyphicon glyphicon-repeat"></i></button>
+            <?php else : ?>
+                <h4 class="text-center">Пока ничего нет.</h4>
+            <?php endif; ?>
+        </section>
     </div>
     <?php else : ?>
         <h2>Для доступа к личному кабинету, вам необходимо <a href="<?php echo $this->url('zfcuser/login') . '#log'; ?>">Войти</a></h2>

@@ -5,6 +5,9 @@ $this->headTitle($title);
 <div class="col col-md-7 col-md-offset-2 form_wrap">
     <div id="reg">
     <h1 class="text-center"><?php echo $this->translate('Register'); ?></h1>
+    <h4 class="text-danger">
+        После подтверждения регистрации, на указанный вами адрес будет выслан email. Откройте его и следуйте инструкциям.
+    </h4>
 
     <?php
     if (!$this->enableRegistration) {
@@ -34,6 +37,7 @@ $this->headTitle($title);
                 <?php echo $this->formInput($element->setAttributes(array(
                         'class'         => 'form-control',
                         'autocomplete'  => 'off',
+                        'autofocus'     => true,
                         'required'      => true,
                     )))
                          . $this->formElementErrors($element) ?>
@@ -42,7 +46,7 @@ $this->headTitle($title);
 
         <?php endforeach ?>
     <?php if ($this->redirect): ?>
-        <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
+        <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>">
     <?php endif ?>
     <?php echo $this->form()->closeTag() ?>
         <p class="register"><?php echo $this->translate('Already a member').'?'; ?> <a class="auth-link" href="<?php echo $this->url('zfcuser/login') . '#log' ?>"><?php echo $this->translate('Sign In'); ?></a></p>

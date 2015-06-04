@@ -143,6 +143,16 @@ return array(
                     ),
                 ),
             ),
+            'active-order' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route'    => '/active-order',
+                    'defaults' => array(
+                        'controller' => 'Product\Controller\Edit',
+                        'action'     => 'active-order',
+                    ),
+                ),
+            ),
         ),
     ),
     'translator' => array(

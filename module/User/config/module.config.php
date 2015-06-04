@@ -29,6 +29,19 @@ return array(
                     ),
                 ),
             ),
+            'send-mail-info' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route'    => '/send-mail-info',
+                    'constraints' => array(
+                    ),
+                    'defaults' => array(
+                        'controller' => 'User\Controller\Index',
+                        'action'     => 'send-mail-info',
+                    ),
+                ),
+            ),
+
         ),
     ),
     'doctrine' => array(
@@ -85,6 +98,9 @@ return array(
     ),
 
     'view_manager' => array(
+        'template_map' => array(
+            'zfc-user/user/login' => __DIR__ . '/../view/zfc-user/user/login.phtml',
+        ),
         'template_path_stack' => array(
             'zfcuser' => __DIR__ . '/../view',
             'user'    => __DIR__ . '/../view',
