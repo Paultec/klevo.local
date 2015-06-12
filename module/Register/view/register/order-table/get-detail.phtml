@@ -1,0 +1,40 @@
+<div>
+    <table class="table table-striped">
+        <tr>
+            <th>ID:</th>
+            <th>Дата:</th>
+            <th>От кого:</th>
+            <th>Статус:</th>
+            <th>Пользователь:</th>
+        </tr>
+        <tr>
+            <?php
+            echo '<td>' . $this->order->getId() .'</td>',
+                 '<td>' . $this->order->getDate()->format('d.m.Y') .'</td>',
+                 '<td>' . $this->order->getIdStore()->getName() .'</td>',
+                 '<td>' . $this->order->getIdStatus()->getName() .'</td>',
+                 '<td>' . $this->order->getIdUser()->getEmail() .'</td>';
+            ?>
+        </tr>
+    </table>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Название</th>
+        <th>Категория</th>
+        <th>Производитель</th>
+        <th>К-во</th>
+        <th>Цена</th>
+    </tr>
+    <?php
+    foreach($this->orderTable as $item) : ?>
+        <tr>
+            <td><?php echo $item->getIdProduct()->getName(); ?></td>
+            <td><?php echo $item->getIdProduct()->getIdCatalog()->getName(); ?></td>
+            <td><?php echo $item->getIdProduct()->getIdBrand()->getName(); ?></td>
+            <td><?php echo $item->getQty(); ?></td>
+            <td><?php echo $item->getPrice() / 100; ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>

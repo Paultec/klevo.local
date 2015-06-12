@@ -173,14 +173,14 @@ class CartController extends AbstractActionController
 
                 $orderProduct = $this->getEntityManager()->getRepository(self::PRODUCT_ENTITY)->findOneBy(array('id' => $this->tmpOrder['id'][0]));
 
-                $result[$elemsCount]['id'] = $orderProduct->getId();
-                $result[$elemsCount]['name'] = $orderProduct->getName();
-                $result[$elemsCount]['translit'] = $orderProduct->getTranslit();
+                $result[$elemsCount]['id']          = $orderProduct->getId();
+                $result[$elemsCount]['name']        = $orderProduct->getName();
+                $result[$elemsCount]['translit']    = $orderProduct->getTranslit();
                 $result[$elemsCount]['description'] = $orderProduct->getDescription();
-                $result[$elemsCount]['price'] = $orderProduct->getPrice();
-                $result[$elemsCount]['img'] = $orderProduct->getImg();
+                $result[$elemsCount]['price']       = $orderProduct->getPrice();
+                $result[$elemsCount]['img']         = $orderProduct->getImg();
 
-                $result[$elemsCount]['quantity']  = 0;
+                $result[$elemsCount]['quantity']    = 0;
             }
 
             // данные пользователя

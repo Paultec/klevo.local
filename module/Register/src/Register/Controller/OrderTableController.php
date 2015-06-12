@@ -9,73 +9,40 @@ use Zend\Authentication\AuthenticationService;
 
 use GoSession;
 
-use Register\Entity\RegisterTable as RegisterTableEntity;
+use Register\Entity\OrderTable as OrderTableEntity;
 
-class RegisterTableController extends AbstractActionController
+class OrderTableController extends AbstractActionController
 {
-    const OPERATION_ENTITY      = 'Data\Entity\Operation';
-    const PAYMENT_TYPE_ENTITY   = 'Data\Entity\PaymentType';
     const STATUS_ENTITY         = 'Data\Entity\Status';
     const STORE_ENTITY          = 'Data\Entity\Store';
     const USER_ENTITY           = 'User\Entity\User';
-    const REGISTER_ENTITY       = 'Register\Entity\Register';
-    const REGISTER_TABLE_ENTITY = 'Register\Entity\RegisterTable';
+    const ORDER_ENTITY          = 'Register\Entity\Order';
+    const ORDER_TABLE_ENTITY    = 'Register\Entity\OrderTable';
     const PRODUCT_ENTITY        = 'Product\Entity\Product';
     const PRODUCT_QTY_ENTITY    = 'Product\Entity\ProductCurrentQty';
     const BRAND_ENTITY          = 'Catalog\Entity\Brand';
     const CATEGORY_ENTITY       = 'Catalog\Entity\Catalog';
-    const ORDER_TABLE_ENTITY    = 'Register\Entity\OrderTable';
 
     /**
      * @var
      */
-    protected $em = null;
+    protected $em;
     private $cache;
     private $fullNameService;
 
-    /**
-     * @return ViewModel
-     */
     public function indexAction()
     {
         $auth = new AuthenticationService();
         $currentUser = $auth->getIdentity();
 
         $currentSession = new Container();
-        $param = $this->params('content');
 
         //Сохранение и получение текущего id записи из таблицы Register
-        if (isset($currentSession->idRegister)) {
-            $idRegister = $currentSession->idRegister;
+        if (isset($currentSession->idOrder)) {
+            $idOrder = $currentSession->idOrder;
         } else {
-            $currentSession->idRegister = $param[0];
-            $idRegister = $currentSession->idRegister;
-        }
-
-        if (!is_null($param[1])) {
-            $currentProductArr = array();
-            $orderTable = $this->getEntityManager()->getRepository(self::ORDER_TABLE_ENTITY)->findBy(array('idOrder' => $param[1]));
-
-            $currentSession->productList = array();
-            foreach ($orderTable as $orderTableItem) {
-                $currentProduct = $orderTableItem->getIdProduct();
-
-                $currentProductArr['id'] = $currentProduct->getId();
-                $currentProductArr['name'] = $currentProduct->getName();
-
-                // Добавление введенных к-ва и цены в свойства выбранного товара
-                $currentProductArr['qty']   = $orderTableItem->getQty();
-                $currentProductArr['price'] = $orderTableItem->getPrice() / 100;
-
-                $brand = $currentProduct->getIdBrand();
-                $currentProductArr['brand'] = $brand->getName();
-
-                $category = $currentProduct->getIdCatalog();
-                $currentProductArr['category'] = $this->fullNameService->getFullNameCategory($category->getId());
-                $this->fullNameService->setFullNameToNull();
-
-                $currentSession->productList[] = $currentProductArr;
-            }
+            $currentSession->idOrder = $this->params('content');
+            $idOrder = $currentSession->idOrder;
         }
 
         $qs = null;
@@ -119,7 +86,11 @@ class RegisterTableController extends AbstractActionController
 
         $product = !is_null($qs) ? $qs->getQuery()->getResult() : $qs;
 
-        $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
+        if (!$idOrder) {
+            return $this->redirect()->toRoute('order');
+        }
+
+        $order = $this->getEntityManager()->find(self::ORDER_ENTITY, $idOrder);
 
         $catalogList = $this->getCatalogList();
 
@@ -145,16 +116,16 @@ class RegisterTableController extends AbstractActionController
         }
 
         // Формирование массива с выбранными товарами
-        if (isset($currentSession->productList) && $currentProductArr && is_null($param[1])) {
+        if (isset($currentSession->productList) && $currentProductArr) {
             $currentSession->productList[] = $currentProductArr;
-        } elseif ($currentProductArr && is_null($param[1])) {
+        } elseif ($currentProductArr) {
             $currentSession->productList = array();
             $currentSession->productList[] = $currentProductArr;
         }
 
         //Добавление свойства с текущим количеством товара
         if ($product->result) {
-            for ($i = 0, $count = count($product->result); $i < $count; ++$i) {
+            for ($i = 0, $count = count($product->result); $i < $count; $i++) {
                 $idProduct = $product->result[$i]->getId();
                 $entityQtyProduct = $this->getEntityManager()->find(self::PRODUCT_QTY_ENTITY, $idProduct);
 
@@ -163,26 +134,24 @@ class RegisterTableController extends AbstractActionController
             }
         }
 
-        $res = new ViewModel(array(
-            'register'    => $register,
+        return new ViewModel(array(
+            'order'       => $order,
             'catalogList' => $catalogList,
             'product'     => $product,
             'productList' => $currentSession->productList,
         ));
-
-        return $res;
     }
 
     /**
-     * @return ViewModel
+     * @return \Zend\Http\Response
      */
     public function addAction()
     {
         $currentSession = new Container();
 
-        $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $currentSession->idRegister);
+        $order = $this->getEntityManager()->find(self::ORDER_ENTITY, $currentSession->idOrder);
 
-        $registerTable = array();
+        $orderTable = array();
 
         $productList = $currentSession->productList;
 
@@ -198,131 +167,70 @@ class RegisterTableController extends AbstractActionController
             unset($productList[$i]['qty']);
             unset($productList[$i]['price']);
 
-            $idUser = $register->getIdUser();
+            $idUser = $order->getIdUser();
             $user   = $this->getEntityManager()->find(self::USER_ENTITY, $idUser);
-
-            $idOperation = $register->getIdOperation();
-            $operation   = $this->getEntityManager()->find(self::OPERATION_ENTITY, $idOperation);
 
             unset($productList[$i]['brand']);
             unset($productList[$i]['category']);
 
-            $noteRegisterTable = array(
+            $noteOrderTable = array(
                 'idProduct'   => $product,
                 'qty'         => $qty,
                 'price'       => $price,
-                'idRegister'  => $register,
-                'idUser'      => $user,
-                'idOperation' => $operation
+                'idOrder'     => $order,
+                'idUser'      => $user
             );
-            $registerTable[] = $noteRegisterTable;
+            $orderTable[] = $noteOrderTable;
         }
 
-        foreach ($registerTable as $item) {
-            $registerTableNote = new RegisterTableEntity();
+        foreach ($orderTable as $item) {
+            $orderTableNote = new OrderTableEntity();
 
-            $registerTableNote->populate($item);
+            $orderTableNote->populate($item);
 
-            $this->getEntityManager()->persist($registerTableNote);
+            $this->getEntityManager()->persist($orderTableNote);
             $this->getEntityManager()->flush();
         }
 
-        $register->setTotalSum($totalSum);
-        $this->getEntityManager()->persist($register);
+        $order->setTotalSum($totalSum);
+
+        $this->getEntityManager()->persist($order);
         $this->getEntityManager()->flush();
 
         unset($currentSession->idBrand);
         unset($currentSession->idCatalog);
-        unset($currentSession->idRegister);
+        unset($currentSession->idOrder);
         unset($currentSession->productList);
 
-        return $this->redirect()->toRoute('register');
+        return $this->redirect()->toRoute('order');
     }
 
     /**
-     * @return ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function getDetailAction()
     {
-        $idRegister = $this->getRequest()->getPost('idRegister');
-        $register = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
-
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->add('select', 'rt')
-            ->add('from', 'Register\Entity\RegisterTable rt')
-            ->where('rt.idRegister = :idRegister')
-            ->setParameter('idRegister', $register->getId());
-        $query = $qb->getQuery();
-        $registerTable = $query->getResult();
-
-        return new ViewModel(array(
-            'register'      => $register,
-            'registerTable' => $registerTable
-        ));
-    }
-
-    /**
-     * @return mixed
-     */
-    public function removeSessionProductAction()
-    {
-        $currentSession = new Container();
-
         $request = $this->getRequest();
 
-        if ($request->isXmlHttpRequest() || !empty($currentSession->productList)) {
-            $postData = $request->getPost('idProduct');
+        if ($request->isPost()) {
+            $idOrder = $this->getRequest()->getPost('idOrder');
+            $order = $this->getEntityManager()->find(self::ORDER_ENTITY, $idOrder);
 
-            $currentProductList = $currentSession->productList;
-            unset($currentSession->productList);
+            $qb = $this->getEntityManager()->createQueryBuilder();
+            $qb->select('ot')
+                ->from(self::ORDER_TABLE_ENTITY ,'ot')
+                ->where('ot.idOrder = :idOrder')
+                ->setParameter('idOrder', $order->getId());
 
-            $newProductList = array();
-            foreach ($currentProductList as $productItem) {
-                if ($productItem['id'] != $postData) {
-                    $newProductList[] = $productItem;
-                }
-            }
+            $orderTable = $qb->getQuery()->getResult();
 
-            $currentSession->productList = $newProductList;
+            return new ViewModel(array(
+                'order'      => $order,
+                'orderTable' => $orderTable
+            ));
         }
 
-        return $this->redirect()->toRoute('admin');
-    }
-
-    public function editSessionProductAction()
-    {
-        $currentSession = new Container();
-
-        $request = $this->getRequest();
-
-        if ($request->isXmlHttpRequest() || !empty($currentSession->productList)) {
-            $postData = (array)$request->getPost();
-
-            $currentProductList = $currentSession->productList;
-            unset($currentSession->productList);
-
-            $newProductList = array();
-            foreach ($currentProductList as $productItem) {
-                if ($productItem['id'] != $postData['idProduct']) {
-                    $newProductList[] = $productItem;
-                } else {
-                    $tmp = array();
-
-                    $tmp['id']       = $productItem['id'];
-                    $tmp['name']     = $productItem['name'];
-                    $tmp['qty']      = $postData['qty'];
-                    $tmp['price']    = $postData['price'];
-                    $tmp['brand']    = $productItem['brand'];
-                    $tmp['category'] = $productItem['category'];
-
-                    $newProductList[] = $tmp;
-                }
-            }
-
-            $currentSession->productList = $newProductList;
-        }
-
-        return $this->redirect()->toRoute('admin');
+        return $this->redirect()->toRoute('order');
     }
 
     /**
@@ -335,20 +243,20 @@ class RegisterTableController extends AbstractActionController
         if ($request->isXmlHttpRequest()) {
             $currentSession = new Container();
 
-            $registerTable = $this->getEntityManager()->getRepository(self::REGISTER_TABLE_ENTITY)->findBy(array('idRegister' => $currentSession->idRegister));
+            $orderTable = $this->getEntityManager()->getRepository(self::ORDER_TABLE_ENTITY)->findBy(array('idOrder' => $currentSession->idOrder));
 
-            if (empty($registerTable)) {
-                $register = $this->getEntityManager()->getRepository(self::REGISTER_ENTITY)->findBy(array('id' => $currentSession->idRegister));
+            if (empty($orderTable)) {
+                $order = $this->getEntityManager()->getRepository(self::ORDER_ENTITY)->findBy(array('id' => $currentSession->idOrder));
 
-                foreach ($register as $registerItem) {
-                    $this->getEntityManager()->remove($registerItem);
+                foreach ($order as $orderItem) {
+                    $this->getEntityManager()->remove($orderItem);
                 }
 
                 $this->getEntityManager()->flush();
             }
         }
 
-        return $this->redirect()->toRoute('register');
+        return $this->redirect()->toRoute('order');
     }
 
     /**

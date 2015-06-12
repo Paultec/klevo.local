@@ -1,3 +1,45 @@
-Module: Register
-Controller: Order
-Action: add
+<?php
+$title = 'Добавить заказ';
+$this->headTitle($title);
+?>
+
+<section class="col col-md-2">
+    <p class="back"><span class="glyphicon glyphicon-arrow-left"></span> Назад</p>
+</section>
+<section class="col col-md-7">
+    <h3><?php echo $this->escapeHtml($title); ?></h3>
+    <?php
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('order', array('action' => 'add')));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+
+    echo $this->formRow($form->get('date'));
+
+    echo '<label>От кого:
+             <select class="form-control store-from" name="idStore" required>',
+                 $this->partialLoop('register/partial/optionLoop.phtml', $this->store),
+            '</select>
+         </label>';
+
+    echo '<label>Статус операции:
+            <select class="form-control" name="idStatus" required>',
+                $this->partialLoop('register/partial/optionLoop.phtml', $this->status),
+         '</select>
+        </label>';
+
+    echo $this->formSubmit($form->get('submit'));
+
+    echo $this->form()->closeTag();
+    ?>
+</section>
+<script>
+    $('.store-from').find('option').each(function() {
+        var $this = $(this);
+
+        if ($(this).data('attrib') != 3) {
+            $this.prop('disabled', true).css('display', 'none');
+        }
+    });
+</script>

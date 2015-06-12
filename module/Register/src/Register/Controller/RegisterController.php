@@ -31,6 +31,7 @@ class RegisterController extends AbstractActionController
      * @var
      */
     protected $em;
+    private $idOrder;
 
     /**
      * @return ViewModel
@@ -295,6 +296,13 @@ class RegisterController extends AbstractActionController
         unset($currentSession->idRegister);
         unset($currentSession->productList);
 
+        $idOrder    = null;
+        $storeFrom  = null;
+        if (isset($currentSession->idOrder, $currentSession->storeFrom)) {
+            $idOrder    = $currentSession->idOrder;
+            $storeFrom  = $currentSession->storeFrom;
+        }
+
         $auth = new AuthenticationService();
         $currentUser = $auth->getIdentity();
 
@@ -306,7 +314,7 @@ class RegisterController extends AbstractActionController
             $registerNote = new RegisterEntity();
             $form->setData($request->getPost());
 
-            if ($form->isValid()){
+            if ($form->isValid()) {
 
                 $formData = $form->getData();
 
@@ -333,16 +341,38 @@ class RegisterController extends AbstractActionController
 
                 $idRegister = $registerNote->getId();
 
+                unset($currentSession->idOrder);
+                unset($currentSession->storeFrom);
+
                 return $this->forward()->dispatch('Register/Controller/RegisterTable',
-                    array('action' => 'index', 'content' => $idRegister));
+                    array('action' => 'index', 'content' => array($idRegister, $idOrder)));
             }
+        }
+
+        if (!is_null($idOrder) && !is_null($storeFrom)) {
+            $storeFrom = $this->setOptionItems(self::STORE_ENTITY, true, $storeFrom);
+
+            $buy = $this->getEntityManager()->getRepository(self::OPERATION_ENTITY)->findOneBy(array('id' => 1)); // покупка
+            $operation = array(
+                array(
+                    'id'   => null,
+                    'name' => 'Выберите из списка'
+                ),
+                array(
+                    'id'   => $buy->getId(),
+                    'name' => $buy->getName()
+                )
+            );
+        } else {
+            $storeFrom = $this->setOptionItems(self::STORE_ENTITY, true);
+            $operation = $this->setOptionItems(self::OPERATION_ENTITY);
         }
 
         return new ViewModel(array(
             'form'        => $form,
-            'storeFrom'   => $this->setOptionItems(self::STORE_ENTITY, true),
+            'storeFrom'   => $storeFrom,
             'storeTo'     => $this->setOptionItems(self::STORE_ENTITY, true),
-            'operation'   => $this->setOptionItems(self::OPERATION_ENTITY),
+            'operation'   => $operation,
             'paymentType' => $this->setOptionItems(self::PAYMENT_TYPE_ENTITY),
             'status'      => $this->setOptionItems(self::STATUS_ENTITY),
         ));
@@ -355,7 +385,7 @@ class RegisterController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-        if ($request->isPost()){
+        if ($request->isPost()) {
             $idRegister = $request->getPost('idRegister');
             $register   = $this->getEntityManager()->find(self::REGISTER_ENTITY, $idRegister);
             $form       = $this->getForm();
@@ -371,11 +401,17 @@ class RegisterController extends AbstractActionController
      * @param      $entity
      * @param bool $attrib
      *
+     * @param bool $storeFrom
+     *
      * @return array
      */
-    protected function setOptionItems($entity, $attrib = false)
+    protected function setOptionItems($entity, $attrib = false, $storeFrom = null)
     {
-        $optionList = $this->getEntityManager()->getRepository($entity)->findAll();
+        if (!is_null($storeFrom)) {
+            $optionList  = $this->getEntityManager()->getRepository($entity)->findBy(array('id' => $storeFrom));
+        } else {
+            $optionList = $this->getEntityManager()->getRepository($entity)->findAll();
+        }
 
         $optionArray = array();
 

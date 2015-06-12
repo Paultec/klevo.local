@@ -1,9 +1,9 @@
-<div>
-<form method="post" action="<?php echo $this->url('register/edit', array('action' => 'edit')); ?>">
+<!--div>
+<form method="post" action="<?php //echo $this->url('register/edit', array('action' => 'edit')); ?>">
     <input type="submit" class="btn btn-info" name="editRegister" value="Редактировать">
-    <input type="hidden" name="idRegister" value="<?php echo $this->register->getId(); ?>">
+    <input type="hidden" name="idRegister" value="<?php //echo $this->register->getId(); ?>">
 </form>
-</div>
+</div-->
 
 <div>
     <table class="table table-striped">
@@ -47,7 +47,7 @@
             <td><?php echo $item->getIdProduct()->getIdCatalog()->getName(); ?></td>
             <td><?php echo $item->getIdProduct()->getIdBrand()->getName(); ?></td>
             <td><?php echo $item->getQty(); ?></td>
-            <td><?php echo $item->getPrice(); ?></td>
+            <td><?php echo $item->getPrice() / 100; ?></td>
         </tr>
 <?php endforeach; ?>
 </table>

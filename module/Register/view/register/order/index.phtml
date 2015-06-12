@@ -1,1 +1,127 @@
-Action "index", controller "Order", module "Register".
+<?php
+$title = 'Заказы';
+$this->headTitle($title);
+?>
+<a href="<?php echo $this->url('order', array('action'=>'add'));?>" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Добавить запись</a>
+
+<div class="delim"></div>
+<div class="filter-criteria">Установленные фильтры: &nbsp;
+    <form method="post" action="<?php echo $this->url('order'); ?>">
+        <?php
+        foreach ($this->filter as $key => $value) :
+            switch ($key) {
+                case 'beginDate':
+                    echo '<strong>начало периода:</strong> ';
+                    break;
+                case 'endDate':
+                    echo '<strong> конец периода:</strong> ';
+                    break;
+                case 'store';
+                    echo '<strong> от кого:</strong> ';
+                    break;
+                case 'status';
+                    echo '<strong> статус:</strong> ';
+                    break;
+                case 'user';
+                    echo '<strong> пользователь:</strong> ';
+                    break;
+            }
+            echo $value; ?>
+            <label class="btn-remove">
+                <input type="submit" class="btn btn-danger hide" name="<?php echo $key . 'Reset'; ?>">
+                <span class="glyphicon glyphicon-remove cross" data-toggle="tooltip" data-placement="top" title="Удалить фильтр"></span>
+            </label>
+        <?php endforeach; ?>
+    </form>
+</div>
+
+<div>
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab0" data-toggle="tab">Выбрать:</a></li>
+            <li><a href="#tab1" data-toggle="tab">период</a></li>
+            <li><a href="#tab2" data-toggle="tab">от кого</a></li>
+            <li><a href="#tab3" data-toggle="tab">статус</a></li>
+            <li><a href="#tab4" data-toggle="tab">пользователя</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab0"></div>
+            <div class="tab-pane" id="tab1">
+                <form method="post" action="<?php echo $this->url('order'); ?>">
+                    начало периода &nbsp;<input type="date" name="beginDate">
+                    &nbsp; конец периода &nbsp;<input type="date" name="endDate">
+                    <input type="submit" class="btn btn-info" value="Готово">
+                </form>
+            </div>
+            <div class="tab-pane" id="tab2">
+                <?php foreach ($this->data['store'] as $store) : ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('order'); ?>">
+                        <input type="submit" class="btn btn-link" name="storeFrom" value="<?php echo $store->getName(); ?>">
+                        <input type="hidden" name="idStoreFrom" value="<?php echo $store->getId(); ?>">
+                    </form>
+                <?php endforeach; ?>
+            </div>
+            <div class="tab-pane" id="tab3">
+                <?php foreach ($this->data['status'] as $status) : ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('order'); ?>">
+                        <input type="submit" class="btn btn-link" name="status" value="<?php echo $status->getName(); ?>">
+                        <input type="hidden" name="idStatus" value="<?php echo $status->getId(); ?>">
+                    </form>
+                <?php endforeach; ?>
+            </div>
+            <div class="tab-pane" id="tab4">
+                <?php foreach ($this->data['user'] as $user) : ?>
+                    <form class="float-form" method="post" action="<?php echo $this->url('order'); ?>">
+                        <input type="submit" class="btn btn-link" name="user" value="<?php echo $user->getEmail(); ?>">
+                        <input type="hidden" name="idUser" value="<?php echo $user->getId(); ?>">
+                    </form>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if ($this->paginator->count() > 0): ?>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Дата</th>
+            <th>От кого</th>
+            <th>Пользователь</th>
+            <th>Сумма</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($this->paginator as $item): ?>
+            <tr>
+                <td><?php echo $item->getId(); ?></td>
+                <td><?php echo $item->getDate()->format('d.m.Y'); ?></td>
+                <td><?php echo $item->getIdStore()->getName(); ?></td>
+                <td><?php echo $item->getIdUser()->getEmail(); ?></td>
+                <td><?php echo $item->getTotalSum() / 100; ?></td>
+                <td>
+                    <form class="float-form form-inline" method="post" action="<?php echo $this->url('order-table', array('action' => 'get-detail')); ?>">
+                        <input type="hidden" name="idOrder" value="<?php echo $item->getId(); ?>">
+                        <input type="submit" class="btn btn-info" name="detailOrder" value="Детали">
+                    </form>
+                    <?php if (!$item->getIsRegistered()) : ?>
+                        <form class="float-form form-inline" method="post" action="<?php echo $this->url('order', array('action' => 'add-to-register')); ?>">
+                            <input type="hidden" name="idOrder" value="<?php echo $item->getId(); ?>">
+                            <input type="submit" class="btn btn-primary" name="detailOrder" value="Оформить приход">
+                        </form>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php else: ?>
+    <h3>Извините, записей с заданными условиями нет. <br>
+        Измените критерии выбора.</h3>
+<?php endif ?>
+<div class="delim"></div>
+<section class="col col-md-12 text-center">
+    <?php
+    echo (count($this->paginator) > 1) ? $this->paginationControl($this->paginator, 'Sliding', 'register/paginator/pagination.phtml') : "";
+    ?>
+</section>

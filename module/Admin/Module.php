@@ -38,6 +38,8 @@ class Module
                     'Article\Controller\Edit',
                     'Article\Controller\Upload',
                     'Gallery\Controller\Edit',
+                    'Register\Controller\Order',
+                    'Register\Controller\OrderTable',
                     'User\Controller\Edit'
                 ))) {
                 $controller->layout('admin/layout');

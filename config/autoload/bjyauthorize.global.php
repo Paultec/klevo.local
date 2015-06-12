@@ -122,6 +122,7 @@ return array(
                     'controller' => array(
                         'Register\Controller\Balance',
                         'Register\Controller\Order',
+                        'Register\Controller\OrderTable',
                         'Register\Controller\Payment',
                         'Register\Controller\Balance',
                         'Search\Controller\Index',

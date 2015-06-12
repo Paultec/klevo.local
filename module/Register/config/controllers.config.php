@@ -28,6 +28,24 @@ return array(
                 }
 
                 return $controller;
-            },
+        },
+        'Register\Controller\OrderTable' => function($sm) {
+            $controller = new Register\Controller\OrderTableController();
+
+            $serviceLocator = $sm->getServiceLocator();
+
+            $services = array(
+                'cache'    => $serviceLocator->get('filesystem'),
+                'fullName' => $serviceLocator->get('fullNameService')
+            );
+
+            foreach ($services as $serviceKey => $serviceValue) {
+                $setter = 'set' . ucfirst($serviceKey);
+
+                $controller->$setter($serviceValue);
+            }
+
+            return $controller;
+        },
     ),
 );

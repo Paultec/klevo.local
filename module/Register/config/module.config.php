@@ -111,6 +111,19 @@ return array(
                     ),
                 ),
             ),
+            'order-table' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/order-table[/:action][/]',
+                    'constraints' => array(
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Register\Controller\OrderTable',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'payment' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -174,7 +187,16 @@ return array(
                 'cache' => 'array',
                 'paths' => array(__DIR__ . '/../src/Register/Entity'),
             ),
-
+            'order_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Register/Entity'),
+            ),
+            'orderTable_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Register/Entity'),
+            ),
             'orm_default' => array(
                 'drivers' => array(
                     'Register\Entity' => 'register_entity',
