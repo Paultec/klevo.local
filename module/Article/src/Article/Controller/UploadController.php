@@ -48,8 +48,8 @@ class UploadController extends AbstractActionController
         $this->layout('layout/image');
 
         return new ViewModel(array(
-                'result' => $tree
-            ));
+            'result' => $tree
+        ));
     }
 
     /**

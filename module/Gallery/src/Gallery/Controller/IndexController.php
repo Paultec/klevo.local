@@ -159,7 +159,7 @@ class IndexController extends AbstractActionController
         $explode = explode(DIRECTORY_SEPARATOR, $uploadedFile['image']['tmp_name']);
 
         $dir      = md5($email);
-        $fileName = $explode[1];
+        $fileName = end($explode);
 
         if (!is_dir($this->imageFolder . $dir)) {
             mkdir($this->imageFolder . $dir);

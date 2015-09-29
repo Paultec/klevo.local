@@ -78,7 +78,7 @@ $this->headTitle($title);
         </tfoot>
 
         <tbody>
-        <?php foreach ($this->orders as $orderKey => $orderValue) : ?>
+        <?php foreach ($this->orders as $email => $orderValue) : ?>
             <?php foreach ($orderValue as $orderItem) : ?>
             <?php
                 $class = 'table-row ';
@@ -91,7 +91,15 @@ $this->headTitle($title);
             ?>
             <tr class="<?php echo $class;?>">
                 <td><?php echo $orderItem['date'];?></td>
-                <td><?php echo $orderKey; //email ?></td>
+                <td>
+                    <?php
+                    if (strpos($email, 'temp_') !== false) {
+                        echo '&#8211;';
+                    } else {
+                        echo $email;
+                    }
+                    ?>
+                </td>
                 <td><?php echo !is_null($orderItem['name']) ? $orderItem['name'] : '&#8211;';?></td>
                 <td><?php echo '0' . $orderItem['phone'];?></td>
                 <td><?php echo !is_null($orderItem['address'])  ?  $orderItem['address'] : '&#8211;';?></td>
