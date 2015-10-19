@@ -23,7 +23,7 @@ return array(
             ),
             array(
                 'label' => 'Форум',
-                'route' => 'contacts',
+                'uri'   => 'http://forum.klevo.com.ua/',
                 'class' => 'float-shadow',
             ),
             array(
