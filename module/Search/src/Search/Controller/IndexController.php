@@ -59,7 +59,13 @@ class IndexController extends AbstractActionController
 
         // Поиск запроса в индексе
         $searchIndexLocation = $this->getIndexLocation();
-        $index = Lucene::open($searchIndexLocation);
+
+        try {
+            $index = Lucene::open($searchIndexLocation);
+        } catch (\Exception $e) {
+            return $this->notFoundAction();
+        }
+
         $query = QueryParser::parse($queryStr, 'UTF-8');
 
         $hits = $index->find($query);

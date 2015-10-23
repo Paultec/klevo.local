@@ -55,10 +55,7 @@ class IndexController extends AbstractActionController
 
         // Если найден несопоставимый параметр - вернуть 404
         if ($param === false) {
-            $view = new ViewModel();
-            $view->setTemplate('error/404');
-
-            return $view;
+            return $this->notFoundAction();
         }
 
         // Формирование запроса, в зависимости от к-ва параметров
