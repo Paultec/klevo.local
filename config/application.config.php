@@ -7,7 +7,6 @@
  */
 return array(
     'modules' => array(
-        'Application',
         'ZendDeveloperTools',
         'ZFTool',
         'DoctrineModule',
@@ -17,6 +16,7 @@ return array(
         'ZfcUser',
         'ZfcUserDoctrineORM',
         'BjyAuthorize',
+        'Application',
         'MtMail',
         'HtUserRegistration',
         'HtUserRegistrationDoctrineORM',
