@@ -50,7 +50,7 @@ class Product {
      * @Annotation\Attributes({"class":"form-control","placeholder":"Описание"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Filter({"name":"StringTrim"})
-     * @Annotation\Validator({"name":"StringLength", "options":{"max":"255"}})
+     * @Annotation\Validator({"name":"StringLength", "options":{"max":"1000"}})
      */
     public $description;
 
